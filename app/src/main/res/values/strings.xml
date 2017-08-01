@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">Wowhubb</string>
+    <string name="fillthecoutrytext">Fill the Country details</string>
+    <string name="filltheotptext">Fill the OTP details</string>
+    <string name="fillthelogin">Fill the Login details</string>
+    <string name="resendotp">Resend OTP?</string>
+    <string name="filltheforgot">Fill the Credentials</string>
+    <string name="filltheregtext">Fill the Register details</string>
+    <string name="fillthebdaytext">Fill the Birthday details</string>
+    <string name="forgotpwd">Forgot Password?</string>
+    <string name="splashone"><![CDATA[Create Share & Advertise your \nPersonal/ Professional Event\n In an Outstanding Way]]></string>
+    <string name="splashtwo"><![CDATA[Search & Book your \n Next Event Venue]]></string>
+    <string name="splashothree"><![CDATA[Search & Hire your Next \nEvent Service Professional]]></string>
+    <string name="selectinterest">Select the 2 or 3 Interests</string>
+    <string name="bne">BUSINESS NETWORKING EVENTS</string>
+    <string name="bne_interest">Business Networking Events</string>
+    <string name="pte_interest">Professional Training Events</string>
+    <string name="ste_interest">Startup Technology Events</string>
+
+    <string name="socialevents"><![CDATA[SOCIAL & LEISURE EVENTS]]></string>
+
+    <string name="comedy"><![CDATA[Comedy-talk Shows $ Events]]></string>
+
+    <string name="filmfashion"><![CDATA[Media Film Fashion & Culture Events]]></string>
+    <string name="homelife">Homelife Styles</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="musicarts">Music Arts</string>
+    <string name="parties">Parties</string>
+    <string name="relegion"><![CDATA[RELIGION - SPIRTUALITY & COMMUNITY EVENTS]]></string>
+    <string name="healthsub"><![CDATA[HEALTH WELLNESS & SPORTS EVENTS]]></string>
+
+    <string name="relegionspirtual">Religion \nSpirtuality</string>
+    <string name="charity"><![CDATA[Charity Cause & Community Events]]></string>
+    <string name="familyedu">Family \nEducation</string>
+    <string name="fooddrink">Food Drink</string>
+    <string name="wellness">Wellness Fitness</string>
+    <string name="sports">Sports Events</string>
+    <string name="travelevents"><![CDATA[TRAVEL & OUTDOOR EVENTS]]></string>
+    <string name="educationevents"><![CDATA[EDUCATION GOVERNMENT & POLITICS]]></string>
+    <string name="traveltours"><![CDATA[Travel Tours & Vacation Spots]]></string>
+    <string name="autobars"><![CDATA[Auto Boats & \nAir]]></string>
+
+    <string name="holidayevents">Holiday \nEvents</string>
+    <string name="schoolevents">School Events</string>
+    <string name="govtevents">Govt Events</string>
+
+    <string name="politicalevents">Political Events</string>
+    <string name="createevents">Create Event</string>
+    <string name="creatyourevent">Create Your Event -</string>
+    <string name="wowtag">!Wowtag</string>
+    <string name="eventname">Event Name</string>
+    <string name="Runtime">Runtime</string>
+    <string name="wowtagvideo">Wowtag Video</string>
+    <string name="covertag">Cover Page</string>
+    <string name="Eventhighlights">Event Highlights(Video/Image)</string>
+    <string name="Eventdate"><![CDATA[Event date & Time]]></string>
+    <string name="speaker">Speaker</string>
+
+
+    <string-array name="stepLabels">
+        <item>!Wowtag</item>
+        <item>Event Venue</item>
+        <item>Program Schedule</item>
+        <item>Event Speaker</item>
+        <item>Event Contact</item>
+        <item>Gift Registry</item>
+    </string-array>
+
+</resources>
