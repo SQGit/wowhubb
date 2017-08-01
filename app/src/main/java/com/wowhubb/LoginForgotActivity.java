@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sloop.fonts.FontsManager;
 
 /**
  * Created by Ramya on 18-07-2017.

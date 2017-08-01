@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
-import com.sloop.fonts.FontsManager;
+
 
 /**
  * Created by Ramya on 24-07-2017.

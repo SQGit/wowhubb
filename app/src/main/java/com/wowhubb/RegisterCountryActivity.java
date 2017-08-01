@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sloop.fonts.FontsManager;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 /**

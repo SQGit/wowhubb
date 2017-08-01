@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
-import com.sloop.fonts.FontsManager;
 
 /**
  * Created by Ramya on 24-07-2017.

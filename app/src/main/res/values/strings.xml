@@ -55,6 +55,8 @@
     <string name="Eventhighlights">Event Highlights(Video/Image)</string>
     <string name="Eventdate"><![CDATA[Event date & Time]]></string>
     <string name="speaker">Speaker</string>
+    <string name="From">From</string>
+    <string name="To">To</string>
 
 
     <string-array name="stepLabels">

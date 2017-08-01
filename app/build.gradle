@@ -35,6 +35,5 @@ dependencies {
     compile 'com.android.support:design:26.0.0'
     compile 'com.github.badoualy:stepper-indicator:1.0.7'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
-    compile 'com.github.GcsSloop:FontsManager:v1.0.0'
 
 }

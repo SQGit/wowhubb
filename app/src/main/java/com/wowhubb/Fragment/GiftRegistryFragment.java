@@ -11,16 +11,16 @@ import android.widget.TextView;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
-public class PageFragment extends Fragment {
+public class GiftRegistryFragment extends Fragment {
 
     private TextView lblPage;
 
-    public static PageFragment newInstance(int page, boolean isLast) {
+    public static GiftRegistryFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
         args.putInt("page", page);
         if (isLast)
             args.putBoolean("isLast", true);
-        final PageFragment fragment = new PageFragment();
+        final GiftRegistryFragment fragment = new GiftRegistryFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -29,19 +29,9 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_page, container, false);
-
-        FontsOverride.setDefaultFont(view.getContext(), "DEFAULT", "fonts/lato.ttf");
-        lblPage = (TextView) view.findViewById(R.id.lbl_page);
+        FontsOverride.setDefaultFont(getContext(), "DEFAULT", "fonts/lato.ttf");
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final int page = getArguments().getInt("page", 0);
-        if (getArguments().containsKey("isLast"))
-            lblPage.setText("You're done!");
-        else
-            lblPage.setText(Integer.toString(page));
-    }
+
 }

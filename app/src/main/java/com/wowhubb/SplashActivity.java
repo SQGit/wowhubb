@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sloop.fonts.FontsManager;
+
 
 /**
  * Created by Ramya on 19-07-2017.
