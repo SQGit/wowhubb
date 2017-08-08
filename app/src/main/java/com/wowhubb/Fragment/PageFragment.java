@@ -29,8 +29,7 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_page, container, false);
-
-        FontsOverride.setDefaultFont(view.getContext(), "DEFAULT", "fonts/lato.ttf");
+        FontsOverride.overrideFonts(getActivity(),view);
         lblPage = (TextView) view.findViewById(R.id.lbl_page);
         return view;
     }

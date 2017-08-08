@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_white"
@@ -8,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
         android:background="@color/graybg"
         android:gravity="center"
         android:orientation="vertical">
@@ -22,29 +24,50 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/creatyourevent" />
+                android:text="@string/creatyourevent"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_14sdp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wowtag"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_14sdp" />
         </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_eventname"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/_5sdp">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:hint="@string/eventname"
-            android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:id="@+id/eventtitle_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:drawableLeft="@drawable/ic_action_name"
+                android:drawablePadding="-10dp"
+                android:hint="@string/eventname"
+                android:imeOptions="actionDone"
+                android:paddingLeft="-5dp"
+                android:singleLine="true"
+                android:textColor="@color/textcolr"
+                android:textColorHint="@color/textcolr"
+                android:textSize="@dimen/_12sdp" />
+
+            <ImageView
+                android:id="@+id/tickiv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/ic_action_tick"
+                android:paddingRight="@dimen/_20sdp"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -56,6 +79,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
             android:background="@color/graybg"
             android:gravity="center"
             android:orientation="horizontal">
@@ -64,13 +88,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wowtag"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_14sdp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:text="@string/Runtime" />
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:text="@string/Runtime"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_14sdp" />
 
         </LinearLayout>
 
@@ -79,51 +106,102 @@
             android:layout_height="wrap_content"
             android:background="@color/graybg"
             android:gravity="center"
-            android:weightSum="2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <LinearLayout
                 android:id="@+id/fromlv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_fromtv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5sdp">
+                <FrameLayout
+                    android:id="@+id/frame_goodstype"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true">
 
-            <EditText
-                android:id="@+id/fromtv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:hint="@string/From" />
-            </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/til_from"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_5sdp">
+
+                        <EditText
+                            android:id="@+id/fromtv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:layout_marginLeft="@dimen/_5sdp"
+                            android:hint="@string/From"
+                            android:singleLine="true"
+                            android:textColor="@color/textcolr"
+                            android:textColorHint="@color/textcolr"
+                            android:textSize="@dimen/_12sdp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_gravity="bottom"
+                        android:background="#E1E1E1" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_fromdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/tolv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                >
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_totv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-              >
+                android:layout_weight="1">
 
-                <EditText
-                    android:id="@+id/totv"
-                    android:layout_width="match_parent"
+                <FrameLayout
+                    android:id="@+id/frame_to"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginRight="@dimen/_5sdp"
-                    android:keepScreenOn="false"
-                    android:hint="@string/To" />
-            </android.support.design.widget.TextInputLayout>
+                    android:clickable="true">
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/til_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_5sdp">
+
+                        <EditText
+                            android:id="@+id/totv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:hint="@string/To"
+                            android:singleLine="true"
+                            android:textColor="@color/textcolr"
+                            android:textColorHint="@color/textcolr"
+                            android:textSize="@dimen/_12sdp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_gravity="bottom"
+                        android:background="#E1E1E1" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_todate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -145,27 +223,64 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/wowtagvideo" />
+                android:drawableLeft="@drawable/ic_action_sym"
+                android:drawablePadding="-12dp"
+                android:gravity="start|center"
+                android:paddingLeft="-10dp"
+                android:text="@string/wowtagvideo"
+                android:textColor="@color/textcolr" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <FrameLayout
+                    android:id="@+id/framevideo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_50sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:layerType="software"
-                    android:src="@drawable/dotted_square" />
+                    <ImageView
+                        android:id="@+id/video0_iv"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layerType="software"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/dotted_square" />
 
-                <ImageView
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_50sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:layerType="software"
-                    android:src="@drawable/dotted_square" />
+                    <ImageView
+                        android:id="@+id/video1plus_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/plus_icon" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/framevideo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/video1_iv"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layerType="hardware"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/dotted_square" />
+
+                    <ImageView
+                        android:id="@+id/video2plus_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/plus_icon" />
+
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -179,14 +294,35 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/covertag" />
+                android:drawableLeft="@drawable/ic_action_sym"
+                android:drawablePadding="-12dp"
+                android:gravity="start|center"
+                android:paddingLeft="-10dp"
+                android:text="@string/covertag"
+                android:textColor="@color/textcolr" />
 
-            <ImageView
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:layerType="software"
-                android:src="@drawable/dotted_square" />
+            <FrameLayout
+                android:id="@+id/frame_cover"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/coverpage_iv"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layerType="software"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/dotted_square" />
+
+                <ImageView
+                    android:id="@+id/coverplusiv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/plus_icon" />
+            </FrameLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -200,26 +336,63 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Eventhighlights" />
+            android:drawableLeft="@drawable/ic_action_sym"
+            android:drawablePadding="-12dp"
+            android:gravity="start|center"
+            android:paddingLeft="-10dp"
+            android:text="@string/Eventhighlights"
+            android:textColor="@color/textcolr" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:layerType="software"
-                android:src="@drawable/dotted_square" />
+            <FrameLayout
+                android:id="@+id/frame_highlight1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:layerType="software"
-                android:src="@drawable/dotted_square" />
+
+                <ImageView
+                    android:id="@+id/highlight1_iv"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layerType="software"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/dotted_square" />
+
+                <ImageView
+                    android:id="@+id/highlight1plus_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/plus_icon" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frame_highlight2"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/highlight2_iv"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layerType="software"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/dotted_square" />
+
+                <ImageView
+                    android:id="@+id/highlight2plus_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/plus_icon" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

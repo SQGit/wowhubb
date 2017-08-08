@@ -13,39 +13,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2.7">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10sdp"
-                android:layout_weight="1"
+                android:layout_weight="0.8"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/speaker" />
+                    android:drawableLeft="@drawable/ic_action_sym"
+                    android:drawablePadding="-12dp"
+                    android:gravity="start|center"
+                    android:paddingLeft="-10dp"
+                    android:text="@string/speaker"
+                    android:textColor="@color/textcolr" />
 
-                <ImageView
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:layerType="software"
-                    android:src="@drawable/dotted_square" />
+                <FrameLayout
+                    android:id="@+id/framespeaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/speaker_iv"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layerType="software"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/dotted_square" />
+
+                    <ImageView
+                        android:id="@+id/speakerplus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/plus_icon" />
+                </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_action_sym"
+                    android:drawablePadding="-12dp"
+                    android:gravity="start|center"
+                    android:paddingLeft="-10dp"
+                    android:text="@string/highlight"
+                    android:textColor="@color/textcolr" />
+
+                <FrameLayout
+                    android:id="@+id/framehighlights"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/highlightiv"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:layerType="software"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/dotted_square" />
+
+                    <ImageView
+                        android:id="@+id/highlightplus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/plus_icon" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="right">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:background="@drawable/btnbg"
                     android:paddingBottom="@dimen/_5sdp"
@@ -62,6 +123,7 @@
             android:id="@+id/til_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:paddingLeft="@dimen/_5sdp">
 
             <EditText
@@ -70,13 +132,13 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="Description"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:maxLength="4"
+                android:imeOptions="actionNext"
+                android:inputType="text"
                 android:maxLines="1"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
-                android:textColor="#000000"
+                android:textColor="@color/textcolr"
+                android:textColorHint="@color/textcolr"
                 android:textSize="@dimen/_13sdp" />
 
             <View
@@ -92,6 +154,7 @@
             android:id="@+id/til_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:paddingLeft="@dimen/_5sdp">
 
             <EditText
@@ -101,12 +164,13 @@
                 android:background="@null"
                 android:hint="URL/Link"
                 android:imeOptions="actionDone"
-                android:inputType="number"
+                android:inputType="text"
                 android:maxLength="4"
                 android:maxLines="1"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
-                android:textColor="#000000"
+                android:textColor="@color/textcolr"
+                android:textColorHint="@color/textcolr"
                 android:textSize="@dimen/_13sdp" />
 
             <View
@@ -125,7 +189,13 @@
             android:layout_marginBottom="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            android:text="+ More Speaker" />
+            android:background="@drawable/btnbg"
+            android:paddingBottom="@dimen/_5sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:text="+ More Speaker"
+            android:textColor="@color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,29 +207,9 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event Don't Have a Speaker" />
+                android:text="Event Don't Have a Speaker"
+                android:textColor="@color/textcolr" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_20sdp">
-
-
-        <TextView
-            android:id="@+id/tv_calltoaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btnbg"
-            android:paddingBottom="@dimen/_10sdp"
-            android:paddingLeft="@dimen/_20sdp"
-            android:paddingRight="@dimen/_20sdp"
-            android:paddingTop="@dimen/_10sdp"
-            android:text="Call to Action"
-            android:textColor="@color/white" />
-    </LinearLayout>
 </LinearLayout>

@@ -5,29 +5,57 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_white">
 
-
-    <TextView
+    <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5sdp"
-        android:text="@string/createevents"
-        android:textSize="@dimen/_15sdp" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/backiv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:src="@drawable/back_arrow" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lltv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:text="@string/createevents"
+            android:textSize="@dimen/_20sdp" />
+    </LinearLayout>
 
 
     <com.badoualy.stepperindicator.StepperIndicator
         android:id="@+id/stepper_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_30sdp"
-        app:stpi_labelSize="@dimen/_8sdp"
+        android:layout_below="@+id/lltv"
+        app:stpi_bottomIndicatorHeight="@dimen/_10sdp"
+        app:stpi_circleStrokeWidth="@dimen/_1sdp"
+        app:stpi_labelColor="@color/textcolr"
+        app:stpi_labelSize="@dimen/_9sdp"
         app:stpi_labels="@array/stepLabels"
+        app:stpi_lineMargin="@dimen/_32sdp"
         app:stpi_showLabels="true" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_below="@+id/stepper_indicator"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/stepper_indicator"
         android:layout_marginTop="@dimen/_5sdp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -37,8 +65,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/_10sdp"
-        app:backgroundTint="@color/colorPrimary"
-        />
+        android:src="@drawable/white_arrow"
+        app:backgroundTint="@color/colorPrimary" />
 
 
 </RelativeLayout>
