@@ -3,8 +3,10 @@ package com.wowhubb.Fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import com.wowhubb.Activity.InterestActivity;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
@@ -22,24 +25,101 @@ import com.wowhubb.R;
  */
 
 public class ReligionandHelalthEventsFragment extends Fragment {
-    CheckBox cse_cb, hobbies_cb, parties_cb;
-    ImageView cse_iv,hobbies_iv,parties_ev;
+    CheckBox cse_cb, hobbies_cb, parties_cb, charity_cb, family_cb, witness_cb;
+    ImageView cse_iv, hobbies_iv, parties_ev, charity_iv, femily_iv, witness_iv;
+
+    String religion,charity,family,food,wellness,sports;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_relegionandhealthevent,
                 container, false);
-        FontsOverride.overrideFonts(getActivity(),view);
+        FontsOverride.overrideFonts(getActivity(), view);
 
         ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
-        cse_cb = (CheckBox)view.findViewById(R.id.religion_cb);
-        hobbies_cb = (CheckBox)view.findViewById(R.id.food_cb);
-        parties_cb = (CheckBox)view.findViewById(R.id.sports_cb);
+        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor edit = sharedPrefces.edit();
 
-        cse_iv = (ImageView)view.findViewById(R.id.comedy_iv);
-        hobbies_iv = (ImageView)view.findViewById(R.id.hobbies_iv);
-        parties_ev = (ImageView)view.findViewById(R.id.sports_iv);
+        cse_cb = (CheckBox) view.findViewById(R.id.religion_cb);
+        hobbies_cb = (CheckBox) view.findViewById(R.id.food_cb);
+        parties_cb = (CheckBox) view.findViewById(R.id.sports_cb);
+        charity_cb = (CheckBox) view.findViewById(R.id.charity_cb);
+        family_cb = (CheckBox) view.findViewById(R.id.family_cb);
+        witness_cb = (CheckBox) view.findViewById(R.id.witness_cb);
+
+        cse_iv = (ImageView) view.findViewById(R.id.comedy_iv);
+        hobbies_iv = (ImageView) view.findViewById(R.id.hobbies_iv);
+        parties_ev = (ImageView) view.findViewById(R.id.sports_iv);
+
+        charity_iv = (ImageView) view.findViewById(R.id.charity_iv);
+        femily_iv = (ImageView) view.findViewById(R.id.family_iv);
+        witness_iv = (ImageView) view.findViewById(R.id.witness_iv);
+
+        religion = sharedPrefces.getString("religion", "");
+        charity = sharedPrefces.getString("charity", "");
+        family = sharedPrefces.getString("family", "");
+        food = sharedPrefces.getString("food", "");
+        wellness = sharedPrefces.getString("wellness", "");
+        sports = sharedPrefces.getString("sports", "");
+        if (!religion.equals("")) {
+            if (religion.equals("10")) {
+                cse_cb.setChecked(true);
+                cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+        if (!food.equals("")) {
+            if (food.equals("13")) {
+                hobbies_cb.setChecked(true);
+                hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+
+        if (!sports.equals("")) {
+            if (sports.equals("15")) {
+                parties_cb.setChecked(true);
+                parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+        if (!charity.equals("")) {
+            if (charity.equals("11")) {
+                charity_cb.setChecked(true);
+                charity_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                charity_iv.setColorFilter(charity_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+
+
+        if (!family.equals("")) {
+            if (family.equals("12")) {
+                family_cb.setChecked(true);
+                femily_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                femily_iv.setColorFilter(femily_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+
+        if (!wellness.equals("")) {
+            if (wellness.equals("14")) {
+                witness_cb.setChecked(true);
+                witness_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                witness_iv.setColorFilter(witness_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            }
+
+        }
+
+
+
+
+
 
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +138,15 @@ public class ReligionandHelalthEventsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    InterestActivity.list.add("religion");
+                    edit.putString("religion", "10");
+                    edit.commit();
                     cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                     cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
                 } else {
+                    InterestActivity.list.remove("religion");
+                    edit.putString("religion", "0");
+                    edit.commit();
                     cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
                     cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                 }
@@ -73,9 +159,15 @@ public class ReligionandHelalthEventsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    InterestActivity.list.add("food");
+                    edit.putString("food", "13");
+                    edit.commit();
                     hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                     hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
                 } else {
+                    InterestActivity.list.remove("food");
+                    edit.putString("food", "13");
+                    edit.commit();
                     hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
                     hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                 }
@@ -88,17 +180,80 @@ public class ReligionandHelalthEventsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    InterestActivity.list.add("sports");
+                    edit.putString("sports", "15");
+                    edit.commit();
                     parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                     parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
                 } else {
+                    InterestActivity.list.remove("sports");
+                    edit.putString("sports", "0");
+                    edit.commit();
                     parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest));
                     parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         });
 
+        charity_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                if (isChecked) {
+                    InterestActivity.list.add("charity");
+                    edit.putString("charity", "11");
+                    edit.commit();
+                    charity_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    charity_iv.setColorFilter(charity_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    InterestActivity.list.remove("charity");
+                    edit.putString("charity", "0");
+                    edit.commit();
+                    charity_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    charity_iv.setColorFilter(charity_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+        });
 
+        family_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    InterestActivity.list.add("family");
+                    edit.putString("family", "12");
+                    edit.commit();
+                    femily_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    femily_iv.setColorFilter(femily_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    InterestActivity.list.remove("family");
+                    edit.putString("family", "0");
+                    edit.commit();
+                    femily_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    femily_iv.setColorFilter(femily_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+        });
+
+        witness_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    InterestActivity.list.add("wellness");
+                    edit.putString("wellness", "14");
+                    edit.commit();
+                    witness_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    witness_iv.setColorFilter(witness_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    InterestActivity.list.remove("wellness");
+                    edit.putString("wellness", "0");
+                    edit.commit();
+                    witness_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    witness_iv.setColorFilter(witness_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+        });
 
 
         return view;

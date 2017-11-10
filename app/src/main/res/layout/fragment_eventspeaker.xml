@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,136 +10,126 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2.7">
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:layout_weight="0.8"
-                android:orientation="vertical">
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:drawableLeft="@drawable/ic_action_sym"
                     android:drawablePadding="-12dp"
                     android:gravity="start|center"
                     android:paddingLeft="-10dp"
-                    android:text="@string/speaker"
+                    android:text="@string/Eventhighlights"
                     android:textColor="@color/textcolr" />
 
+                <ImageView
+                    android:id="@+id/wowtag_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="@dimen/_70sdp"
+                    android:gravity="center|right"
+                    android:padding="@dimen/_3sdp"
+                    android:src="@drawable/wowtag_add" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <FrameLayout
-                    android:id="@+id/framespeaker"
+                    android:id="@+id/frame_highlight1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
+
                     <ImageView
-                        android:id="@+id/speaker_iv"
+                        android:id="@+id/highlight1_iv"
                         android:layout_width="@dimen/_60sdp"
-                        android:layout_height="@dimen/_60sdp"
+                        android:layout_height="@dimen/_50sdp"
                         android:layout_margin="@dimen/_5sdp"
                         android:layerType="software"
                         android:scaleType="fitXY"
                         android:src="@drawable/dotted_square" />
 
                     <ImageView
-                        android:id="@+id/speakerplus"
+                        android:id="@+id/highlight1plus_iv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:padding="@dimen/_5sdp"
                         android:src="@drawable/plus_icon" />
                 </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_weight="0.8"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_action_sym"
-                    android:drawablePadding="-12dp"
-                    android:gravity="start|center"
-                    android:paddingLeft="-10dp"
-                    android:text="@string/highlight"
-                    android:textColor="@color/textcolr" />
 
                 <FrameLayout
-                    android:id="@+id/framehighlights"
+                    android:id="@+id/frame_highlight2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/highlightiv"
+                        android:id="@+id/highlight2_iv"
                         android:layout_width="@dimen/_60sdp"
-                        android:layout_height="@dimen/_60sdp"
+                        android:layout_height="@dimen/_50sdp"
                         android:layout_margin="@dimen/_5sdp"
                         android:layerType="software"
                         android:scaleType="fitXY"
                         android:src="@drawable/dotted_square" />
 
                     <ImageView
-                        android:id="@+id/highlightplus"
+                        android:id="@+id/highlight2plus_iv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:padding="@dimen/_5sdp"
                         android:src="@drawable/plus_icon" />
                 </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="right">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:background="@drawable/btnbg"
-                    android:paddingBottom="@dimen/_5sdp"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:text="+ Wowtag ID"
-                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@android:drawable/btn_dropdown"
+            android:hint="Event Guest Type"
+            android:textSize="@dimen/_12sdp"
+            app:met_floatingLabel="highlight"
+            app:met_textColorHint="@color/view" />
+
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_description"
+            android:id="@+id/til_nameofspeaker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10sdp"
             android:paddingLeft="@dimen/_5sdp">
 
             <EditText
-                android:id="@+id/description_et"
+                android:id="@+id/speaker_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="Description"
+
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
                 android:textColor="@color/textcolr"
-                android:textColorHint="@color/textcolr"
                 android:textSize="@dimen/_13sdp" />
 
             <View
@@ -162,15 +153,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="URL/Link"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLength="4"
                 android:maxLines="1"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
                 android:textColor="@color/textcolr"
-                android:textColorHint="@color/textcolr"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@color/grey"></View>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/intro_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:textColor="@color/textcolr"
                 android:textSize="@dimen/_13sdp" />
 
             <View
@@ -183,33 +198,16 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
+            android:id="@+id/addmore_iv"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:layout_marginBottom="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:background="@drawable/btnbg"
-            android:paddingBottom="@dimen/_5sdp"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
-            android:paddingTop="@dimen/_5sdp"
-            android:text="+ More Speaker"
-            android:textColor="@color/white" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:background="@color/graybg"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Event Don't Have a Speaker"
-                android:textColor="@color/textcolr" />
-        </LinearLayout>
+            android:layout_gravity="left"
+            android:layout_margin="@dimen/_20sdp"
+            android:drawableLeft="@drawable/add_icon_create"
+            android:drawablePadding="@dimen/_5sdp"
+            android:gravity="center"
+            android:text="Event Highlights"
+            android:textColor="@color/headercolor" />
     </LinearLayout>
 
 </LinearLayout>

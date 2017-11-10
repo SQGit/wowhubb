@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f7f7f7">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:drawablePadding="@dimen/_5sdp"
+            android:drawableRight="@drawable/search_icon"
+            android:hint="Search People/ Events"
+            android:paddingRight="@dimen/_5sdp"
+            android:singleLine="true"
+            android:textSize="@dimen/_12sdp" />
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_eventinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:paddingLeft="@dimen/_5sdp">
+
+        <EditText
+            android:id="@+id/eventcity_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="Event City"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:textColor="@color/textcolr"
+            android:textColorHint="@color/textcolr"
+            android:textSize="@dimen/_13sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/grey">
+
+        </View>
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/graybg"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:id="@+id/fromlv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/frame_date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_5sdp">
+
+                    <EditText
+                        android:id="@+id/datetv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:hint="@string/Date"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolr"
+                        android:textColorHint="@color/textcolr"
+                        android:textSize="@dimen/_12sdp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_gravity="bottom"
+                    android:background="#E1E1E1" />
+
+                <LinearLayout
+                    android:id="@+id/layout_fromdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_guestsize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_5sdp">
+
+                <EditText
+                    android:id="@+id/guestsize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:hint="@string/guestsize"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textColor="@color/textcolr"
+                    android:textColorHint="@color/textcolr"
+                    android:textSize="@dimen/_12sdp" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

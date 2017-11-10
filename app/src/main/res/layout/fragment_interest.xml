@@ -16,8 +16,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:src="@drawable/back_arrow" />
+            android:src="@drawable/back_arrow"
+           />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:gravity="right"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
 
+
+            <TextView
+                android:id="@+id/skiptv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_6sdp"
+                android:padding="@dimen/_10sdp"
+                android:text="Skip"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

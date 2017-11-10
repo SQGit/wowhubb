@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wowhubb.Activity.EventFeedDashboard;
+import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
 
@@ -28,8 +29,11 @@ public class EventHubbFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_eventfeed, container, false);
 
 
-        View view = inflater.inflate(R.layout.fragment_eventfeed,
+        View view = inflater.inflate(R.layout.fragment_eventhub,
                 container, false);
+
+        FontsOverride.overrideFonts(getActivity(), view);
+       // EventFeedDashboard.titletv.setText("Get your Wowtag points");
 
        // EventFeedDashboard.arcMenu.setVisibility(View.VISIBLE);
         return view;

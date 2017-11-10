@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/top"
     android:background="@drawable/bg_white"
     android:orientation="vertical">
 
@@ -23,13 +24,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_15sdp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/head_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15sdp"
             android:text="@string/filltheotptext"
             android:textColor="@color/headercolor"
             android:textSize="@dimen/_25sdp" />
@@ -42,45 +43,66 @@
             android:gravity="center"
             android:orientation="vertical">
 
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_otp"
+            <LinearLayout android:id="@+id/pin_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5sdp">
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal">
 
-                <EditText
-                    android:id="@+id/phone_et"
-                    android:layout_width="match_parent"
+                <EditText android:id="@+id/pin_first_edittext"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="OTP"
-                    android:imeOptions="actionDone"
+                    android:contentDescription="@string/pin_content_desc"
                     android:inputType="number"
-                    android:maxLength="4"
-                    android:maxLines="1"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/_13sdp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey">
+                    style="@style/pin_edittext_style" />
 
-                </View>
-            </android.support.design.widget.TextInputLayout>
+                <EditText android:id="@+id/pin_second_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/pin_content_desc"
+                    android:inputType="number"
+                    style="@style/pin_edittext_style" />
+
+                <EditText android:id="@+id/pin_third_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/pin_content_desc"
+                    android:inputType="number"
+                    style="@style/pin_edittext_style" />
+
+                <EditText android:id="@+id/pin_forth_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/pin_content_desc"
+                    android:inputType="number"
+                    style="@style/pin_edittext_style" />
+
+
+            </LinearLayout>
+
+            <EditText android:id="@+id/pin_hidden_edittext"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:background="@null"
+                android:cursorVisible="false"
+                android:password="true"
+                android:maxLength="5"
+                android:textColor="#00000000"
+                android:contentDescription="@string/pin_content_desc" />
 
             <TextView
                 android:id="@+id/resendotp_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:gravity="right"
                 android:layout_gravity="right"
+                android:padding="@dimen/_10sdp"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/resendotp" />
 
@@ -95,7 +117,16 @@
             android:layout_marginTop="@dimen/_40sdp"
             android:src="@drawable/submit_arrow" />
 
-
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:indicatorName="BallSpinFadeLoaderIndicator"
+            app:indicatorColor="#e91e63"
+            android:visibility="invisible"
+            android:layout_marginBottom="@dimen/_50sdp"
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,22 +1,40 @@
 package com.wowhubb.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+import com.hbb20.CountryCodePicker;
+import com.wang.avi.AVLoadingIndicatorView;
 import com.wowhubb.Adapter.CustomAdapter;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
+import com.wowhubb.Utils.Config;
+import com.wowhubb.Utils.HttpUtils;
+import com.wowhubb.Utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Ramya on 18-07-2017.
@@ -24,104 +42,338 @@ import com.wowhubb.R;
 
 public class RegisterCountryActivity extends Activity {
 
-    String[] SPINNERLIST = {"Afghanistan","Australia","Bahrain","Canada","United States", "United Kingdom", "India"};
-    String[] CODE_SPN = {"123", "423", "625", "435", "422"};
-    Typeface latoheading,lato;
+    Typeface latoheading, lato;
     TextView head_tv;
     TextInputLayout phone_til;
     ImageView submit;
+    Config config;
+    EditText phone_et;
+    String str_phone, val_status, str_country;
+    CountryCodePicker countryCodePicker;
+    Snackbar snackbar;
+    TextView tv_snack;
+    AVLoadingIndicatorView av_loader;
+    RadioButton ByEmail, ByPhone;
+    RadioGroup radioGroup;
+    SharedPreferences sharedPrefces;
+    SharedPreferences.Editor edit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_country);
-        View v1 = getWindow().getDecorView().getRootView();
-        FontsOverride.overrideFonts(RegisterCountryActivity.this,v1);
+
+        config = new Config();
+
+        //------------------------------FONT STYLE------------------------------------------------//
 
         latoheading = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/latoheading.ttf");
         lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
-        head_tv=(TextView) findViewById(R.id.head_tv);
-        submit=(ImageView)findViewById(R.id.submit_iv);
+        View v1 = getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(RegisterCountryActivity.this, v1);
 
-        phone_til=(TextInputLayout) findViewById(R.id.til_phone);
+        //----------------------------------------------------------------------------------------//
+
+        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        edit = sharedPrefces.edit();
+        edit.putString("val_status", "phone");
+        edit.remove("str_email");
+        edit.remove("str_phone");
+        edit.apply();
+        edit.commit();
+
+        head_tv =  findViewById(R.id.head_tv);
+        submit = findViewById(R.id.submit_iv);
+        phone_et = findViewById(R.id.phone_et);
+        av_loader =  findViewById(R.id.avi);
+        phone_til =  findViewById(R.id.til_phone);
         head_tv.setTypeface(latoheading);
         phone_til.setTypeface(lato);
+        ByEmail =  findViewById(R.id.rademail);
+        ByPhone =  findViewById(R.id.radiophone);
+        radioGroup =  findViewById(R.id.radioGroup);
+        countryCodePicker = findViewById(R.id.ccp);
+
+        //-----------------------------------------SNACKBAR----------------------------------------//
+
+        snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
+        View sbView = snackbar.getView();
+        tv_snack = (android.widget.TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        tv_snack.setTextColor(Color.WHITE);
+        tv_snack.setTypeface(lato);
+        if (!Utils.Operations.isOnline(RegisterCountryActivity.this)) {
+            snackbar.show();
+            tv_snack.setText(R.string.networkError);
+        }
 
 
+        //----------------------------TO CHECK EMAIL OR PHONE-------------------------------------//
 
-
-        MaterialBetterSpinner materialDesignSpinner = (MaterialBetterSpinner)
-                findViewById(R.id.android_material_design_spinner);
-      /*  ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, SPINNERLIST);
-
-        materialDesignSpinner.setAdapter(arrayAdapter);*/
-
-        MaterialBetterSpinner code_spn = (MaterialBetterSpinner)
-                findViewById(R.id.code_spn);
-        ArrayAdapter<String> codearrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, CODE_SPN);
-        code_spn.setAdapter(codearrayAdapter);
-
-
-        final CustomAdapter arrayAdapter = new CustomAdapter(RegisterCountryActivity.this, android.R.layout.simple_dropdown_item_1line, SPINNERLIST) {
-            @Override
-            public boolean isEnabled(int position) {
-                if (position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                tv.setTypeface(lato);
-                tv.setTextSize(14);
-                tv.setPadding(10, 15, 10, 15);
-                if (position == 0) {
-                    tv.setTextColor(Color.BLACK);
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (ByPhone.isChecked()) {
+                    countryCodePicker.setVisibility(View.VISIBLE);
+                    phone_et.setError(null);
+                    phone_til.setHint("Mobile Number");
+                    phone_til.setPadding(0, 0, 0, 0);
+                    edit.putString("val_status", "phone");
+                    edit.commit();
+                    final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
+                    val_status = sharedPreferences.getString("val_status", "");
+
                 } else {
-                    tv.setTextColor(Color.BLACK);
+                    countryCodePicker.setVisibility(View.GONE);
+                    phone_et.setError(null);
+                    phone_et.setText("");
+                    phone_til.setPadding(40, 0, 0, 0);
+                    phone_til.setHint("Email");
+                    edit.putString("val_status", "email");
+                    edit.commit();
+                    final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
+                    val_status = sharedPreferences.getString("val_status", "");
+                    edit.remove("str_phone");
+                    edit.apply();
                 }
-                return view;
+
+
             }
-
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                tv.setTextSize(14);
-                tv.setPadding(5, 0, 0, 0);
-                tv.setTypeface(lato);
-                if (position == 0) {
-                    tv.setTextColor(Color.BLACK);
-                } else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-
-
-        materialDesignSpinner.setAdapter(arrayAdapter);
-
-       // materialDesignSpinner.setPaddingSafe(0, 0, 0, 0);
+        });
 
 
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(RegisterCountryActivity.this, LoginOtpActivity.class));
-                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            public void onClick(View v) {
+
+                str_country = countryCodePicker.getSelectedCountryCodeWithPlus();
+                phone_et.setEnabled(true);
+                str_phone = phone_et.getText().toString();
+                edit.putString("str_country", str_country);
+                edit.commit();
+
+                if (!str_country.equals("")) {
+                    phone_et.setEnabled(true);
+                    if (!phone_et.getText().toString().trim().equalsIgnoreCase("")) {
+                        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
+                        val_status = sharedPreferences.getString("val_status", "");
+                        if (val_status.equals("phone")) {
+                            if (phone_et.getText().toString().trim().length() > 9) {
+                                phone_til.setError(null);
+                                if (!Utils.Operations.isOnline(RegisterCountryActivity.this)) {
+                                    snackbar.show();
+                                    tv_snack.setText(R.string.networkError);}
+                                else
+                                {
+                                    new login_customer().execute();
+                                }
+
+                            } else {
+                                phone_til.setError("Invalid Phone Number");
+                                phone_et.requestFocus();
+                            }
+                        } else {
+
+                            if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(phone_et.getText().toString()).matches())) {
+                                phone_et.setError(null);
+                                {
+                                    phone_et.requestFocus();
+                                    if (!Utils.Operations.isOnline(RegisterCountryActivity.this)) {
+                                        snackbar.show();
+                                        tv_snack.setText(R.string.networkError);
+                                    }
+                                    else
+                                    {
+                                        new login_customer_email().execute();
+                                    }
+
+
+                                }
+                            } else {
+                                phone_til.setError("Invalid Email");
+                                phone_et.requestFocus();
+                            }
+
+
+                        }
+
+                    } else {
+                        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
+                        val_status = sharedPreferences.getString("val_status", "");
+                        if (val_status.equals("phone")) {
+                            phone_et.setError(null);
+                            phone_til.setError("Enter Mobile Number");
+                            phone_et.requestFocus();
+                        } else {
+                            phone_et.setError(null);
+                            phone_til.setError("Enter Email");
+                            phone_et.requestFocus();
+                        }
+
+                    }
+
+                } else {
+                    phone_et.setEnabled(false);
+                }
+
+
             }
         });
+
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(RegisterCountryActivity.this, SplashActivity.class);
+        startActivity(intent);
+    }
+
+
+    //------------------------------ASYNC TASK FOR PHONE NO---------------------------------------//
+
+    public class login_customer extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            av_loader.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("tonumber", str_country + str_phone);
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_OTP, json);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "tag" + s);
+            av_loader.setVisibility(View.GONE);
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+
+                    if (jo.has("success")) {
+                        String status = jo.getString("success");
+                        if (status.equals("true")) {
+                            String otp = jo.getString("otp");
+                            String msg = jo.getString("message");
+                            SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor edit = sharedPrefces.edit();
+                            edit.putString("otp", otp);
+                            edit.putString("str_phone", str_phone);
+                            edit.putString("loginstatus", "phone");
+                            edit.commit();
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(RegisterCountryActivity.this, RegisterOtpActivity.class));
+                            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                            finish();
+                        } else {
+                            String msg = jo.getString("message");
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("tag", "nt" + e.toString());
+                }
+            } else {
+
+
+            }
+
+        }
+
+    }
+
+    //------------------------------ASYNC TASK FOR EMAIL-------------------------------------------//
+    public class login_customer_email extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            av_loader.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("toemail", str_phone);
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_MAILOTP, json);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "tag" + s);
+            av_loader.setVisibility(View.GONE);
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+
+                    if (jo.has("success")) {
+                        String status = jo.getString("success");
+                        if (status.equals("true")) {
+                            String otp = jo.getString("otp");
+                            String msg = jo.getString("message");
+                            SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor edit = sharedPrefces.edit();
+                            edit.putString("otp", otp);
+                            edit.putString("str_email", str_phone);
+                            edit.putString("loginstatus", "email");
+                            edit.commit();
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(RegisterCountryActivity.this, RegisterOtpActivity.class));
+                            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                        } else {
+                            String msg = jo.getString("message");
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+            } else {
+
+            }
+
+        }
 
     }
 }

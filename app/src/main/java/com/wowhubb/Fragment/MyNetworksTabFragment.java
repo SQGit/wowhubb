@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
 public class MyNetworksTabFragment extends Fragment {
@@ -42,6 +43,9 @@ public class MyNetworksTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_giftregistry, container, false);
+        View view = inflater.inflate(R.layout.mynetwork_tab, container, false);
+        FontsOverride.overrideFonts(getActivity(), view);
+        return view;
+
     }
 }

@@ -95,7 +95,7 @@
 
 
                 <ImageView
-                    android:id="@+id/mediafilm_iv"
+                    android:id="@+id/charity_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"
@@ -139,7 +139,7 @@
 
 
                 <ImageView
-                    android:id="@+id/homelife_iv"
+                    android:id="@+id/family_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"
@@ -260,7 +260,7 @@
 
 
                 <ImageView
-                    android:id="@+id/musicarts_iv"
+                    android:id="@+id/witness_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"

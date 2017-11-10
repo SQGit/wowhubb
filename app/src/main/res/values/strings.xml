@@ -6,7 +6,7 @@
     <string name="resendotp">Resend OTP?</string>
     <string name="filltheforgot">Fill the Credentials</string>
     <string name="filltheregtext">Fill the Register details</string>
-    <string name="fillthebdaytext">Fill the Birthday details</string>
+    <string name="fillthebdaytext">Fill the details</string>
     <string name="forgotpwd">Forgot Password?</string>
     <string name="splashone"><![CDATA[Create Share & Advertise your \nPersonal/ Professional Event\n In an Outstanding Way]]></string>
     <string name="splashtwo"><![CDATA[Search & Book your \n Next Event Venue]]></string>
@@ -69,14 +69,55 @@
     <string name="item_1">My Network</string>
     <string name="item_2">Contacts</string>
     <string name="item_3">Add Contact</string>
+    <string name="contact_txt">We may periodically sync and store your contacts to faciltate a continuous connection between you and your network members you are always going to choose who you invite and conect with</string>
+    <string name="add_contact">+ Add Contact</string>
+    <string name="Todayevent"><u>Today Events</u></string>
+    <string name="Tomorrowevent"><u>Tomorrow Events</u></string>
+    <string name="EventHistory"><u>Event History</u></string>
+    <string name="Date">Date</string>
+    <string name="guestsize">Guest Size</string>
+    <string name="searchevent_land"><![CDATA[Search & Book \nyour Event Venue]]></string>
+    <string name="nearbyevents">Search for Nearby \n       Events</string>
+    <string name="searchevent_providers">Search for Event \nService Providers</string>
+    <string name="createevents_land">Create Your \n Events</string>
+    <string name="personal">Personal Profile</string>
+    <string name="addmore">+ Add More</string>
+    <string name="Ok">Ok</string>
+    <string name="name">Segun Devis</string>
+    <string name="uploadpic">Upolad Pics</string>
+    <string name="newcoverpage">New Cover Page</string>
+    <string name="changephoto">Change Photo</string>
+    <string name="uploadvideo">Upload Self Intro Video</string>
+    <string name="browse">Browse</string>
+    <string name="save">Save</string>
 
+    <string name="Personal">Personal</string>
+    <string name="Professional">Professional</string>
+    <string name="connection">102 Connections</string>
+    <string name="vieweventfeed">View Event Feed</string>
+    <string name="Personalprofile">Personal Profile</string>
+    <string name="Personalprofileedit">Edit Cover Page</string>
+    <string name="img_profile">Profile</string>
+    <string name="img_coverprofile">Cover Picture</string>
     <string-array name="stepLabels">
+        <item>Event Type</item>
         <item>!Wowtag</item>
         <item>Event Venue</item>
         <item>Program Schedule</item>
-        <item>Event Speaker</item>
+        <item>Event Highlights</item>
         <item>Event Contact</item>
-        <item>Gift Registry</item>
+        <item>Event Links</item>
     </string-array>
 
+        <string name="pin_content_desc">PIN input field</string>
+        <string name="pin_label_text">PIN</string>
+
+    <string name="search_result">Search Result!</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_hint">Type and Search</string>
+    <string name="menu_search">Search</string>
+    <string name="publish"><![CDATA[Publish & Share On My Wowhubb Network]]></string>
+    <string name="wownw1">\@#coll group</string>
+    <string name="wownw2"><![CDATA[Eventzz%&]]></string>
+    <string name="networkError">Network Error! Please Try Again Later.</string>
 </resources>

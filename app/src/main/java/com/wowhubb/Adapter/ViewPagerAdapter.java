@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wowhubb.R;
 
@@ -26,13 +27,14 @@ public class ViewPagerAdapter extends PagerAdapter {
 	private int imagesList[];
 	private int screenWidth;
 	private int screenHeight;
-
-	public ViewPagerAdapter(Context mContext, int images[], int screenWidth,
+	private int textList[];
+	public ViewPagerAdapter(Context mContext, int images[],int list[], int screenWidth,
 			int screenHeight) {
 		this.imagesList = images;
 		this.mContext = mContext;
 		this.screenWidth = screenWidth / 2;
 		this.screenHeight = screenHeight / 2;
+		this.textList=list;
 	}
 
 	@Override
@@ -51,6 +53,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup container, int position) {
 		// Declare Variables
 		ImageView imgflag;
+		TextView tv;
 
 		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,8 +65,10 @@ public class ViewPagerAdapter extends PagerAdapter {
 		// Locate the ImageView in row_image_gallery
 		imgflag = (ImageView) itemView.findViewById(R.id.hotspotImage);
 		// Capture position and set to the ImageView
-
+		//tv = (TextView) itemView.findViewById(R.id.tv);
 		imgflag.setImageResource(imagesList[position]);
+
+		//tv.setText(""+textList[position]);
 		RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imgflag
 				.getLayoutParams();
 

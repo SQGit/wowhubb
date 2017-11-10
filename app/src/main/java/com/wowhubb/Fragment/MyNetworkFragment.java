@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 
 import com.wowhubb.Activity.EventFeedDashboard;
+import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
 
@@ -34,8 +35,8 @@ public class MyNetworkFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_mynetwork,
                 container, false);
-
-      //  EventFeedDashboard.arcMenu.setVisibility(View.GONE);
+        FontsOverride.overrideFonts(getActivity(), view);
+       // EventFeedDashboard.titletv.setText("Your Events will Show here");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 view.findViewById(R.id.navigation);
 
@@ -47,17 +48,25 @@ public class MyNetworkFragment extends Fragment {
                         switch (item.getItemId()) {
                             case R.id.action_item1:
                                 selectedFragment = MyNetworksTabFragment.newInstance();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame_layout, selectedFragment);
+                                transaction.commit();
                                 break;
                             case R.id.action_item2:
-                                selectedFragment = MyNetworksTabFragment.newInstance();
+                               /* selectedFragment = MyNetworkAddContact.newInstance();
+                                FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction1.replace(R.id.frame_layout, selectedFragment);
+                                transaction1.commit();
+                                break;*/
                                 break;
                             case R.id.action_item3:
-                                selectedFragment = MyNetworksTabFragment.newInstance();
+                                selectedFragment = MyNetworkAddContact.newInstance();
+                                FragmentTransaction transaction2 = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction2.replace(R.id.frame_layout, selectedFragment);
+                                transaction2.commit();
                                 break;
                         }
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.frame_layout, selectedFragment);
-                        transaction.commit();
+
                         return true;
                     }
                 });

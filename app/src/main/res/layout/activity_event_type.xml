@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@color/graybg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:drawableLeft="@drawable/ic_action_sym"
+            android:drawablePadding="-12dp"
+            android:gravity="start|center"
+            android:paddingBottom="@dimen/_3sdp"
+            android:paddingLeft="-10dp"
+            android:paddingTop="@dimen/_2sdp"
+            android:text="Private/Personal Event"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_14sdp" />
+
+    </LinearLayout>
+
+    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        android:id="@+id/gender_spn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:background="@null"
+        android:hint="Event Category"
+        android:textSize="@dimen/_13sdp"
+        app:met_floatingLabel="highlight"
+        app:met_textColorHint="@color/view" />
+
+
+    <FrameLayout
+        android:id="@+id/frame_eventdate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:clickable="true">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_eventdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/eventdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@null"
+                android:drawableRight="@drawable/birthday_icon"
+                android:enabled="false"
+                android:hint="Event Date"
+                android:singleLine="true"
+                android:textColor="@color/textcolr"
+                android:textColorHint="@color/textcolr"
+                android:textSize="@dimen/_13sdp" />
+
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_gravity="bottom"
+                android:background="@color/grey" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_eventdate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:paddingLeft="@dimen/_5sdp">
+
+        <EditText
+            android:id="@+id/description_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="Event Description"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:textColor="@color/textcolr"
+            android:textColorHint="@color/textcolr"
+            android:textSize="@dimen/_13sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/grey">
+
+        </View>
+    </android.support.design.widget.TextInputLayout>
+</LinearLayout>

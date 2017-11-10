@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wowhubb.Activity.EventFeedDashboard;
+import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
 
@@ -25,10 +26,10 @@ public class WowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_mynetwork,
+        View view = inflater.inflate(R.layout.fragment_wowtag,
                 container, false);
-
-        EventFeedDashboard.arcMenu.setVisibility(View.GONE);
+       // EventFeedDashboard.titletv.setText("Lets Connect with Friends");
+        FontsOverride.overrideFonts(getActivity(), view);
         return view;
     }
 

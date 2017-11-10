@@ -9,6 +9,19 @@
     <color name="white_trans">#99FFFFFF</color>
     <color name="graybg">#f5f5f5</color>
     <color name="gray">#f0f0f0</color>
+    <color name="graybgopacity">#80f0f0f0</color>
     <color name="textcolr">#3c3c3c</color>
     <color name="view">#828689</color>
+    <color name="feed_bg">#d3d6db</color>
+    <color name="feed_item_bg">#ffffff</color>
+    <color name="feed_item_border">#c2c3c8</color>
+    <color name="link">#0a80d1</color>
+    <color name="timestamp">#a0a3a7</color>
+    <color name="oror">#e91e63</color>
+    <color name="or2">#4B4B4B</color>
+    <color name="pink">#ffe7e5</color>
+    <color name="brown">#382F2F</color>
+    <color name="redColor">#e91e63</color>
+    <color name="grayback">#dbdbdb</color>
+
 </resources>

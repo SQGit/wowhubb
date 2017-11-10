@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_white"
@@ -55,10 +56,9 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="Phone/Email"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:maxLength="4"
+                    android:imeOptions="actionDone"
                     android:maxLines="1"
+                    android:inputType="textVisiblePassword"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_5sdp"
                     android:textColor="#000000"
@@ -72,6 +72,7 @@
 
                 </View>
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_pwd"
                 android:layout_width="match_parent"
@@ -87,7 +88,6 @@
                     android:hint="Password"
                     android:imeOptions="actionDone"
                     android:inputType="textWebPassword"
-                    android:maxLength="4"
                     android:maxLines="1"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_5sdp"
@@ -107,12 +107,12 @@
                 android:id="@+id/forgot_pwd_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:layout_marginRight="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:gravity="right"
-                android:layout_gravity="right"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/forgotpwd" />
+                android:text="@string/forgotpwd"
+                android:textColor="@color/colorPrimary" />
 
         </LinearLayout>
 
@@ -125,7 +125,15 @@
             android:layout_marginTop="@dimen/_40sdp"
             android:src="@drawable/submit_arrow" />
 
-
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_50sdp"
+            android:visibility="invisible"
+            app:indicatorColor="#e91e63"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
     </LinearLayout>
 
 </LinearLayout>

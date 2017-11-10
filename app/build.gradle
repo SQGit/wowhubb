@@ -1,21 +1,37 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'wowhubb'
+            keyPassword '123456'
+            storeFile file('E:/wowhubb/wowhubb.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.wowhubb"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.config
+            zipAlignEnabled true
         }
+    }
+    productFlavors {
     }
 }
 repositories {
@@ -24,16 +40,36 @@ repositories {
     maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'com.android.support:appcompat-v7:26.0.0'
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile 'com.android.support:appcompat-v7:26.0.2'
+    compile 'junit:junit:4.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.intuit.sdp:sdp-android:1.0.3'
-    compile 'com.android.support:design:26.0.0'
+    compile 'com.android.support:design:26.0.2'
     compile 'com.github.badoualy:stepper-indicator:1.0.7'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.sa90.materialarcmenu:library:1.5.0'
+    compile 'com.prolificinteractive:material-calendarview:1.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.android.support:recyclerview-v7:26.0.2'
+    compile 'com.wang.avi:library:2.1.3'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile files('libs/httpmime-4.2.jar')
+    compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
+    compile 'com.devbrackets.android:exomedia:4.0.3'
+    compile 'com.hbb20:ccp:0.1.1'
+    compile 'com.github.zcweng:switch-button:0.0.3@aar'
+    compile files('libs/volley.jar')
 }
+/*
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.0'
+            }
+        }
+    }
+}*/

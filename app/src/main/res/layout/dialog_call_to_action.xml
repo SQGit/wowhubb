@@ -205,8 +205,27 @@
             android:layout_height="wrap_content"
             android:textColor="#252525" />
 
-
     </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
 
 
+
+
+
+    <TextView
+        android:id="@+id/ok_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btnbg"
+        android:textColor="@color/white"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        android:paddingLeft="@dimen/_15sdp"
+        android:paddingRight="@dimen/_15sdp"
+        android:layout_gravity="center"
+        android:text="@string/Ok"/>
+</LinearLayout>
 </LinearLayout>

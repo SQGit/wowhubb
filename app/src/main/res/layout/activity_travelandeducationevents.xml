@@ -96,7 +96,7 @@
 
 
                 <ImageView
-                    android:id="@+id/mediafilm_iv"
+                    android:id="@+id/autoboat_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"
@@ -106,7 +106,7 @@
                     android:src="@drawable/autoboats_interest" />
 
                 <CheckBox
-                    android:id="@+id/mediafilm_cb"
+                    android:id="@+id/autoboat_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/toggle"
@@ -138,7 +138,7 @@
 
 
                 <ImageView
-                    android:id="@+id/homelife_iv"
+                    android:id="@+id/holiday_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"
@@ -149,7 +149,7 @@
 
 
                 <CheckBox
-                    android:id="@+id/homelife_cb"
+                    android:id="@+id/holiday_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/toggle"
@@ -300,7 +300,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/parties_iv"
+                    android:id="@+id/political_iv"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_marginLeft="@dimen/_7sdp"
@@ -312,7 +312,7 @@
 
 
                 <CheckBox
-                    android:id="@+id/parties_cb"
+                    android:id="@+id/political_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/toggle"
