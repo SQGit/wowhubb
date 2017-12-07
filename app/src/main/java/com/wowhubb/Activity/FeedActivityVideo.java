@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.ImageView.CircularNetworkImageView;
@@ -15,20 +17,29 @@ import com.wowhubb.R;
 import com.wowhubb.app.AppController;
 import com.wowhubb.app.ImageLoader;
 
+import java.io.File;
+
 /**
  * Created by Salman on 27-10-2017.
  */
 
-public class FeedActivityVideo extends Activity {
+public class FeedActivityVideo extends Activity
+{
     String fulladdress,wowtagvideo, profilepicture, timestamp_str, description, eventname, name_str,eventdate,status,coverimage,highligh1,highligh2;
     VideoView videoView;
     public com.wowhubb.app.ImageLoader imageLoader1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_video);
+
+        View v1 = getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(FeedActivityVideo.this, v1);
+
         videoView = findViewById(R.id.video_view);
         imageLoader1 = new ImageLoader(getApplicationContext());
+
         TextView name = (TextView) findViewById(R.id.hoster_name);
         TextView eventname_tv = (TextView) findViewById(R.id.eventname_tv);
         TextView timestamp = (TextView) findViewById(R.id.timestamp);
@@ -36,10 +47,10 @@ public class FeedActivityVideo extends Activity {
         TextView datetv = (TextView) findViewById(R.id.datetv);
         TextView addresstv = (TextView) findViewById(R.id.address_tv);
 
-        CircularNetworkImageView profilePic = (CircularNetworkImageView) findViewById(R.id.profilePic);
+        ImageView profilePic = (ImageView) findViewById(R.id.imageview_profile);
         Bundle extras = getIntent().getExtras();
-        View v1 = getWindow().getDecorView().getRootView();
-        FontsOverride.overrideFonts(FeedActivityVideo.this, v1);
+
+
         if (extras != null)
         {
             wowtagvideo = extras.getString("wowtagvideo");
@@ -54,8 +65,6 @@ public class FeedActivityVideo extends Activity {
             eventdate = extras.getString("eventdate");
             coverimage = extras.getString("coverpage");
             fulladdress = extras.getString("fulladdress");
-
-            Log.e("tag","324434343"+status);
 
 
             if(status.equals("wowtag"))
@@ -84,7 +93,6 @@ public class FeedActivityVideo extends Activity {
             }
 
 
-           // imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/personal/" +profilepicture,profilePic);
             name.setText(name_str);
             eventname_tv.setText("- " + eventname);
             timestamp.setText(timestamp_str);
@@ -93,14 +101,17 @@ public class FeedActivityVideo extends Activity {
             addresstv.setText(fulladdress);
 
         }
-        if (profilepicture != null) {
-            imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/personal/" +profilepicture,profilePic);
 
-
-        } else {
-            profilePic.setImageResource(R.drawable.profile_img);
+        Log.e("tag","PPPPPPPPP------------>"+profilepicture);
+        if (profilepicture != null)
+        {
+            //imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/personal/" +profilepicture,profilePic);
+            Glide.with(FeedActivityVideo.this).load("http://104.197.80.225:3010/wow/media/personal/" +profilepicture).into(profilePic);
         }
-
+        else
+        {
+           // profilePic.setImageResource(R.drawable.profile_img);
+        }
 
     }
 }

@@ -100,7 +100,7 @@
     <string name="img_profile">Profile</string>
     <string name="img_coverprofile">Cover Picture</string>
     <string-array name="stepLabels">
-        <item>Event Type</item>
+        <item>Event Details</item>
         <item>!Wowtag</item>
         <item>Event Venue</item>
         <item>Program Schedule</item>

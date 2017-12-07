@@ -272,18 +272,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_17sdp"
-            android:background="@color/colorPrimary">
+            >
 
             <TextView
                 android:id="@+id/vieweventfeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@drawable/tab_textfeed_color"
                 android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingBottom="@dimen/_5sdp"
+                android:background="@drawable/tab_bgfeed_color"
+                android:gravity="center"
                 android:text="@string/vieweventfeed" />
         </LinearLayout>
 

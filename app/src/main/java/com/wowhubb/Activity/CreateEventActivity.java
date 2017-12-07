@@ -269,13 +269,10 @@ public class CreateEventActivity extends AppCompatActivity {
         if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
             Log.e("tag", "Permission is granted");
             return true;
-
-
         } else {
             Log.e("tag", "Permission is revoked");
             ActivityCompat.requestPermissions(CreateEventActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return false;
-
         }
     }
 

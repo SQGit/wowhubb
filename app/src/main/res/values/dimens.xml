@@ -11,6 +11,7 @@
     <dimen name="feed_item_padding_top_bottom">10dp</dimen>
     <dimen name="feed_item_padding_left_right">10dp</dimen>
     <dimen name="feed_item_profile_pic">60dp</dimen>
+    <dimen name="feed_item_profile_pic1">70dp</dimen>
     <dimen name="feed_item_profile_info_padd">10dp</dimen>
     <dimen name="feed_item_profile_name">@dimen/_13sdp</dimen>
     <dimen name="feed_item_timestamp">@dimen/_12sdp</dimen>

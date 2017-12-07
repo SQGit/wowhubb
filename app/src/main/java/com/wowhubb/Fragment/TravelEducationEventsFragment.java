@@ -61,12 +61,12 @@ public class TravelEducationEventsFragment extends Fragment {
         holiday_iv = (ImageView) view.findViewById(R.id.holiday_iv);
         political_iv = (ImageView) view.findViewById(R.id.political_iv);
 
+
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("tag", "Interest------------>" + InterestActivity.list.size());
-               /* startActivity(new Intent(getActivity(), ProfileActivity.class));
-                getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);*/
                 new updateInterestinfo().execute();
             }
         });
@@ -168,11 +168,11 @@ public class TravelEducationEventsFragment extends Fragment {
         return view;
     }
 
+    //--------------------------------ASYN TASK FOR UPDATE INTEREST-------------------------------//
 
     public class updateInterestinfo extends AsyncTask<String, Void, String> {
 
         public updateInterestinfo() {
-
         }
 
         @Override
@@ -185,25 +185,8 @@ public class TravelEducationEventsFragment extends Fragment {
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-             /*   "{
-                ""interests"": [
-                ""birthday"",""social"",""politics""
-        ]
-            }"*/
-               /* jsonObject.accumulate("highlightdescription", EventTypeFragment.desc_et.getText().toString());
-                jsonObject.accumulate("eventtime", EventTypeFragment.eventdate_et.getText().toString());
-                jsonObject.accumulate("eventname", "!" + WowtagFragment.eventname_et.getText().toString());
-
-                jsonObject.accumulate("eventvenuename", EventVenueFragment.venuename.getText().toString());
-                jsonObject.accumulate("eventvenueaddress", EventVenueFragment.address.getText().toString());
-                jsonObject.accumulate("eventvenuecity", EventVenueFragment.city.getText().toString());
-                jsonObject.accumulate("eventvenuestate", EventVenueFragment.state.getText().toString());
-                jsonObject.accumulate("eventvenuezipcode", EventVenueFragment.zipcode.getText().toString());*/
-
                 JSONArray jsArray = new JSONArray(InterestActivity.list);
-                //JSONArray jo=new JSONArray();
                 jsonObject.put("interests", jsArray);
-
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/getinterests", json, token);
             } catch (Exception e) {
@@ -216,8 +199,8 @@ public class TravelEducationEventsFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "tag" + s);
-            // av_loader.setVisibility(View.GONE);
-            if (s != null) {
+            if (s != null)
+            {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
@@ -228,7 +211,6 @@ public class TravelEducationEventsFragment extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("tag", "nt" + e.toString());
                 }
             } else {
 

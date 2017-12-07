@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,12 +50,15 @@ import java.io.IOException;
 
 public class GiftRegistryFragment extends Fragment {
     Dialog dialog, loader_dialog;
-    CheckBox sharenw_cb,specific_group;
+    CheckBox sharenw_cb, specific_group,eventlink_cb;
     TextInputLayout til_ticketurl, til_otherurl, til_donation;
     Typeface lato;
     String profilepath, video1, video2, coverpage, token, eventId, highlights1, highlights2, highlight1_status, highlight2_status, highlightsvideo1, highlightsvideo2;
     AVLoadingIndicatorView av_loader;
+    String runtimeFrom, runtimeTo;
+    EditText eventregistryurl_et, donationurl_et, othersurl_et;
     private TextView callToAction, subaction;
+    LinearLayout ll;
 
     public static GiftRegistryFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
@@ -71,7 +76,12 @@ public class GiftRegistryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_giftregistry, container, false);
         FontsOverride.overrideFonts(getActivity(), view);
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        video1 = sharedPreferences.getString("video1", "");
         token = sharedPreferences.getString("token", "");
+        runtimeFrom = sharedPreferences.getString("runtimeFrom", "");
+        runtimeTo = sharedPreferences.getString("runtimeTo", "");
+        Log.e("tag","VIDEOOOOOOOOOO11111111111111------->"+video1);
+        Log.e("tag","5552------->"+runtimeTo);
         CreateEventActivity.skiptv.setVisibility(View.INVISIBLE);
 
         av_loader = (AVLoadingIndicatorView) view.findViewById(R.id.avi);
@@ -80,6 +90,12 @@ public class GiftRegistryFragment extends Fragment {
         til_donation = (TextInputLayout) view.findViewById(R.id.til_donation);
         til_otherurl = (TextInputLayout) view.findViewById(R.id.til_otherurl);
         callToAction = (TextView) view.findViewById(R.id.tv_calltoaction);
+
+        eventregistryurl_et = view.findViewById(R.id.eventreg_et);
+        donationurl_et = view.findViewById(R.id.donationurl_et);
+        othersurl_et = view.findViewById(R.id.otherurl_et);
+        ll=view.findViewById(R.id.ll);
+
         callToAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,9 +114,11 @@ public class GiftRegistryFragment extends Fragment {
 
             }
         });
+
         til_donation.setTypeface(lato);
         til_otherurl.setTypeface(lato);
         til_ticketurl.setTypeface(lato);
+
         loader_dialog = new Dialog(getActivity());
         loader_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loader_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -108,6 +126,7 @@ public class GiftRegistryFragment extends Fragment {
         loader_dialog.setContentView(R.layout.test_loader);
         sharenw_cb = view.findViewById(R.id.share_cb);
         specific_group = view.findViewById(R.id.specific_group_cb);
+        eventlink_cb = view.findViewById(R.id.eventlink_cb);
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -142,7 +161,6 @@ public class GiftRegistryFragment extends Fragment {
         });
 
 
-
         specific_group.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -154,7 +172,26 @@ public class GiftRegistryFragment extends Fragment {
                 }
             }
         });
-
+        eventlink_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (isChecked)
+                {
+                    eventregistryurl_et.setVisibility(View.GONE);
+                    donationurl_et.setVisibility(View.GONE);
+                    othersurl_et.setVisibility(View.GONE);
+                    ll.setVisibility(View.GONE);
+                }
+                else
+                {
+                    eventregistryurl_et.setVisibility(View.VISIBLE);
+                    donationurl_et.setVisibility(View.VISIBLE);
+                    othersurl_et.setVisibility(View.VISIBLE);
+                    ll.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         return view;
     }
 
@@ -292,16 +329,21 @@ public class GiftRegistryFragment extends Fragment {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("eventid", eventId);
-                jsonObject.accumulate("highlightdescription", EventTypeFragment.desc_et.getText().toString());
-                jsonObject.accumulate("eventtime", EventTypeFragment.eventdate_et.getText().toString());
-                jsonObject.accumulate("eventname", "!"+WowtagFragment.eventname_et.getText().toString());
+                jsonObject.accumulate("eventtopic", EventTypeFragment.eventtopic_et.getText().toString());
+                jsonObject.accumulate("eventdescription", EventTypeFragment.desc_et.getText().toString());
+                jsonObject.accumulate("eventdate", EventTypeFragment.eventdate_et.getText().toString());
+                jsonObject.accumulate("eventname", "!" + WowtagFragment.eventname_et.getText().toString());
 
                 jsonObject.accumulate("eventvenuename", EventVenueFragment.venuename.getText().toString());
                 jsonObject.accumulate("eventvenueaddress", EventVenueFragment.address.getText().toString());
                 jsonObject.accumulate("eventvenuecity", EventVenueFragment.city.getText().toString());
                 jsonObject.accumulate("eventvenuestate", EventVenueFragment.state.getText().toString());
                 jsonObject.accumulate("eventvenuezipcode", EventVenueFragment.zipcode.getText().toString());
-
+                jsonObject.accumulate("runtimefrom", runtimeFrom);
+                jsonObject.accumulate("runtimeto", runtimeTo);
+                jsonObject.accumulate("giftregistryurl", eventregistryurl_et.getText().toString());
+                jsonObject.accumulate("donationsurl", donationurl_et.getText().toString());
+                jsonObject.accumulate("otherurl", othersurl_et.getText().toString());
 
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/info", json, token);

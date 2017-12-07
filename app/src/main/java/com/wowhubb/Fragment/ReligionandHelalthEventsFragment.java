@@ -27,7 +27,6 @@ import com.wowhubb.R;
 public class ReligionandHelalthEventsFragment extends Fragment {
     CheckBox cse_cb, hobbies_cb, parties_cb, charity_cb, family_cb, witness_cb;
     ImageView cse_iv, hobbies_iv, parties_ev, charity_iv, femily_iv, witness_iv;
-
     String religion,charity,family,food,wellness,sports;
 
     @Nullable
@@ -36,9 +35,10 @@ public class ReligionandHelalthEventsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_relegionandhealthevent,
                 container, false);
+
+
         FontsOverride.overrideFonts(getActivity(), view);
 
-        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
         SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final SharedPreferences.Editor edit = sharedPrefces.edit();
 
@@ -56,6 +56,8 @@ public class ReligionandHelalthEventsFragment extends Fragment {
         charity_iv = (ImageView) view.findViewById(R.id.charity_iv);
         femily_iv = (ImageView) view.findViewById(R.id.family_iv);
         witness_iv = (ImageView) view.findViewById(R.id.witness_iv);
+        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
+
 
         religion = sharedPrefces.getString("religion", "");
         charity = sharedPrefces.getString("charity", "");
@@ -116,12 +118,7 @@ public class ReligionandHelalthEventsFragment extends Fragment {
 
         }
 
-
-
-
-
-
-
+    //------------------------TravelEducationEventsFragment-------------------------------//
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

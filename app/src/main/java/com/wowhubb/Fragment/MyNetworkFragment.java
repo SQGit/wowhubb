@@ -35,10 +35,17 @@ public class MyNetworkFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_mynetwork,
                 container, false);
+
         FontsOverride.overrideFonts(getActivity(), view);
-       // EventFeedDashboard.titletv.setText("Your Events will Show here");
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 view.findViewById(R.id.navigation);
+
+        Fragment selectedFragment = MyNetworksTabFragment.newInstance();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, selectedFragment);
+        transaction.commit();
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -71,13 +78,7 @@ public class MyNetworkFragment extends Fragment {
                     }
                 });
 
-        //Manually displaying the first fragment - one time only
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, MyNetworksTabFragment.newInstance());
-        transaction.commit();
 
-        //Used to select an item programmatically
-        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
 
         return view;
     }

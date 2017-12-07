@@ -8,13 +8,16 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:smoothScrollbar="true">
+            android:layout_height="wrap_content"
+            android:scrollingCache="false"
+            android:animationCache="false"
+            android:fadeScrollbars="true"
+            android:smoothScrollbar="false">
 
         </ListView>
         <com.wang.avi.AVLoadingIndicatorView
@@ -22,42 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:indicatorColor="#e91e63"
             app:indicatorName="BallSpinFadeLoaderIndicator" />
-        <com.sa90.materialarcmenu.ArcMenu
-            android:id="@+id/arcMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            app:menu_open="arc_left"
-            app:menu_scr="@android:drawable/ic_dialog_dialer">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/create_icon" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/comment_icon" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/messaging_icon" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/video_icon_arc" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/image_icon" />
-        </com.sa90.materialarcmenu.ArcMenu>
     </FrameLayout>
 </LinearLayout>

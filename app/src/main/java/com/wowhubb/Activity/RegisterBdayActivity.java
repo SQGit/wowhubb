@@ -50,11 +50,13 @@ public class RegisterBdayActivity extends Activity {
     TextView head_tv, bday_tv;
     ImageView bday_iv;
     ImageView submit, backiv;
-    String str_wowtag, str_firstname, str_lastname, str_phone, str_email, str_password, str_gender, str_birthday,str_country;
+    String str_wowtag, str_firstname, str_lastname, str_phone, str_email, str_password, str_gender, str_birthday, str_country;
     AVLoadingIndicatorView av_loader;
     LinearLayout bday_lv;
     EditText email_et, mobileno_et;
     TextInputLayout email_til, mobile_til;
+    Snackbar snackbar;
+    TextView tv_snack;
     private int year, month, day;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener myDateListener = new
@@ -66,19 +68,20 @@ public class RegisterBdayActivity extends Activity {
                     showDate(arg1, arg2 + 1, arg3);
                 }
             };
-    Snackbar snackbar;
-    TextView tv_snack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_bday);
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
+
+        //------------------------------FONT STYLE------------------------------------------------//
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(RegisterBdayActivity.this, v1);
-        bday_lv = findViewById(R.id.bdaylv);
         latoheading = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/latoheading.ttf");
         lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+
+        bday_lv = findViewById(R.id.bdaylv);
         head_tv = (TextView) findViewById(R.id.head_tv);
         bday_tv = (TextView) findViewById(R.id.bday_tv);
         bday_iv = (ImageView) findViewById(R.id.bday_iv);
@@ -114,7 +117,9 @@ public class RegisterBdayActivity extends Activity {
         str_wowtag = sharedPreferences.getString("wowtagid", "");
         //str_country= sharedPreferences.getString("str_country", "");
         Log.e("tag", "assss------>" + str_country);
-        str_country="+1";
+
+
+        str_country = "+1";
         if (!str_email.equals("")) {
             email_et.setText(str_email);
             email_et.setEnabled(false);
@@ -125,13 +130,13 @@ public class RegisterBdayActivity extends Activity {
             mobileno_et.requestFocus();
         }
         if (!str_phone.equals("")) {
-            mobileno_et.setText(str_country+str_phone);
+            mobileno_et.setText(str_country + str_phone);
             mobileno_et.setEnabled(false);
         }
 
         final MaterialBetterSpinner materialDesignSpinner = (MaterialBetterSpinner) findViewById(R.id.gender_spn);
         materialDesignSpinner.setTypeface(lato);
-        //materialDesignSpinner.setHint("jghbkcvjkgj");
+
         final CustomAdapter arrayAdapter = new CustomAdapter(RegisterBdayActivity.this, android.R.layout.simple_dropdown_item_1line, SPINNERLIST) {
             @Override
             public boolean isEnabled(int position) {
@@ -168,7 +173,6 @@ public class RegisterBdayActivity extends Activity {
                 tv.setPadding(10, 20, 0, 20);
                 tv.setTypeface(lato);
                 if (position == 0) {
-                    materialDesignSpinner.setHint("ggggggggg");
                     tv.setTextColor(Color.BLACK);
                 } else {
                     tv.setTextColor(Color.BLACK);
@@ -179,14 +183,10 @@ public class RegisterBdayActivity extends Activity {
         materialDesignSpinner.setAdapter(arrayAdapter);
         materialDesignSpinner.setTypeface(lato);
 
-        materialDesignSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        materialDesignSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e("tag","--------SPNNNNNN---------");
-                materialDesignSpinner.setHint("ggggggggg");
                 materialDesignSpinner.setHintTextColor(getResources().getColor(R.color.colorPrimaryDark));
-
                 FontsOverride.overrideFonts(RegisterBdayActivity.this, view);
                 str_gender = adapterView.getItemAtPosition(i).toString();
             }
@@ -217,7 +217,6 @@ public class RegisterBdayActivity extends Activity {
                         if (!mobileno_et.getText().toString().trim().equalsIgnoreCase("")) {
                             mobile_til.setError(null);
                             if (!materialDesignSpinner.getText().toString().equals("")) {
-                                Log.e("tag", "11111");
                                 materialDesignSpinner.setError(null);
                                 new register_alldetails().execute();
                             } else {
@@ -244,13 +243,10 @@ public class RegisterBdayActivity extends Activity {
     protected Dialog onCreateDialog(int id) {
         // TODO Auto-generated method stub
         if (id == 999) {
-
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
         }
@@ -294,6 +290,8 @@ public class RegisterBdayActivity extends Activity {
         }
     }
 
+    //------------------------------ASYNC TASK FOR REGISTER---------------------------------------//
+
     public class register_alldetails extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -326,14 +324,12 @@ public class RegisterBdayActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tag", "tag" + s);
             av_loader.setVisibility(View.GONE);
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
-                        //   {String status = jo.getString("status");
                         String message = jo.getString("message");
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(RegisterBdayActivity.this, LoginActivity.class));
@@ -346,7 +342,7 @@ public class RegisterBdayActivity extends Activity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("tag", "nt" + e.toString());
+
                 }
             } else {
 
@@ -355,4 +351,7 @@ public class RegisterBdayActivity extends Activity {
         }
 
     }
+
+
+
 }

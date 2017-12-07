@@ -28,8 +28,9 @@ public class WowFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_wowtag,
                 container, false);
-       // EventFeedDashboard.titletv.setText("Lets Connect with Friends");
+
         FontsOverride.overrideFonts(getActivity(), view);
+
         return view;
     }
 

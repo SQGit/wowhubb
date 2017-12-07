@@ -30,6 +30,7 @@ public class Config {
     public static final String WEB_URL_UPDATE_PERSONAL="http://104.197.80.225:3010/wow/user/updatepersonalprofile";
     public static final String WEB_URL_GETPERSONAL="http://104.197.80.225:3010/wow/user/getpersonalprofile";
     public static final String WEB_URL_GETCHECKTAG="http://104.197.80.225:3010/wow/checktagid";
+    public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
     public static boolean isStringNullOrWhiteSpace(String value) {
         if (value == null) {
             return true;

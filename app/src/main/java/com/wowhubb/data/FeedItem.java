@@ -1,24 +1,126 @@
 package com.wowhubb.data;
 
 public class FeedItem {
+    String eventid, pcoordinator, peventname, pftime, pttime, peventno, designation, pday, friendid, friendname, friendwowtagid, friendpic, friiendsstatus, receivedstatus;
     private int id;
     private String fulladdress, name, status, image, profilePic, timeStamp, url, wowtagvideo, highlight1, highlight2, eventname, description, eventdate, coverimage;
-
     private String highlightvideo2, highlightvideo1;
+    private String eventtopic, runtimefrom, runtimeto, giftregistryurl, donationurl, othersurl;
+
 
     public FeedItem() {
     }
 
-    public FeedItem(int id, String name, String image, String status,
-                    String profilePic, String timeStamp, String url) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.status = status;
-        this.profilePic = profilePic;
-        this.timeStamp = timeStamp;
-        this.url = url;
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getFriiendsstatus() {
+        return friiendsstatus;
+    }
+
+    public void setFriiendsstatus(String friiendsstatus) {
+        this.friiendsstatus = friiendsstatus;
+    }
+
+    public String getReceivedstatus() {
+        return receivedstatus;
+    }
+
+    public void setReceivedstatus(String receivedstatus) {
+        this.receivedstatus = receivedstatus;
+    }
+
+    public String getFriendpic() {
+        return friendpic;
+    }
+
+    public void setFriendpic(String friendpic) {
+        this.friendpic = friendpic;
+    }
+
+    public String getFriendid() {
+        return friendid;
+    }
+
+    public void setFriendid(String friendid) {
+        this.friendid = friendid;
+    }
+
+    public String getFriendname() {
+        return friendname;
+    }
+
+    public void setFriendname(String friendname) {
+        this.friendname = friendname;
+    }
+
+    public String getFriendwowtagid() {
+        return friendwowtagid;
+    }
+
+    public void setFriendwowtagid(String friendwowtagid) {
+        this.friendwowtagid = friendwowtagid;
+    }
+
+    public String getPcoordinator() {
+        return pcoordinator;
+    }
+
+    public void setPcoordinator(String pcoordinator) {
+        this.pcoordinator = pcoordinator;
+    }
+
+    public String getPeventname() {
+        return peventname;
+    }
+
+    public void setPeventname(String peventname) {
+        this.peventname = peventname;
+    }
+
+    public String getPftime() {
+        return pftime;
+    }
+
+    public void setPftime(String pftime) {
+        this.pftime = pftime;
+    }
+
+    public String getPttime() {
+        return pttime;
+    }
+
+    public void setPttime(String pttime) {
+        this.pttime = pttime;
+    }
+
+    public String getPeventno() {
+        return peventno;
+    }
+
+    public void setPeventno(String peventno) {
+        this.peventno = peventno;
+    }
+
+    public String getPday() {
+        return pday;
+    }
+
+    public void setPday(String pday) {
+        this.pday = pday;
+    }
+
+    public String getEventid() {
+        return eventid;
+    }
+
+    public void setEventid(String eventid) {
+        this.eventid = eventid;
     }
 
     public String getFulladdress() {
@@ -158,5 +260,54 @@ public class FeedItem {
 
     public void setHighlightvideo2(String highlightvideo2) {
         this.highlightvideo2 = highlightvideo2;
+    }
+
+    public String getRuntimefrom() {
+        return runtimefrom;
+    }
+
+    public void setRuntimefrom(String runtimefrom) {
+        this.runtimefrom = runtimefrom;
+    }
+
+    public String getRuntimeto() {
+        return runtimeto;
+    }
+
+    public void setRuntimeto(String runtimeto) {
+        this.runtimeto = runtimeto;
+    }
+
+    public String getEventtopic() {
+        return eventtopic;
+    }
+
+    public void setEventtopic(String eventtopic) {
+        this.eventtopic = eventtopic;
+    }
+
+
+    public String getDonationurl() {
+        return donationurl;
+    }
+
+    public void setDonationurl(String donationurl) {
+        this.donationurl = donationurl;
+    }
+
+    public String getGiftregistryurl() {
+        return giftregistryurl;
+    }
+
+    public void setGiftregistryurl(String giftregistryurl) {
+        this.giftregistryurl = giftregistryurl;
+    }
+
+    public String getOthersurl() {
+        return othersurl;
+    }
+
+    public void setOthersurl(String othersurl) {
+        this.othersurl = othersurl;
     }
 }

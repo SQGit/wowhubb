@@ -59,13 +59,11 @@ public class ProfileActivity extends Activity {
     public final static int REQUEST_PROFILE = 1;
     public final static int REQUEST_COVERPAGE = 2;
     private static final int INTENT_REQUEST_GET_VIDEO1 = 12;
-    private static final int INTENT_REQUEST_GET_VIDEO2 = 11;
     public com.gun0912.tedpicker.Config img_config;
     TextView personal_tv, skiptv, edittv, wowtag2, browse_tv, save_tv;
     ImageView editiv, backiv, coverpageiv, coverpageeditiv, video0_iv, video1plus;
-    ArrayList<String> selectedPhotos = new ArrayList<>();
     ArrayList<Uri> image_uris;
-    String str_profile_img, str_profile_cover, token, name, lname, str_wowtag, profilepath;
+    String str_profile_img, str_profile_cover, token, name, lname, str_wowtag, profilepath,personalimage,personalcover;
     ImageView profile_iv;
     FrameLayout framevideo1;
     TextView username, lastname, wowtag, professionaltv;
@@ -78,6 +76,7 @@ public class ProfileActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileActivity.this);
         editor = sharedPreferences.edit();
         token = sharedPreferences.getString("token", "");
@@ -85,10 +84,12 @@ public class ProfileActivity extends Activity {
         lname = sharedPreferences.getString("str_lname", "");
         str_wowtag = sharedPreferences.getString("wowtagid", "");
         profilepath = sharedPreferences.getString("profilepath", "");
+
         img_config = new com.gun0912.tedpicker.Config();
         img_config.setCameraHeight(R.dimen.app_camera_height);
         img_config.setSelectedBottomHeight(R.dimen.bottom_height);
         img_config.setCameraBtnBackground(R.drawable.round_rd);
+
         personal_tv = findViewById(R.id.personal_tv);
         professionaltv = findViewById(R.id.professionaltv);
         editiv = (ImageView) findViewById(R.id.editiv);
@@ -109,8 +110,10 @@ public class ProfileActivity extends Activity {
         video1plus = findViewById(R.id.speakerplus);
         interest_lvl = findViewById(R.id.interest_lv);
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
+
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(ProfileActivity.this, v1);
+
         new getpersonalprofile().execute();
 
         if (name != null) {
@@ -119,7 +122,6 @@ public class ProfileActivity extends Activity {
 
         if (lname != null) {
             lastname.setText(lname);
-
         }
 
         if (str_wowtag != null) {
@@ -134,27 +136,25 @@ public class ProfileActivity extends Activity {
 
 
         }
-        if (!profilepath.equals("")) {
-            Log.e("tag", "s--------->" + profilepath);
-
+       /* if (!profilepath.equals(""))
+        {
             Glide.with(ProfileActivity.this).load(new File(profilepath)).into(profile_iv);
-        }
+        }*/
 
         personal_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ProfileActivity.this, ProfilePersonalActivity.class));
-
             }
         });
 
         professionaltv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  startActivity(new Intent(ProfileActivity.this, ProfilePersonalActivity.class));
-                //overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+
             }
         });
+
         save_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,12 +163,14 @@ public class ProfileActivity extends Activity {
 
             }
         });
+
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ProfileActivity.this.finish();
             }
         });
+
         skiptv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +179,7 @@ public class ProfileActivity extends Activity {
                 finish();
             }
         });
+
         interest_lvl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,6 +188,7 @@ public class ProfileActivity extends Activity {
                 finish();
             }
         });
+
         edittv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,18 +217,7 @@ public class ProfileActivity extends Activity {
             }
         });
 
-      /*  framevideo1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkPermission()) {
-                    Intent intent = new Intent();
-                    intent.setType("video*//*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Video"), INTENT_REQUEST_GET_VIDEO1);
-                }
 
-            }
-        });*/
 
         browse_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,14 +243,10 @@ public class ProfileActivity extends Activity {
                 image_uris = data.getParcelableArrayListExtra(com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS);
                 Log.e("tag", "12345----------->>>>>>" + image_uris.get(0).toString());
             } catch (IndexOutOfBoundsException e) {
-                Log.e("tag", "xgdfdg" + e.toString());
             }
-            // selectedPhotos.clear();
             if (image_uris != null) {
                 str_profile_img = image_uris.get(0).toString();
                 Glide.with(ProfileActivity.this).load(new File(str_profile_img)).into(profile_iv);
-
-
                 new profileupload_task().execute();
             }
         } else if (requestCode == REQUEST_COVERPAGE && resultCode == Activity.RESULT_OK) {
@@ -265,11 +254,8 @@ public class ProfileActivity extends Activity {
                 image_uris = data.getParcelableArrayListExtra(com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS);
                 Log.e("tag", "12345" + image_uris.get(0).toString());
             } catch (IndexOutOfBoundsException e) {
-                Log.e("tag", "xgdfdg" + e.toString());
             }
 
-
-            // selectedPhotos.clear();
             if (image_uris != null) {
                 str_profile_cover = image_uris.get(0).toString();
                 Glide.with(ProfileActivity.this).load(new File(str_profile_cover)).into(coverpageiv);
@@ -280,7 +266,6 @@ public class ProfileActivity extends Activity {
             try {
                 Uri selectedMediaUri = data.getData();
                 Log.d("tag", "567231546" + selectedMediaUri);
-                //  Uri selectedVideo = data.getData();
                 String selectedVideoFilePath1 = GetFilePathFromDevice.getPath(ProfileActivity.this, selectedMediaUri);
 
                 video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
@@ -295,19 +280,15 @@ public class ProfileActivity extends Activity {
 
     }
 
+    //--------------------------------------checkPermission---------------------------------------//
+
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int result2 = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.RECORD_AUDIO);
-
         if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
-            Log.e("tag", "Permission is granted");
             return true;
-
-
         } else {
-            Log.e("tag", "Permission is revoked");
             ActivityCompat.requestPermissions(ProfileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return false;
 
@@ -319,11 +300,11 @@ public class ProfileActivity extends Activity {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
-
         }
         return super.dispatchTouchEvent(ev);
     }
+
+    //--------------------------------ASYN TASK FOR PROFILE----------------------------------------//
 
     public class profileupload_task extends AsyncTask<String, Void, String> {
         @Override
@@ -344,14 +325,12 @@ public class ProfileActivity extends Activity {
                 HttpEntity r_entity = null;
 
                 if (str_profile_img != null) {
-                    Log.e("tag", "strt111" + str_profile_img);
                     MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                     entity.addPart("personalimage", new FileBody(new File(str_profile_img), "image/jpeg"));
                     httppost.setEntity(entity);
                 }
 
                 try {
-
                     try {
                         response = httpclient.execute(httppost);
                     } catch (Exception e) {
@@ -368,7 +347,6 @@ public class ProfileActivity extends Activity {
                     Log.e("tag", response.getStatusLine().toString());
                     if (statusCode == 200) {
                         responseString = EntityUtils.toString(r_entity);
-                        Log.e("tag", "rssss" + responseString);
                         JSONObject jo = new JSONObject(responseString);
                         String success = jo.getString("success");
                         editor.putString("profilepath", str_profile_img);
@@ -400,11 +378,13 @@ public class ProfileActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             av_loader.setVisibility(View.GONE);
-            //Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
 
         }
 
     }
+
+
+    //-------------------------------ASYN TASK FOR PROFILE COVER PIC-------------------------------//
 
     public class profilecoverupload_task extends AsyncTask<String, Void, String> {
         @Override
@@ -486,17 +466,16 @@ public class ProfileActivity extends Activity {
 
     }
 
+    //------------------------------ASYN TASK FOR PROFILE GET PROFILE------------------------------//
+
     public class getpersonalprofile extends AsyncTask<String, Void, String> {
         String phone_str, str_pwd;
 
-        public getpersonalprofile() {
-        }
+        public getpersonalprofile() {}
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            // av_loader.setVisibility(View.VISIBLE);
-        }
+            super.onPreExecute();}
 
         @Override
         protected String doInBackground(String... strings) {
@@ -516,30 +495,31 @@ public class ProfileActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "getprofile------->" + s);
-            // av_loader.setVisibility(View.GONE);
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
                         JSONObject message = jo.getJSONObject("message");
-                        // String abotme = message.getString("");
+                        if(message.has("personalimage")){
+                             personalimage = message.getString("personalimage");
+                            if (!personalimage.equals("")) {
+                                Log.e("tag", "getprofileelseee------->" );
+                                Glide.with(ProfileActivity.this).load("http://104.197.80.225:3010/wow/media/personal/" + personalimage).into(profile_iv);
+                            }
+                        }
+                        if(message.has("personalcover")){
+                             personalcover = message.getString("personalcover");
+                            Log.e("tag", "getprofileelseee------->"+personalimage );
+                            if (!personalcover.equals("")) {
+                                Glide.with(ProfileActivity.this).load("http://104.197.80.225:3010/wow/media/personal/" + personalcover).into(coverpageiv);
 
-                        String personalimage = message.getString("personalimage");
-                        String personalcover = message.getString("personalcover");
-                        //  Log.e("tag", "getprofile------->" + personalimage);
-
-                        if (personalimage.equals("")) {
-
-                        } else {
-                            Glide.with(ProfileActivity.this).load(new File("http://104.197.80.225:3010/wow/media/personal/" + personalimage)).into(profile_iv);
+                            }
                         }
 
-                        if (personalcover.equals("")) {
 
-                        } else {
-                            Glide.with(ProfileActivity.this).load(new File("http://104.197.80.225:3010/wow/media/personal/" + personalcover)).into(coverpageiv);
-                        }
+
+
 
 
                     }
@@ -555,4 +535,5 @@ public class ProfileActivity extends Activity {
         }
 
     }
+
 }

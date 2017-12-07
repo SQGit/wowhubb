@@ -32,15 +32,19 @@ public class InterestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_interest);
 
-        list = new ArrayList<String>();
+        //-----------------------------------------SNACKBAR----------------------------------------//
+
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(InterestActivity.this, v1);
         latoheading = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/latoheading.ttf");
         lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+
         head_tv = (TextView) findViewById(R.id.head_tv);
         backiv=findViewById(R.id.backiv);
         skip_tv = findViewById(R.id.skiptv);
         head_tv.setTypeface(latoheading);
+        list = new ArrayList<String>();
+
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -50,7 +54,6 @@ public class InterestActivity extends Activity {
             }
         });
 
-
         skip_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,9 +62,11 @@ public class InterestActivity extends Activity {
                 finish();
             }
         });
+
+        //-----------------------------BusinessEventsFragment--------------------------------------//
+
         BusinessEventsFragment bef = new BusinessEventsFragment();
         FragmentManager fm = getFragmentManager();
-
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_container, bef);
         ft.commit();

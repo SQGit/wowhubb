@@ -50,11 +50,16 @@ public class LoginActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+
+        av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
+
+        //------------------------------FONT STYLE------------------------------------------------//
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(LoginActivity.this, v1);
-        av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
         latoheading = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/latoheading.ttf");
         lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+
+
         head_tv = (TextView) findViewById(R.id.head_tv);
         forgotpwd_tv = (TextView) findViewById(R.id.forgot_pwd_tv);
         backiv = (ImageView) findViewById(R.id.backiv);
@@ -66,13 +71,16 @@ public class LoginActivity extends Activity {
         head_tv.setTypeface(latoheading);
         phone_til.setTypeface(lato);
         pwd_til.setTypeface(lato);
+
+        //-----------------------------------------SNACKBAR----------------------------------------//
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
         snackbar.setActionTextColor(Color.RED);
         View sbView = snackbar.getView();
         tv_snack = (android.widget.TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         tv_snack.setTextColor(Color.WHITE);
-       // tv_snack.setBackgroundColor(getColor(R.color.colorAccent));
         tv_snack.setTypeface(lato);
+
+
         forgotpwd_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +95,7 @@ public class LoginActivity extends Activity {
                 finish();
             }
         });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +122,6 @@ public class LoginActivity extends Activity {
                         } else {
                             snackbar.show();
                         }
-
 
                     } else {
                         phone_til.setError("Invalid Credential");
@@ -147,7 +155,6 @@ public class LoginActivity extends Activity {
         public loginphone_customer(String phone_str, String pwd) {
             this.phone_str = phone_str;
             this.pwd_str = pwd;
-
         }
 
         @Override
@@ -164,7 +171,6 @@ public class LoginActivity extends Activity {
                 jsonObject.accumulate("phone", "+1" + phone_str);
                 jsonObject.accumulate("password", str_pwd);
                 json = jsonObject.toString();
-
                 return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_LOGIN, json);
             } catch (Exception e) {
                 Log.e("InputStream", e.getLocalizedMessage());
@@ -175,7 +181,6 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tag", "tag" + s);
             av_loader.setVisibility(View.GONE);
             if (s != null) {
                 try {
@@ -183,9 +188,7 @@ public class LoginActivity extends Activity {
                     String status = jo.getString("success");
 
                     if (status.equals("true")) {
-
                         String token = jo.getString("token");
-
                         JSONObject user_details = jo.getJSONObject("user");
                         String name = user_details.getString("firstname");
                         String lastname = user_details.getString("lastname");
@@ -218,17 +221,19 @@ public class LoginActivity extends Activity {
                     } else {
                         String msg = jo.getString("message");
 
-
-                        if (msg.equals("Authentication failed. User not found")) {
+                        if (msg.equals("Authentication failed. User not found"))
+                        {
                             phone_til.setError("Invalid User");
                             phone_til.setTypeface(lato);
-
-                        } else if (msg.equals("Authentication failed. Wrong Password")) {
+                        }
+                        else if (msg.equals("Authentication failed. Wrong Password"))
+                        {
                             phone_til.setError(null);
                             pwd_til.setError("Invalid Password");
                             phone_til.setTypeface(lato);
-
-                        } else {
+                        }
+                        else
+                        {
                             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                         }
 
@@ -278,7 +283,6 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tag", "tag" + s);
             av_loader.setVisibility(View.GONE);
             if (s != null) {
                 try {
@@ -332,7 +336,7 @@ public class LoginActivity extends Activity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("tag", "nt" + e.toString());
+
                 }
             } else {
 

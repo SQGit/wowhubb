@@ -14,7 +14,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.wowhubb"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,9 @@ android {
         }
     }
     productFlavors {
+    }
+    dexOptions {
+        javaMaxHeapSize "4g" //specify the heap size for the dex process
     }
 }
 repositories {

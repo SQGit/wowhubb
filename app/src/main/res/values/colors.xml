@@ -23,5 +23,7 @@
     <color name="brown">#382F2F</color>
     <color name="redColor">#e91e63</color>
     <color name="grayback">#dbdbdb</color>
-
+    <color name="green">#8dc63d</color>
+    <color name="red">#ef4135</color>
+    <color name="yellow">#E5F231</color>
 </resources>

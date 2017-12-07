@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -35,10 +36,12 @@
 
 
             <ImageView
+                android:id="@+id/img_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/_5sdp"
                 android:paddingTop="@dimen/_5sdp"
+                android:paddingLeft="@dimen/_5sdp"
                 android:src="@drawable/right_nav_icon" />
         </LinearLayout>
     </LinearLayout>
@@ -52,6 +55,7 @@
 
 
         <EditText
+            android:id="@+id/searchpeople_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"

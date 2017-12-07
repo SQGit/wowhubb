@@ -37,11 +37,13 @@ public class SocialEventsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_interest_socialevents,
                 container, false);
-        /*FontsManager.initFormAssets(getActivity(), "fonts/lato.ttf");
-        FontsManager.changeFonts(getActivity());*/
+
         FontsOverride.overrideFonts(getActivity(), view);
+
         SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final SharedPreferences.Editor edit = sharedPrefces.edit();
+
+        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
         cse_cb = (CheckBox) view.findViewById(R.id.comedy_cb);
         hobbies_cb = (CheckBox) view.findViewById(R.id.hobbies_cb);
         parties_cb = (CheckBox) view.findViewById(R.id.parties_cb);
@@ -239,7 +241,10 @@ public class SocialEventsFragment extends Fragment {
         });
 
 
-        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
+
+
+        //------------------------ReligionandHelalthEventsFragment-------------------------------//
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

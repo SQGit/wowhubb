@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/nav_header_main" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/top"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/_7sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/eventcreate_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_5sdp"
+                android:drawablePadding="@dimen/_6sdp"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Create Event"
+                android:textColor="@drawable/tab_text_color"
+                android:background="@drawable/tab_bg_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:background="@color/grey" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/eventfeed_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/_8sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:text="Event Feeds"
+            android:textColor="@drawable/tab_text_color"
+            android:background="@drawable/tab_bg_color"
+            android:textSize="@dimen/_13sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:background="@color/grey" />
+
+        <TextView
+            android:id="@+id/eventvenue_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/_8sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:text="Event Service Providers"
+            android:textColor="@drawable/tab_text_color"
+            android:background="@drawable/tab_bg_color"
+            android:textSize="@dimen/_13sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:background="@color/grey" />
+
+        <TextView
+            android:id="@+id/logout_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/_8sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:text="Logout"
+            android:textColor="@drawable/tab_text_color"
+            android:background="@drawable/tab_bg_color"
+            android:textSize="@dimen/_13sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:background="@color/grey" />
+    </LinearLayout>
+
+
+</LinearLayout>

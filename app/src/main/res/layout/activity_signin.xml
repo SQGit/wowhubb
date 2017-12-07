@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="Phone/Email"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:inputType="textVisiblePassword"
                     android:paddingRight="@dimen/_10sdp"

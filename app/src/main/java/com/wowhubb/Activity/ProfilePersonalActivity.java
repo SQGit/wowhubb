@@ -64,7 +64,9 @@ import java.util.List;
  * Created by Salman on 05-10-2017.
  */
 
-public class ProfilePersonalActivity extends Activity {
+public class ProfilePersonalActivity extends Activity
+{
+
     public final static int REQUEST_PROFILE = 1;
     public com.gun0912.tedpicker.Config img_config;
     ImageView backiv;
@@ -77,12 +79,12 @@ public class ProfilePersonalActivity extends Activity {
     ArrayList<Uri> image_uris;
     ImageView profile_iv;
     String[] SPINNERLIST = {"Single", "Married"};
-    //   Typeface lato;
     MaterialBetterSpinner married_spn;
     SharedPreferences.Editor editor;
     private int year, month, day;
     private Calendar calendar;
-    // String token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OWQ1ZTkxOTQxYmRjNjE5ZTg0NGRkMjYiLCJmaXJzdG5hbWUiOiJzZ3MiLCJsYXN0bmFtZSI6InNnZWciLCJlbWFpbCI6InJhbXlhQHNxaW5kaWEubmV0IiwicGhvbmUiOiIrOTE5NzkxMDk1MjM4IiwiYmlydGhkYXkiOiIxMC81LzIwMTciLCJpYXQiOjE1MDc2Mzk2OTgsImV4cCI6MTUwNzgxMjQ5OH0.rX71fZqoLoiJPpmbQnoIrcWx8S8QUJzgKCRfKkQUHMo";
+
+
     private DatePickerDialog.OnDateSetListener myDateListener = new
             DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -135,12 +137,18 @@ public class ProfilePersonalActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personalprofile);
+
+        final Typeface lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+        View v1 = getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(ProfilePersonalActivity.this, v1);
+
         new getpersonalprofile().execute();
-        //lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+
         img_config = new com.gun0912.tedpicker.Config();
         img_config.setCameraHeight(R.dimen.app_camera_height);
         img_config.setSelectedBottomHeight(R.dimen.bottom_height);
         img_config.setCameraBtnBackground(R.drawable.round_rd);
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfilePersonalActivity.this);
         editor = sharedPreferences.edit();
         token = sharedPreferences.getString("token", "");
@@ -150,7 +158,6 @@ public class ProfilePersonalActivity extends Activity {
         profilepath = sharedPreferences.getString("profilepath", "");
 
         profile_iv = findViewById(R.id.imageview_profile);
-        //personal_tv = findViewById(R.id.personal_tv);
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
         uname_tv = findViewById(R.id.username);
         backiv = findViewById(R.id.backiv);
@@ -178,7 +185,8 @@ public class ProfilePersonalActivity extends Activity {
         layout_anniversaries = findViewById(R.id.layout_anniversaries);
         layout_social = findViewById(R.id.layout_socialfunction);
         layout_parties = findViewById(R.id.layout_parties);
-        final Typeface lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+        married_spn = (MaterialBetterSpinner) findViewById(R.id.married_spn);
+
         bday_til.setTypeface(lato);
         wedding_til.setTypeface(lato);
         anniversay_til.setTypeface(lato);
@@ -187,8 +195,6 @@ public class ProfilePersonalActivity extends Activity {
         email_til.setTypeface(lato);
         place_til.setTypeface(lato);
         til_aboutme.setTypeface(lato);
-
-        married_spn = (MaterialBetterSpinner) findViewById(R.id.married_spn);
 
 
         final CustomAdapter arrayAdapter = new CustomAdapter(ProfilePersonalActivity.this, android.R.layout.simple_dropdown_item_1line, SPINNERLIST) {
@@ -249,10 +255,8 @@ public class ProfilePersonalActivity extends Activity {
         if (name != null) {
             uname_tv.setText(name + " " + lname);
             email_et.setText(useremail);
-            //username and password are present, do your stuff
         }
-        View v1 = getWindow().getDecorView().getRootView();
-        FontsOverride.overrideFonts(ProfilePersonalActivity.this, v1);
+
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,8 +266,8 @@ public class ProfilePersonalActivity extends Activity {
         save_et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 place_str = place_et.getText().toString();
-                //marital_str = married_et.getText().toString();
                 bday_str = dobv_tv.getText().toString();
                 wedding_str = wedding_et.getText().toString();
                 anniversary_str = anniversaries_et.getText().toString();
@@ -271,13 +275,11 @@ public class ProfilePersonalActivity extends Activity {
                 parties_str = parties_et.getText().toString();
                 aboutme_str = aboutme_et.getText().toString();
                 maritalstatus = sharedPreferences.getString("maritalstatus", "");
-                Log.e("tag", "dsjhfgjsh" + parties_str);
-                if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
-                    email_til.setError(null);
-                    //   phone_str = str_phone;
-                    // new loginotp_customer(phone_str).execute();
-                    new updateprofile().execute();
 
+                if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches()))
+                {
+                    email_til.setError(null);
+                    new updateprofile().execute();
                 } else {
                     email_til.setError("Invalid Email");
                     email_til.requestFocus();
@@ -293,7 +295,6 @@ public class ProfilePersonalActivity extends Activity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
                 showDialog(100);
             }
         });
@@ -303,7 +304,6 @@ public class ProfilePersonalActivity extends Activity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
                 showDialog(200);
             }
         });
@@ -313,7 +313,6 @@ public class ProfilePersonalActivity extends Activity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
                 showDialog(300);
             }
         });
@@ -323,7 +322,6 @@ public class ProfilePersonalActivity extends Activity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
                 showDialog(400);
             }
         });
@@ -332,7 +330,6 @@ public class ProfilePersonalActivity extends Activity {
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
                 showDialog(500);
             }
         });
@@ -357,53 +354,42 @@ public class ProfilePersonalActivity extends Activity {
     protected Dialog onCreateDialog(int id) {
         // TODO Auto-generated method stub
         if (id == 100) {
-
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
         } else if (id == 200) {
 
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListener1, year, month, day);
         } else if (id == 300) {
 
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListeneranni, year, month, day);
         } else if (id == 400) {
 
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListenersocial, year, month, day);
         } else if (id == 500) {
 
             calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
-            //showDate(year, month+1, day);
             return new DatePickerDialog(this,
                     myDateListenerparties, year, month, day);
         }
@@ -448,7 +434,6 @@ public class ProfilePersonalActivity extends Activity {
             } catch (IndexOutOfBoundsException e) {
                 Log.e("tag", "xgdfdg" + e.toString());
             }
-            // selectedPhotos.clear();
             if (image_uris != null) {
                 str_profile_img = image_uris.get(0).toString();
                 Glide.with(ProfilePersonalActivity.this).load(new File(str_profile_img)).into(profile_iv);
@@ -462,8 +447,6 @@ public class ProfilePersonalActivity extends Activity {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
-
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -471,18 +454,14 @@ public class ProfilePersonalActivity extends Activity {
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(ProfilePersonalActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(ProfilePersonalActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int result2 = ContextCompat.checkSelfPermission(ProfilePersonalActivity.this, Manifest.permission.RECORD_AUDIO);
 
         if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
             Log.e("tag", "Permission is granted");
             return true;
-
-
         } else {
             Log.e("tag", "Permission is revoked");
             ActivityCompat.requestPermissions(ProfilePersonalActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return false;
-
         }
     }
 
@@ -498,9 +477,6 @@ public class ProfilePersonalActivity extends Activity {
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-                //place,maritalstatus,birthday,wedding,socialfunction,parties
-                Log.e("tag", "place------>" + place_str);
-                Log.e("tag", "place------>" + bday_str);
 
                 if (!place_str.equals("")) {
                     Log.e("tag", "place1112------>" + place_str);
@@ -516,16 +492,13 @@ public class ProfilePersonalActivity extends Activity {
                 }
 
                 jsonObject.accumulate("maritalstatus", marital_str);
-
                 jsonObject.accumulate("wedding", wedding_str);
                 jsonObject.accumulate("socialfunction", social_str);
                 jsonObject.accumulate("parties", parties_str);
                 jsonObject.accumulate("anniversary", anniversary_str);
                 jsonObject.accumulate("aboutme", aboutme_str);
-                //anniversary,aboutme
-                //  jsonObject.accumulate("password", str_pwd);
-                Log.e("tag", "tag" + jsonObject.toString());
                 json = jsonObject.toString();
+
                 return jsonStr = HttpUtils.makeRequest1(Config.WEB_URL_UPDATE_PERSONAL, json, token);
             } catch (Exception e) {
                 Log.e("InputStream", e.getLocalizedMessage());
@@ -545,8 +518,6 @@ public class ProfilePersonalActivity extends Activity {
                     if (jo.has("success")) {
                         String status = jo.getString("success");
                         if (status.equals("true")) {
-                            //   {String status = jo.getString("status");
-
                             JSONObject msg = jo.getJSONObject("message");
                             Log.e("tag", "nt" + msg);
                             finish();
@@ -619,7 +590,6 @@ public class ProfilePersonalActivity extends Activity {
                         Log.e("tag", "rssss" + responseString);
                         JSONObject jo = new JSONObject(responseString);
                         String success = jo.getString("success");
-
                         return success;
 
 
@@ -647,7 +617,6 @@ public class ProfilePersonalActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             av_loader.setVisibility(View.GONE);
-            //Toast.makeText(getActivity(),"Event Created Successfully",Toast.LENGTH_LONG).show();
 
         }
 
@@ -663,7 +632,6 @@ public class ProfilePersonalActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // av_loader.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -684,14 +652,12 @@ public class ProfilePersonalActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "getprofile------->" + s);
-            // av_loader.setVisibility(View.GONE);
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
                         JSONObject message = jo.getJSONObject("message");
-                        // String abotme = message.getString("");
                         String email = message.getString("email");
                         String place = message.getString("place");
                         String birthday = message.getString("birthday");
@@ -701,10 +667,6 @@ public class ProfilePersonalActivity extends Activity {
                         String aboutme = message.getString("aboutme");
                         String socialfunction = message.getString("socialfunction");
                         String maritalstatus = message.getString("maritalstatus");
-                        //   String personalimage = message.getString("personalimage");
-
-                        //  Log.e("tag", "getprofile------->" + personalimage);
-
 
                         email_et.setText(email);
 
@@ -749,8 +711,6 @@ public class ProfilePersonalActivity extends Activity {
                                 married_spn.setText("Single");
                                 editor.putString("maritalstatus", "Single");
                                 editor.commit();
-
-
                             } else {
                                 married_spn.setText("Married");
                                 editor.putString("maritalstatus", "Married");
@@ -758,35 +718,15 @@ public class ProfilePersonalActivity extends Activity {
                             }
                         }
 
-                       /*
-                        anniversaries_et.setText(anniverasaries);
-                        social_function_et.setText(socialfunction);
-                        parties_et.setText(parties);
-                        aboutme_et.setText(aboutme);
-*/
-                     /*   if (!maritalstatus.equals("")) {
-                            if (maritalstatus.equals("Single")) {
-                                married_spn.setSelection(0);
-                            } else {
-                                married_spn.setSelection(1);
-
-                            }
-
-                        }
-
-                        if(!personalimage.equals(""))
-                        {
-                            Glide.with(ProfilePersonalActivity.this).load(new File("http://104.197.80.225:3010/wow/media/personal/"+personalimage)).into(profile_iv);
-                        }
-*/
-
                     }
 
                 } catch (JSONException e) {
 
                 }
 
-            } else {
+            } else
+            {
+
 
             }
 

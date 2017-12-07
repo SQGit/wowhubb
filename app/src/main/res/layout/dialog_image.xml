@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -22,25 +23,26 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical"
-
             android:padding="@dimen/_5sdp">
 
-            <com.wowhubb.ImageView.CircularNetworkImageView
-                android:id="@+id/profilePic"
-                android:layout_width="@dimen/feed_item_profile_pic"
-                android:layout_height="@dimen/feed_item_profile_pic"
-                android:scaleType="fitCenter">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageview_profile"
+                android:layout_width="@dimen/_47sdp"
+                android:layout_height="@dimen/_47sdp"
+                android:layout_margin="@dimen/_3sdp"
+                android:src="@drawable/profile_img"
+                app:civ_border_color="@color/graybg"
+                app:civ_border_width="1dp" />
 
-            </com.wowhubb.ImageView.CircularNetworkImageView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginRight="@dimen/_5sdp"
             android:layout_weight="3"
             android:orientation="vertical"
-            android:layout_marginRight="@dimen/_5sdp"
             android:paddingLeft="@dimen/_2sdp">
 
             <LinearLayout
@@ -77,8 +79,6 @@
         </LinearLayout>
 
 
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -106,8 +106,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:background="@color/gray">
 
             <TextView
@@ -128,8 +128,8 @@
             <TextView
                 android:id="@+id/datetv"
                 android:layout_width="wrap_content"
-                android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_5sdp"
                 android:drawableLeft="@drawable/calendar_icon"
                 android:drawablePadding="@dimen/_5sdp"
                 android:text="Date"

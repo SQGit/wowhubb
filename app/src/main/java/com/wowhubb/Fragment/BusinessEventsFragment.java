@@ -37,21 +37,24 @@ public class BusinessEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_interest, container, false);
-        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        final SharedPreferences.Editor edit = sharedPrefces.edit();
-        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
+
         FontsOverride.overrideFonts(getActivity(), view);
+
         bne_cb = (CheckBox) view.findViewById(R.id.bne_cb);
         ste_cb = (CheckBox) view.findViewById(R.id.ste_cb);
         pte_cb = (CheckBox) view.findViewById(R.id.pte_cb);
-
         bne_iv = (ImageView) view.findViewById(R.id.bne_iv);
         ste_iv = (ImageView) view.findViewById(R.id.ste_iv);
         pte_iv = (ImageView) view.findViewById(R.id.pte_iv);
+
+        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor edit = sharedPrefces.edit();
+        ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
         bne = sharedPrefces.getString("bne", "");
         ste = sharedPrefces.getString("ste", "");
         pte = sharedPrefces.getString("pte", "");
-        Log.e("tag", "111111111--------" + ste);
+
+
 
         if (!bne.equals("")) {
             if (bne.equals("1"))
@@ -59,34 +62,31 @@ public class BusinessEventsFragment extends Fragment {
                 bne_cb.setChecked(true);
                 bne_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                 bne_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-
-
             }
-
         }
         if (!ste.equals("")) {
             if (ste.equals("2")) {
                 ste_cb.setChecked(true);
-
                 ste_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                 ste_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-
             }
-
         }
+
         if (!pte.equals("")) {
             if (pte.equals("3")) {
                 pte_cb.setChecked(true);
-
                 pte_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                 pte_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
             }
 
         }
+
+        //-----------------------------SocialEventsFragment---------------------------------------//
+
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("tag","LIst----"+InterestActivity.list);
+
                 SocialEventsFragment bef = new SocialEventsFragment();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -100,7 +100,6 @@ public class BusinessEventsFragment extends Fragment {
         bne_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
                     edit.putString("bne", "1");
                     edit.commit();

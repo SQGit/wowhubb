@@ -1,13 +1,17 @@
 package com.wowhubb.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
@@ -34,7 +38,6 @@ public class SplashActivity extends Activity {
     int currentPage = 0;
     Timer timer;
     TextView splashcontent_tv;
-    // ImageView nextsub_iv;
     int i;
     TextView registertv, logintv;
     int NUM_PAGES = 4;
@@ -51,15 +54,19 @@ public class SplashActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
         splashcontent_tv = (TextView) findViewById(R.id.splashcontent);
         status = sharedPreferences.getString("status", "");
+
         registertv = findViewById(R.id.registertv);
         logintv = findViewById(R.id.logintv);
+
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(SplashActivity.this, v1);
         initView();
-        Log.e("tag", "RAMYA---------->" + status);
+
+
 
         registertv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +75,7 @@ public class SplashActivity extends Activity {
                 overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
             }
         });
+
         logintv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,35 +92,22 @@ public class SplashActivity extends Activity {
             final Runnable Update = new Runnable() {
                 public void run() {
 
-                    if (currentPage == 1) {
-                        // mPager.setCurrentItem(1);
-                        //    mPager.setCurrentItem(1, true);
-                        Log.e("tag", "page1---------->" + currentPage);
+                    if (currentPage == 1)
+                    {
                         String splashone = getString(R.string.splashtwo);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashone);
-                        //mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-                        //  splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
 
                     } else if (currentPage == 2) {
-                        //mPager.setCurrentItem(2);
-                        //  mPager.setCurrentItem(2, true);
-                        Log.e("tag", "page2---------->" + currentPage);
+
                         String splashtwo = getString(R.string.splashothree);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashtwo);
-                        //mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-                        // splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
                     } else if (currentPage == 3) {
 
-                        Log.e("tag", "page3---------->" + currentPage);
                         String splashthree = getString(R.string.splashone);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashthree);
-                        //  mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-
-                        ///   splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-
 
                     }
 
@@ -129,10 +124,6 @@ public class SplashActivity extends Activity {
 
                 @Override
                 public void run() {
-                    // initView();
-
-                    Log.d("tag", "Vdfsfg---------->" + currentPage);
-
 
                     handler.post(Update);
 
@@ -152,33 +143,26 @@ public class SplashActivity extends Activity {
                 public void run() {
 
                     if (currentPage == 1) {
-                        // mPager.setCurrentItem(1);
-                        //    mPager.setCurrentItem(1, true);
+
                         Log.e("tag", "page1---------->" + currentPage);
                         String splashone = getString(R.string.splashtwo);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashone);
-                        //mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-                        //  splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
+
 
                     } else if (currentPage == 2) {
-                        //mPager.setCurrentItem(2);
-                        //  mPager.setCurrentItem(2, true);
+
                         Log.e("tag", "page2---------->" + currentPage);
                         String splashtwo = getString(R.string.splashothree);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashtwo);
-                        //mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-                        // splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
+
                     } else if (currentPage == 3) {
 
                         Log.e("tag", "page3---------->" + currentPage);
                         String splashthree = getString(R.string.splashone);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashthree);
-                        //  mPager.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
-
-                        ///   splashcontent_tv.startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.move_textview));
 
 
                     }
@@ -196,10 +180,6 @@ public class SplashActivity extends Activity {
 
                 @Override
                 public void run() {
-                    // initView();
-
-                    Log.d("tag", "Vdfsfg---------->" + currentPage);
-
 
                     handler.post(Update);
 
@@ -228,8 +208,10 @@ public class SplashActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, LandingPageActivity.class));
-                    overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+
+                        startActivity(new Intent(SplashActivity.this, LandingPageActivity.class));
+                        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+
                 }
             }, 2000);
 
@@ -253,5 +235,23 @@ public class SplashActivity extends Activity {
         mPager.setCurrentItem(0); // current item number
         pageIndicator.setViewPager(mPager);
         pageIndicator.notifyDataSetChanged();
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int result2 = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.RECORD_AUDIO);
+
+        if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
+            Log.e("tag", "Permission is granted");
+            return true;
+
+
+        } else {
+            Log.e("tag", "Permission is revoked");
+            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            return false;
+
+        }
     }
 }

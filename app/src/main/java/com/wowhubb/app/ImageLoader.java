@@ -9,7 +9,9 @@ import java.io.File;
         import java.net.HttpURLConnection;
         import java.net.URL;
         import java.util.Collections;
-        import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
         import java.util.WeakHashMap;
         import java.util.concurrent.ExecutorService;
         import java.util.concurrent.Executors;
@@ -18,7 +20,8 @@ import java.io.File;
         import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
-        import android.widget.ImageView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.wowhubb.R;
 import com.wowhubb.Utils.Utils;
@@ -34,6 +37,7 @@ public class ImageLoader {
     public ImageLoader(Context context){
         fileCache=new FileCache(context);
         executorService=Executors.newFixedThreadPool(5);
+       // mImageRequstController.setPriority(Thread.NORM_PRIORITY - 1);
     }
 
    // final int stub_id= R.drawable.profile_img;
@@ -165,6 +169,7 @@ public class ImageLoader {
                 return;
             if(bitmap!=null)
                 photoToLoad.imageView.setImageBitmap(bitmap);
+
            // else
                // photoToLoad.imageView.setImageResource(stub_id);
         }

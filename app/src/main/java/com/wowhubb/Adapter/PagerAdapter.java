@@ -21,7 +21,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-
     @Override
     public int getCount() {
         return 7;
@@ -41,10 +40,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 6: return GiftRegistryFragment.newInstance(position + 1, position == getCount() - 1);
             default: return PageFragment.newInstance(position + 1, position == getCount() - 1);
         }
-
-
     }
-
 
     @Override
     public CharSequence getPageTitle(int position) {
