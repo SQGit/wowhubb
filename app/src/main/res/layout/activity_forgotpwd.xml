@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_white"
@@ -51,105 +52,14 @@
                 android:paddingLeft="@dimen/_5sdp">
 
                 <EditText
-                    android:id="@+id/email_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="Phone/Email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="4"
-                    android:maxLines="1"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/_13sdp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey">
-
-                </View>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_otp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5sdp">
-
-                <EditText
-                    android:id="@+id/otp_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="Otp"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLength="4"
-                    android:maxLines="1"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/_13sdp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey">
-
-                </View>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_newpwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5sdp">
-
-                <EditText
-                    android:id="@+id/newpwd_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="New Password"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword"
-                    android:maxLength="4"
-                    android:maxLines="1"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/_13sdp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey">
-
-                </View>
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_cpwd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5sdp">
-
-                <EditText
                     android:id="@+id/phone_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="Confirm Password"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword"
-                    android:maxLength="4"
+                    android:hint="Phone/Email"
+                    android:imeOptions="actionDone"
                     android:maxLines="1"
+                    android:inputType="textVisiblePassword"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_5sdp"
                     android:textColor="#000000"
@@ -163,6 +73,7 @@
 
                 </View>
             </android.support.design.widget.TextInputLayout>
+
 
 
         </LinearLayout>
@@ -176,7 +87,15 @@
             android:layout_marginTop="@dimen/_40sdp"
             android:src="@drawable/submit_arrow" />
 
-
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_50sdp"
+            android:visibility="invisible"
+            app:indicatorColor="#e91e63"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
     </LinearLayout>
 
 </LinearLayout>

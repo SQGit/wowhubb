@@ -12,22 +12,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.ImageView.CircularNetworkImageView;
 import com.wowhubb.R;
-import com.wowhubb.app.AppController;
 import com.wowhubb.app.ImageLoader;
-
-import java.io.File;
 
 /**
  * Created by Salman on 27-10-2017.
  */
 
-public class FeedActivityVideo extends Activity
-{
-    String fulladdress,wowtagvideo, profilepicture, timestamp_str, description, eventname, name_str,eventdate,status,coverimage,highligh1,highligh2;
-    VideoView videoView;
+public class FeedActivityVideo extends Activity {
     public com.wowhubb.app.ImageLoader imageLoader1;
+    String eventstartdate, eventenddate, fulladdress, wowtagvideo, profilepicture, timestamp_str, description, eventname, name_str, eventdate, status, coverimage, highligh1, highligh2;
+    VideoView videoView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,15 +39,15 @@ public class FeedActivityVideo extends Activity
         TextView eventname_tv = (TextView) findViewById(R.id.eventname_tv);
         TextView timestamp = (TextView) findViewById(R.id.timestamp);
         TextView desc = (TextView) findViewById(R.id.desc_tv);
-        TextView datetv = (TextView) findViewById(R.id.datetv);
-        TextView addresstv = (TextView) findViewById(R.id.address_tv);
 
+        TextView addresstv = (TextView) findViewById(R.id.address_tv);
+        TextView fromdatetv = findViewById(R.id.fromdatetv);
+        TextView todatetv = findViewById(R.id.todatetv);
         ImageView profilePic = (ImageView) findViewById(R.id.imageview_profile);
         Bundle extras = getIntent().getExtras();
 
 
-        if (extras != null)
-        {
+        if (extras != null) {
             wowtagvideo = extras.getString("wowtagvideo");
             highligh1 = extras.getString("highligh1");
             highligh2 = extras.getString("highligh2");
@@ -62,30 +57,29 @@ public class FeedActivityVideo extends Activity
             status = extras.getString("status");
             eventname = extras.getString("eventname");
             name_str = extras.getString("name");
-            eventdate = extras.getString("eventdate");
+
             coverimage = extras.getString("coverpage");
             fulladdress = extras.getString("fulladdress");
+            eventstartdate = extras.getString("eventstartdate");
+            eventenddate = extras.getString("eventenddate");
 
 
-            if(status.equals("wowtag"))
-            {
-                if (!wowtagvideo.equals("null")) {
-                    videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + wowtagvideo));
-                    videoView.start();
+            if (status.equals("wowtag")) {
+                if (wowtagvideo != null) {
+
+                    if (!wowtagvideo.equals("null")) {
+                        videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + wowtagvideo));
+                        videoView.start();
+                    }
                 }
-            }
-
-            else if(status.equals("highlightvideo1"))
-            {
-                Log.e("tag","324434343"+highligh1);
+            } else if (status.equals("highlightvideo1")) {
+                Log.e("tag", "324434343" + highligh1);
                 if (!highligh1.equals("null")) {
 
                     videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + highligh1));
                     videoView.start();
                 }
-            }
-            else if(status.equals("highlightvideo2"))
-            {
+            } else if (status.equals("highlightvideo2")) {
                 if (!highligh2.equals("null")) {
                     videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + highligh2));
                     videoView.start();
@@ -97,20 +91,18 @@ public class FeedActivityVideo extends Activity
             eventname_tv.setText("- " + eventname);
             timestamp.setText(timestamp_str);
             desc.setText(description);
-            datetv.setText(eventdate);
             addresstv.setText(fulladdress);
+            fromdatetv.setText(eventstartdate);
+            todatetv.setText(eventenddate);
 
         }
 
-        Log.e("tag","PPPPPPPPP------------>"+profilepicture);
-        if (profilepicture != null)
-        {
+        Log.e("tag", "PPPPPPPPP------------>" + profilepicture);
+        if (profilepicture != null) {
             //imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/personal/" +profilepicture,profilePic);
-            Glide.with(FeedActivityVideo.this).load("http://104.197.80.225:3010/wow/media/personal/" +profilepicture).into(profilePic);
-        }
-        else
-        {
-           // profilePic.setImageResource(R.drawable.profile_img);
+            Glide.with(FeedActivityVideo.this).load("http://104.197.80.225:3010/wow/media/personal/" + profilepicture).into(profilePic);
+        } else {
+            // profilePic.setImageResource(R.drawable.profile_img);
         }
 
     }

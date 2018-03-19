@@ -241,7 +241,7 @@
             android:id="@+id/interest_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -251,14 +251,14 @@
                 android:paddingLeft="@dimen/_20sdp"
                 android:text="Interests"
                 android:textColor="@color/textcolr"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:src="@drawable/right_arrow"
+                android:src="@drawable/circleright_arrow"
 
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
@@ -274,7 +274,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -284,14 +284,14 @@
                 android:paddingLeft="@dimen/_20sdp"
                 android:text="Photos"
                 android:textColor="@color/textcolr"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/circleright_arrow" />
         </LinearLayout>
 
         <View
@@ -305,7 +305,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -319,7 +319,7 @@
                     android:paddingLeft="@dimen/_20sdp"
                     android:text="Eventhubb"
                     android:textColor="@color/textcolr"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_13sdp" />
 
                 <com.wang.avi.AVLoadingIndicatorView
                     android:id="@+id/avi"
@@ -337,7 +337,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/circleright_arrow" />
         </LinearLayout>
 
         <View
@@ -351,7 +351,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -361,14 +361,14 @@
                 android:paddingLeft="@dimen/_20sdp"
                 android:text="Wowtag"
                 android:textColor="@color/textcolr"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/circleright_arrow" />
         </LinearLayout>
 
         <View
@@ -394,6 +394,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingTop="@dimen/_5sdp"
+            android:paddingBottom="@dimen/_5sdp"
             android:text="@string/uploadvideo"
             android:textColor="@color/textcolr"
             android:textSize="@dimen/_13sdp" />
@@ -454,17 +455,17 @@
                 android:src="@drawable/plus_icon" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/browse_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawableLeft="@drawable/edit_icon"
-            android:drawablePadding="@dimen/_5sdp"
-            android:gravity="center"
-            android:text="@string/browse"
-            android:textColor="@color/textcolr" />
+        <!-- <TextView
+             android:id="@+id/browse_tv"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:layout_marginLeft="@dimen/_10sdp"
+             android:drawableLeft="@drawable/edit_icon"
+             android:drawablePadding="@dimen/_5sdp"
+             android:gravity="center"
+             android:text="@string/browse"
+             android:textColor="@color/textcolr" />-->
         <TextView
             android:id="@+id/save_tv"
             android:layout_width="wrap_content"

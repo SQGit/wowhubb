@@ -46,7 +46,7 @@ public class EventServiceFragment extends Fragment {
         //getSupportActionBar().hide();
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        setupViewPager1(viewPager);
+      //  setupViewPager1(viewPager);
         Log.e("tag", "Ramya11");
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -54,7 +54,7 @@ public class EventServiceFragment extends Fragment {
         return view;
     }
 
-    private void setupViewPager1(ViewPager viewPager) {
+  /*  private void setupViewPager1(ViewPager viewPager) {
         Log.e("tag", "Ramyasetupp");
         ViewPagerAdapter1 adapter1 = new ViewPagerAdapter1(getActivity().getSupportFragmentManager());
         Log.e("tag", "sdadssd");
@@ -94,6 +94,6 @@ public class EventServiceFragment extends Fragment {
         }
 
 
-    }
+    }*/
 
 }

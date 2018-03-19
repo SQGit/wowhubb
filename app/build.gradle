@@ -2,12 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'wowhubb'
-            keyPassword '123456'
-            storeFile file('E:/wowhubb/wowhubb.jks')
-            storePassword '123456'
-        }
+
     }
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -16,19 +11,18 @@ android {
         applicationId "com.wowhubb"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.config
         multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
-            signingConfig signingConfigs.config
             zipAlignEnabled true
+        }
+        debug {
+            zipAlignEnabled true
+            debuggable true
         }
     }
     productFlavors {
@@ -41,10 +35,12 @@ repositories {
     maven { url 'https://repo.commonsware.com.s3.amazonaws.com' }
     maven { url 'https://jitpack.io' }
     maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
+
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -63,16 +59,23 @@ dependencies {
     compile 'com.devbrackets.android:exomedia:4.0.3'
     compile 'com.hbb20:ccp:0.1.1'
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'com.android.support:cardview-v7:26.0.2'
+    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar'
     compile files('libs/volley.jar')
+    compile 'com.github.drawers:SpinnerDatePicker:1.0.4'
+    compile 'me.biubiubiu.justifytext:library:1.1'
+    compile 'com.github.ratty3697:android-smart-animation-library:1.3'
+    compile 'me.zhanghai.android.materialratingbar:library:1.2.0'
+    compile 'lib.kingja.switchbutton:switchbutton:1.1.6'
+    compile 'com.github.Gavras:MultiLineRadioGroup:v1.0.0.6'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.google.android.gms:play-services-maps:10.2.1'
+    compile 'com.google.android.gms:play-services-location:10.2.1'
+    compile 'com.google.android.gms:play-services-places:10.2.1'
+    compile 'com.afollestad:easyvideoplayer:0.3.0'
+    compile 'com.github.traex.rippleeffect:library:1.3'
 }
-/*
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '25.3.0'
-            }
-        }
-    }
-}*/

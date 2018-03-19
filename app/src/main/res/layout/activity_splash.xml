@@ -25,7 +25,7 @@
                     android:textColor="@color/white"
                     android:layout_gravity="right"
                     android:layout_margin="@dimen/_5sdp"
-                    android:text="Version:Test4"/>
+                    android:text="Version:7.7"/>
 
 
                 <android.support.v4.view.ViewPager

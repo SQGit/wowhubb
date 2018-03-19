@@ -1,19 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <include layout="@layout/searchmain" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:weightSum="1">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start|center">
@@ -25,64 +28,21 @@
                 android:gravity="start|center"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/back_arrow" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:gravity="center">
 
-
-            <ImageView
-                android:id="@+id/img_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/_5sdp"
-                android:paddingTop="@dimen/_5sdp"
-                android:paddingLeft="@dimen/_5sdp"
-                android:src="@drawable/right_nav_icon" />
-        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_20sdp"
-        android:layout_marginRight="@dimen/_20sdp"
-        android:orientation="vertical">
-
-
-        <EditText
-            android:id="@+id/searchpeople_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@null"
-            android:drawablePadding="@dimen/_5sdp"
-            android:drawableLeft="@drawable/search_icon"
-            android:hint="Search People/ Events"
-            android:paddingRight="@dimen/_5sdp"
-            android:singleLine="true"
-            android:textSize="@dimen/_12sdp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@color/colorPrimary">
-
-        </View>
-    </LinearLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:tabGravity="fill"
         android:layout_marginTop="@dimen/_5sdp"
-        app:tabMode="scrollable" />
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
+
 
     <FrameLayout
         android:layout_width="match_parent"

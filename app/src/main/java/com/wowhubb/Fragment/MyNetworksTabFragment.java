@@ -20,10 +20,12 @@
 
 package com.wowhubb.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.wowhubb.Adapter.FriendListAdapter;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 import com.wowhubb.Utils.HttpUtils;
@@ -54,6 +55,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wowhubb.R.drawable;
+import static com.wowhubb.R.id;
+import static com.wowhubb.R.layout;
+
 public class MyNetworksTabFragment extends Fragment {
     SharedPreferences.Editor editor;
     String token, personalimage;
@@ -62,6 +67,7 @@ public class MyNetworksTabFragment extends Fragment {
     List<String> arrayList = new ArrayList<>();
     Dialog dialog;
     private List<FeedItem> feedItems;
+
 
     public static MyNetworksTabFragment newInstance() {
         MyNetworksTabFragment fragment = new MyNetworksTabFragment();
@@ -76,7 +82,7 @@ public class MyNetworksTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_networklist, container, false);
+        View view = inflater.inflate(layout.fragment_networklist, container, false);
         FontsOverride.overrideFonts(getActivity(), view);
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPreferences.edit();
@@ -84,7 +90,7 @@ public class MyNetworksTabFragment extends Fragment {
         feedItems = new ArrayList<FeedItem>();
         Log.e("tag", "1111");
 
-        listView = view.findViewById(R.id.listview);
+        listView = view.findViewById(id.listview);
         Log.e("tag", "222");
 
         Log.e("tag", "3333");
@@ -92,7 +98,7 @@ public class MyNetworksTabFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.test_loader);
+        dialog.setContentView(layout.test_loader);
         new getNetworks().execute();
         return view;
 
@@ -102,7 +108,7 @@ public class MyNetworksTabFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.show();
+           // dialog.show();
         }
 
         @Override
@@ -124,7 +130,7 @@ public class MyNetworksTabFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "tagqqqqqqqqqq" + s);
-            dialog.dismiss();
+            //dialog.dismiss();
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
@@ -140,13 +146,12 @@ public class MyNetworksTabFragment extends Fragment {
                             String friendname = feedObj.getString("firstname");
                             String wowtagid = feedObj.getString("wowtagid");
                             String friendstatus = feedObj.getString("status");
-                            // String received = feedObj.getString("received");
+                            String mutualfriends = feedObj.getString("mutualfriendscount");
                             item.setFriendid(friendid);
                             item.setFriendname(friendname);
                             item.setFriendwowtagid(wowtagid);
                             item.setFriiendsstatus(friendstatus);
-                            // item.setReceivedstatus(received);
-
+                            item.setMutualfriends(mutualfriends);
                             if (feedObj.has("personalimage")) {
                                 personalimage = feedObj.getString("personalimage");
                                 item.setFriendpic(personalimage);
@@ -173,7 +178,7 @@ public class MyNetworksTabFragment extends Fragment {
 
     }
 
-     class FriendListAdapter extends BaseAdapter {
+    class FriendListAdapter extends BaseAdapter {
 
 
         SharedPreferences.Editor editor;
@@ -204,6 +209,7 @@ public class MyNetworksTabFragment extends Fragment {
             return position;
         }
 
+        @SuppressLint("ResourceAsColor")
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder viewHolder;
@@ -213,23 +219,25 @@ public class MyNetworksTabFragment extends Fragment {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.mynetwork_tab, null);
+                convertView = inflater.inflate(layout.mynetwork_tab, null);
                 viewHolder = new ViewHolder();
                 viewHolder.position = position;
                 FontsOverride.overrideFonts(activity, convertView);
-                viewHolder.name = (TextView) convertView.findViewById(R.id.friend_name);
-                viewHolder.addtv = convertView.findViewById(R.id.addtv);
-                viewHolder.removetv = convertView.findViewById(R.id.removetv);
-                viewHolder.profilePic = (ImageView) convertView.findViewById(R.id.imageview_profile);
+                viewHolder.name = (TextView) convertView.findViewById(id.friend_name);
+                viewHolder.addtv = convertView.findViewById(id.addtv);
+                viewHolder.removetv = convertView.findViewById(id.removetv);
+                viewHolder.profilePic = (ImageView) convertView.findViewById(id.imageview_profile);
+                viewHolder.mutualtv = convertView.findViewById(R.id.mutual_tv);
                 convertView.setTag(viewHolder);
                 dialog = new Dialog(activity);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 dialog.setCancelable(false);
-                dialog.setContentView(R.layout.test_loader);
+                dialog.setContentView(layout.test_loader);
                 final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
                 editor = sharedPreferences.edit();
                 token = sharedPreferences.getString("token", "");
+
 
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -239,25 +247,42 @@ public class MyNetworksTabFragment extends Fragment {
             viewHolder.name.setText(item.getFriendname());
             viewHolder.position = position;
 
-
+            if (position % 2 == 0) {
+                convertView.setBackgroundColor(Color.parseColor("#f0f0f0"));
+            } else {
+                convertView.setBackgroundColor(Color.TRANSPARENT);
+            }
             //--------------------------------View Profile Image--------------------------------------//
 
             if (item.getFriendpic() != null) {
                 // Log.e("tag", "Imagge-------" + item.getImge());
                 Glide.with(activity).load("http://104.197.80.225:3010/wow/media/personal/" + item.getFriendpic()).into(viewHolder.profilePic);
             } else {
-                viewHolder.profilePic.setImageResource(R.drawable.profile_img);
+                viewHolder.profilePic.setImageResource(drawable.profile_img);
             }
 
-            if (item.getFriiendsstatus().equals("add")) {
+            if (item.getFriiendsstatus().equals("add friend")) {
                 viewHolder.addtv.setText("Add Friend");
                 viewHolder.removetv.setVisibility(View.INVISIBLE);
-            } else if (item.getFriiendsstatus().equals("sent")) {
+            } else if (item.getFriiendsstatus().equals("request sent")) {
                 viewHolder.addtv.setText("Request sent");
+                viewHolder.removetv.setVisibility(View.INVISIBLE);
+            } else if (item.getFriiendsstatus().equals("friend")) {
+                viewHolder.addtv.setText("Friends");
                 viewHolder.removetv.setVisibility(View.INVISIBLE);
             } else {
                 viewHolder.addtv.setText("Accept");
                 viewHolder.removetv.setVisibility(View.VISIBLE);
+            }
+
+
+            if (item.getMutualfriends().equals("0")) {
+                viewHolder.mutualtv.setVisibility(View.GONE);
+
+            } else {
+                viewHolder.mutualtv.setVisibility(View.VISIBLE);
+                viewHolder.mutualtv.setText(item.getMutualfriends()+" Mutual Connections");
+
             }
 
 
@@ -267,12 +292,10 @@ public class MyNetworksTabFragment extends Fragment {
                     FeedItem item = feedItems.get(position);
                     userId = item.getFriendid();
 
-                    if (item.getFriiendsstatus().equals("add")) {
+                    if (item.getFriiendsstatus().equals("add friend")) {
                         new sendRequest().execute();
                         viewHolder.addtv.setClickable(true);
-                    }
-                    else if (item.getFriiendsstatus().equals("received"))
-                    {
+                    } else if (item.getFriiendsstatus().equals("received")) {
                         viewHolder.addtv.setClickable(true);
                         new acceptRequest().execute();
                     } else {
@@ -280,13 +303,26 @@ public class MyNetworksTabFragment extends Fragment {
                     }
                 }
             });
+            viewHolder.removetv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FeedItem item = feedItems.get(position);
+                    userId = item.getFriendid();
 
+                    if (item.getFriiendsstatus().equals("received")) {
+                        viewHolder.removetv.setClickable(true);
+                        new declineRequest().execute();
+                    } else {
+                        viewHolder.removetv.setClickable(false);
+                    }
+                }
+            });
 
             return convertView;
         }
 
         class ViewHolder {
-            TextView name, addtv, removetv;
+            TextView name, addtv, removetv, mutualtv;
             int position;
             ImageView profilePic;
 
@@ -331,9 +367,7 @@ public class MyNetworksTabFragment extends Fragment {
                             feedItems.clear();
                             new getNetworks().execute();
 
-                        }
-                        else
-                        {
+                        } else {
                             String message = jo.getString("message");
                             Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                             notifyDataSetChanged();
@@ -389,9 +423,7 @@ public class MyNetworksTabFragment extends Fragment {
                             Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                             feedItems.clear();
                             new getNetworks().execute();
-                        }
-                        else
-                        {
+                        } else {
                             String message = jo.getString("message");
                             Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                             feedItems.clear();
@@ -412,5 +444,61 @@ public class MyNetworksTabFragment extends Fragment {
 
         }
 
-}
+        public class declineRequest extends AsyncTask<String, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+                String json = "", jsonStr = "";
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("userid", userId);
+                    json = jsonObject.toString();
+                    return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/network/declinerequest", json, token);
+                } catch (Exception e) {
+                    Log.e("InputStream", e.getLocalizedMessage());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Log.e("tag", "tagqqqqqqqqqq------------------>>>>>>" + s);
+                dialog.dismiss();
+                if (s != null) {
+                    try {
+                        JSONObject jo = new JSONObject(s);
+                        String status = jo.getString("success");
+
+                        if (status.equals("true")) {
+                            String message = jo.getString("message");
+                            Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                            feedItems.clear();
+                            new getNetworks().execute();
+                        } else {
+                            String message = jo.getString("message");
+                            Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                            feedItems.clear();
+                            new getNetworks().execute();
+
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("tag", "nt" + e.toString());
+                    }
+                } else {
+
+                }
+
+            }
+
+        }
+    }
 }

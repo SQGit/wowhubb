@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_white"
+    android:layout_height="match_parent">
+
+
+
+
+    <LinearLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp">
+
+
+        <TextView
+            android:id="@+id/event_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/brown"
+            android:gravity="center"
+           android:layout_marginLeft="@dimen/_25sdp"
+            android:layout_weight="1"
+            android:padding="@dimen/_5sdp"
+            android:textSize="@dimen/_17sdp"/>
+
+
+
+        <ImageView
+            android:id="@+id/closeiv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/close_round"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/head2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_below="@+id/head">
+
+        <TextView
+            android:id="@+id/dialog_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Venues"
+            android:textColor="@color/brown"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="@dimen/_5sdp"
+            android:textSize="@dimen/_14sdp"/>
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Duration:"
+            android:textColor="@color/colorPrimary"
+            android:gravity="right"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:textSize="@dimen/_12sdp"/>
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:layout_weight="1"
+            android:textSize="@dimen/_12sdp"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/timeslot_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/head2"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_marginTop="?actionBarSize"/>
+
+</RelativeLayout>

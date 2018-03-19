@@ -1,27 +1,29 @@
 package com.wowhubb.Activity;
 
-import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.wowhubb.Adapter.ViewPagerAdapter;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.Pager.SimpleViewPagerIndicator;
 import com.wowhubb.R;
+
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +44,10 @@ public class SplashActivity extends Activity {
     TextView registertv, logintv;
     int NUM_PAGES = 4;
     String status;
+    String currentVersion, playstoreVersion;
+    Dialog dg_show_update;
+    TextView tv_dg_txt, tv_dg_txt2;
+    Button btn_dg_download;
     private ViewPager mPager;
     private SimpleViewPagerIndicator pageIndicator;
     private int resourceList[] = {R.drawable.splash_image1,
@@ -49,12 +55,17 @@ public class SplashActivity extends Activity {
     };
     private int List[] = {R.string.splashtwo, R.string.splashtwo, R.string.splashtwo};
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        try {
+            currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            Log.e("tag", "version:" + currentVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            Log.e("tag", "err:" + e.toString());
+        }
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
         splashcontent_tv = (TextView) findViewById(R.id.splashcontent);
         status = sharedPreferences.getString("status", "");
@@ -65,14 +76,14 @@ public class SplashActivity extends Activity {
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(SplashActivity.this, v1);
         initView();
-
-
+        Log.e("tag", "aaaaa--->>>>>>>>>>>>" + status);
 
         registertv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SplashActivity.this, RegisterCountryActivity.class));
+                startActivity(new Intent(SplashActivity.this, RegisterAllDetailsActivity.class));
                 overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                finish();
             }
         });
 
@@ -81,8 +92,11 @@ public class SplashActivity extends Activity {
             public void onClick(View view) {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                finish();
             }
         });
+
+           // new GetVersionCode().execute();
 
 
         if (status == "") {
@@ -92,8 +106,7 @@ public class SplashActivity extends Activity {
             final Runnable Update = new Runnable() {
                 public void run() {
 
-                    if (currentPage == 1)
-                    {
+                    if (currentPage == 1) {
                         String splashone = getString(R.string.splashtwo);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashone);
@@ -131,10 +144,7 @@ public class SplashActivity extends Activity {
             }, DELAY_MS, PERIOD_MS);
 
 
-        }
-
-        else if(status.equals("false"))
-        {
+        } else if (status.equals("false")) {
 
             logintv.setVisibility(View.VISIBLE);
             registertv.setVisibility(View.VISIBLE);
@@ -187,21 +197,7 @@ public class SplashActivity extends Activity {
             }, DELAY_MS, PERIOD_MS);
 
 
-
-
-
-
-
-        }
-
-
-
-
-
-
-
-
-        else {
+        } else {
             logintv.setVisibility(View.INVISIBLE);
             registertv.setVisibility(View.INVISIBLE);
             final Handler handler = new Handler();
@@ -209,8 +205,8 @@ public class SplashActivity extends Activity {
                 @Override
                 public void run() {
 
-                        startActivity(new Intent(SplashActivity.this, LandingPageActivity.class));
-                        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                    startActivity(new Intent(SplashActivity.this, LandingPageActivity.class));
+                    overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
 
                 }
             }, 2000);
@@ -237,21 +233,66 @@ public class SplashActivity extends Activity {
         pageIndicator.notifyDataSetChanged();
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int result2 = ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.RECORD_AUDIO);
+  /*  private class GetVersionCode extends AsyncTask<Void, String, String> {
 
-        if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
-            Log.e("tag", "Permission is granted");
-            return true;
+        @Override
+
+        protected String doInBackground(Void... voids) {
+
+            String newVersion = null;
+
+            try {
+
+                Log.e("tag", "https://play.google.com/store/apps/details?id=" + SplashActivity.this.getPackageName() + "&hl=it");
+
+                newVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=" + SplashActivity.this.getPackageName() + "&hl=it").timeout(30000)
+                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                        .referrer("http://www.google.com")
+                        .get()
+                        .select("div[itemprop=softwareVersion]")
+                        .first()
+                        .ownText();
+
+                Log.e("Tag", "new: " + newVersion);
+
+                return newVersion;
+
+            } catch (Exception e) {
+
+                Log.e("Tag", "dreerr: " + e.toString());
+                return newVersion;
+
+            }
+
+        }
 
 
-        } else {
-            Log.e("tag", "Permission is revoked");
-            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            return false;
+        @Override
+
+        protected void onPostExecute(String onlineVersion) {
+
+
+            Log.e("tag", "OUTPUT: " + onlineVersion);
+
+            super.onPostExecute(onlineVersion);
+
+            playstoreVersion = onlineVersion;
+
+            if (playstoreVersion != null && !playstoreVersion.isEmpty()) {
+
+                if (Float.valueOf(currentVersion) < Float.valueOf(playstoreVersion)) {
+
+                    //show dialog
+                    dg_show_update.show();
+
+                }
+            } else {
+                //nextpage
+            }
+
+            Log.e("update", "Current version " + currentVersion + "playstore version " + playstoreVersion);
 
         }
     }
+*/
 }

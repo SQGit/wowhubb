@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:id="@+id/backtv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Accounts"
+            android:padding="@dimen/_10sdp"
+            android:drawablePadding="@dimen/_5sdp"
+            android:drawableLeft="@drawable/back_arrow"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_15sdp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/privacy_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/privacy"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/location_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Location"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/chatsettings_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/chatsettings"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/videos_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/videos"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sounds_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/sounds"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/language_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/language"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/eventfeed_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Event Feed"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/loginsecurity_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/loginsecurity"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

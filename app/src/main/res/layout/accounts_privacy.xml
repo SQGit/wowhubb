@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/backtv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/back_arrow"
+            android:drawablePadding="@dimen/_5sdp"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/privacy"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_15sdp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/managefeedpost_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/managefeedpost"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/manageprofile_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/manageprofile"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/managecoupons_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/managecoupons"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/managefriendlist_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/tab_bg_color"
+                android:drawablePadding="@dimen/_6sdp"
+                android:drawableRight="@drawable/right_arrow_gray"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/managefriendlist"
+                android:textColor="@drawable/tab_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:paddingLeft="@dimen/_5sdp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

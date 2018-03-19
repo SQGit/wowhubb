@@ -119,7 +119,7 @@ public class FeedListAdapter extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.feed_items, null);
+            convertView = inflater.inflate(R.layout.feed_items_professional, null);
             viewHolder = new ViewHolder();
             viewHolder.position = position;
             if (imageLoader == null)
@@ -214,7 +214,10 @@ public class FeedListAdapter extends BaseAdapter {
 
         if (item.getDesignation() != null) {
             viewHolder.timestamp.setText(item.getDesignation());
-        } else {
+        }
+        else
+        {
+
         }
         //--------------------------------View Profile Image--------------------------------------//
 
@@ -313,35 +316,24 @@ public class FeedListAdapter extends BaseAdapter {
                 Log.e("tag", "Imagge11-------" + item.getHighlight2());
                 if (!item.getHighlight1().equals("null")) {
                     Log.e("tag", "1111111111" + item.getHighlight1());
-                    // edit.putString("hl1_status", "image");
-                    // edit.commit();
-                    // intent.putExtra("status", "highlight1");
                     intent.putExtra("hl1_status", "image");
                     intent.putExtra("highligh1", item.getHighlight1());
                 }
 
                 if (!item.getHighlightvideo1().equals("null")) {
                     Log.e("tag", "2222" + item.getHighlightvideo1());
-                    // edit.putString("hl1_status", "video");
-                    // edit.commit();
-                    // intent.putExtra("status", "highlightvideo1");
                     intent.putExtra("hl1_status", "video");
                     intent.putExtra("highligh1", item.getHighlightvideo1());
                 }
 
                 if (!item.getHighlight2().equals("null")) {
                     Log.e("tag", "2222" + item.getHighlight2());
-                    // edit.putString("hl2_status", "image");
-                    //  edit.commit();
                     intent.putExtra("hl2_status", "image");
                     intent.putExtra("highligh2", item.getHighlight2());
                 }
                 if (!item.getHighlightvideo2().equals("null")) {
                     Log.e("tag", "2222" + item.getHighlightvideo2());
-                    //  edit.putString("hl2_status", "video");
-                    // edit.commit();
                     intent.putExtra("hl2_status", "video");
-                    //  intent.putExtra("status", "highlightvideo2");
                     intent.putExtra("highligh2", item.getHighlightvideo2());
                 }
                 activity.startActivity(intent);

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/colorPrimary"
+        android:weightSum="3"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:id="@+id/img_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/_7sdp"
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:background="@drawable/whitepre_arrow"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="2">
+
+
+
+            <TextView
+                android:id="@+id/txt_provider_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:gravity="center"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:textSize="@dimen/_17sdp"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_weight="0.5">
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/_10sdp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_20sdp"
+                android:orientation="vertical"
+                android:background="@drawable/border_graybg">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="8"
+                    android:padding="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="5">
+
+                        <TextView
+                            android:id="@+id/wowtagid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/exc_icon"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/_15sdp"
+                            android:text="Elevation 2018"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1">
+
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="2">
+
+                        <Switch
+                            android:id="@+id/simpleSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/black_30"
+                            android:layout_centerHorizontal="true"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black_30"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:weightSum="8">
+
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.5"
+                        android:orientation="vertical">
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_80sdp"
+                            android:orientation="vertical">
+
+                            <com.devbrackets.android.exomedia.ui.widget.VideoView
+                                android:id="@+id/video_view"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/gray"
+                                app:useDefaultControls="true"
+                                app:videoScale="centerCrop" />
+
+
+                            <ImageView
+                                android:id="@+id/no_video"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4.5"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:orientation="vertical">
+
+
+
+                        <TextView
+                            android:id="@+id/wowtag_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="false"
+                            android:textSize="@dimen/_13sdp"
+                            android:text=""
+                            android:textColor="@color/textcolr" />
+
+
+
+                        <TextView
+                            android:id="@+id/wowtag_venue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="false"
+                            android:textSize="@dimen/_10sdp"
+                            android:text="No Data"
+                            android:textColor="@color/textcolr" />
+
+
+
+
+                        <TextView
+                            android:id="@+id/wowtag_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="false"
+                            android:textSize="@dimen/_10sdp"
+                            android:text="No Data"
+                            android:textColor="@color/textcolr" />
+
+
+                        <TextView
+                            android:id="@+id/wowtag_eventdatetime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textColor="@color/textcolr"
+                            android:textSize="@dimen/_10sdp"
+                            android:text="No Data"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/wowtag_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:text="@string/edit_wowtag"/>
+
+
+                    <TextView
+                        android:id="@+id/wowtag_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textcolr"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:textSize="@dimen/_11sdp"
+                        android:text="No Data"/>
+
+
+                    <TextView
+                        android:id="@+id/wowtag_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textcolr"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/_12sdp"
+                        android:text="Description"/>
+
+
+                    <TextView
+                        android:id="@+id/wowtag_description_cont"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textcolr"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="No Description Data loaded here..."/>
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@drawable/video_button_gray">
+
+
+
+                    <TextView
+                        android:id="@+id/wowtag_runtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/time_icon"
+                        android:text="No Date"
+                        android:textSize="@dimen/_11sdp"
+                        android:drawablePadding="@dimen/_3sdp"
+                        android:textColor="@color/colorPrimary"
+                        android:paddingTop="@dimen/_2sdp"
+                        android:paddingBottom="@dimen/_2sdp"
+                        android:paddingLeft="@dimen/_3sdp"/>
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:weightSum="3">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+
+                        <TextView
+                            android:id="@+id/wow_shares"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="100 Shares"
+                            android:textColor="@color/textcolr"
+                            android:textSize="@dimen/_10sdp"
+                            android:drawableLeft="@drawable/shares_icon"/>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/wow_attending"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="1000 Attending"
+                            android:textColor="@color/textcolr"
+                            android:textSize="@dimen/_10sdp"
+                            android:drawableLeft="@drawable/users_icon"/>
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginLeft="@dimen/_7sdp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/wow_views"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="1000 Views"
+                            android:textColor="@color/textcolr"
+                            android:textSize="@dimen/_10sdp"
+                            android:drawableLeft="@drawable/views_icon"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:weightSum="5">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"></LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="3">
+
+                        <Button
+                            android:id="@+id/wowtag_register"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_30sdp"
+                            android:text="Update Wowtag"
+                            android:paddingLeft="@dimen/_15sdp"
+                            android:paddingRight="@dimen/_15sdp"
+                            android:textSize="@dimen/_13sdp"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"
+                            android:textAllCaps="false"
+                            android:background="@drawable/curve_btnbg"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+
+
+                        <LinearLayout
+                            android:id="@+id/del_video"
+                            android:layout_width="@dimen/_33sdp"
+                            android:layout_height="@dimen/_33sdp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:background="@drawable/round_rd"
+                            android:orientation="vertical">
+
+                             <ImageView
+                                 android:id="@+id/del_img"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_gravity="center"
+                                 android:background="@drawable/delete_white"/>
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+
+
+
+</LinearLayout>

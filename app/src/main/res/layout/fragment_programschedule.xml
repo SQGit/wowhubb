@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:hint="Event"
+                    android:hint="Agenda"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
@@ -157,7 +157,7 @@
                     android:id="@+id/orrganizer_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Who"
+                    android:hint="Facilitator"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"

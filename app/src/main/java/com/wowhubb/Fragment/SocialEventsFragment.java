@@ -29,7 +29,8 @@ public class SocialEventsFragment extends Fragment {
 
     CheckBox cse_cb, hobbies_cb, parties_cb, media_cb, homelife_cb, musicarts_cb;
     ImageView cse_iv, hobbies_iv, parties_ev, media_iv, homelife_iv, musicarts_iv;
-    String cse,hobbies,parties,media,homelife,musicarts;
+    String cse, hobbies, parties, media, homelife, musicarts;
+    boolean flag1, flag2, flag3, flag4, flag5, flag6 = true;
 
     @Nullable
     @Override
@@ -120,6 +121,32 @@ public class SocialEventsFragment extends Fragment {
             }
 
         }
+        cse_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag1 == true) {
+                    flag1 = false;
+                    cse_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    edit.putString("cse", "4");
+                    edit.commit();
+                    InterestActivity.list.add("comedy");
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    cse_cb.setChecked(false);
+                    flag1 = true;
+                    InterestActivity.list.remove("comedy");
+                    edit.putString("cse", "0");
+                    edit.commit();
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
+
         cse_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -140,7 +167,31 @@ public class SocialEventsFragment extends Fragment {
             }
         });
 
+        hobbies_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag2 == true) {
+                    flag2 = false;
+                    hobbies_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("hobbies");
+                    edit.putString("hobbies", "7");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    hobbies_cb.setChecked(false);
+                    flag2 = true;
+                    InterestActivity.list.remove("hobbies");
+                    edit.putString("hobbies", "0");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         hobbies_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -161,7 +212,31 @@ public class SocialEventsFragment extends Fragment {
             }
         });
 
+        parties_ev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag3 == true) {
+                    flag3 = false;
+                    parties_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("parties");
+                    edit.putString("parties", "9");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    parties_cb.setChecked(false);
+                    flag3 = true;
+                    InterestActivity.list.remove("parties");
+                    edit.putString("parties", "0");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         parties_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -181,7 +256,31 @@ public class SocialEventsFragment extends Fragment {
                 }
             }
         });
+        musicarts_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag4 == true) {
+                    flag4 = false;
+                    musicarts_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("music");
+                    edit.putString("musicarts", "8");
+                    edit.commit();
+                    musicarts_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    musicarts_iv.setColorFilter(musicarts_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    musicarts_cb.setChecked(false);
+                    flag4 = true;
+                    InterestActivity.list.remove("music");
+                    edit.putString("musicarts", "0");
+                    edit.commit();
+                    musicarts_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    musicarts_iv.setColorFilter(musicarts_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         musicarts_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -199,6 +298,31 @@ public class SocialEventsFragment extends Fragment {
                     musicarts_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
                     musicarts_iv.setColorFilter(musicarts_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                 }
+            }
+        });
+        media_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag5 == true) {
+                    flag5 = false;
+                    media_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("media");
+                    edit.putString("media", "5");
+                    edit.commit();
+                    media_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    media_iv.setColorFilter(media_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    media_cb.setChecked(false);
+                    flag5 = true;
+                    InterestActivity.list.remove("media");
+                    edit.putString("media", "0");
+                    edit.commit();
+                    media_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    media_iv.setColorFilter(media_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
             }
         });
         media_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -220,6 +344,31 @@ public class SocialEventsFragment extends Fragment {
                 }
             }
         });
+        homelife_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag6 == true) {
+                    flag6 = false;
+                    homelife_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("homelife");
+                    edit.putString("homelife", "6");
+                    edit.commit();
+                    homelife_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    homelife_iv.setColorFilter(homelife_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    homelife_cb.setChecked(false);
+                    flag6 = true;
+                    InterestActivity.list.remove("homelife");
+                    edit.putString("homelife", "0");
+                    edit.commit();
+                    homelife_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    homelife_iv.setColorFilter(homelife_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
         homelife_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -239,8 +388,6 @@ public class SocialEventsFragment extends Fragment {
                 }
             }
         });
-
-
 
 
         //------------------------ReligionandHelalthEventsFragment-------------------------------//

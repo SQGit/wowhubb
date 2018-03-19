@@ -19,7 +19,7 @@ import com.wowhubb.app.ImageLoader;
 
 public class FeedActivityImage extends Activity {
     public ImageLoader imageLoader1;
-    String fulladdress, highligh1, highligh2, profilepicture, timestamp_str, description, eventname, name_str, eventdate, status, coverimage;
+    String eventstartdate,eventenddate,fulladdress, highligh1, highligh2, profilepicture, timestamp_str, description, eventname, name_str, eventdate, status, coverimage;
     ImageView videoView;
 
     @Override
@@ -37,9 +37,11 @@ public class FeedActivityImage extends Activity {
         TextView eventname_tv = (TextView) findViewById(R.id.eventname_tv);
         TextView timestamp = (TextView) findViewById(R.id.timestamp);
         TextView desc = (TextView) findViewById(R.id.desc_tv);
-        TextView datetv = (TextView) findViewById(R.id.datetv);
+
         TextView addresstv = (TextView) findViewById(R.id.address_tv);
         ImageView profilePic = (ImageView) findViewById(R.id.imageview_profile);
+        TextView fromdatetv=findViewById(R.id.fromdatetv);
+        TextView todatetv=findViewById(R.id.todatetv);
 
         Bundle extras = getIntent().getExtras();
 
@@ -55,6 +57,9 @@ public class FeedActivityImage extends Activity {
             highligh1 = extras.getString("highligh1");
             highligh2 = extras.getString("highligh2");
             fulladdress = extras.getString("fulladdress");
+            eventstartdate = extras.getString("eventstartdate");
+            eventenddate = extras.getString("eventenddate");
+
 
             if (status.equals("cover")) {
                 if (!coverimage.equals("null")) {
@@ -71,8 +76,12 @@ public class FeedActivityImage extends Activity {
             eventname_tv.setText("- " + eventname);
             timestamp.setText(timestamp_str);
             desc.setText(description);
-            datetv.setText(eventdate);
+
             addresstv.setText(fulladdress);
+            fromdatetv.setText(eventstartdate);
+            todatetv.setText(eventenddate);
+
+
         }
         Log.e("tag","PPPPPPPPP------------>"+profilepicture);
         if (profilepicture != null)

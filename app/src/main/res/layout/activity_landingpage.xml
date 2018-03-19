@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/bg_white"
-    android:orientation="vertical"
-    android:weightSum="4">
+    android:id="@+id/top"
+    android:orientation="vertical">
+
+
+
+
     <LinearLayout
+        android:id="@+id/lnr_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/backiv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:src="@drawable/back_arrow" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/_40sdp"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_20sdp">
+
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +30,9 @@
             android:paddingRight="@dimen/_5sdp"
             android:singleLine="true"
             android:background="@null"
-            android:textSize="@dimen/_13sdp" />
+            android:textSize="@dimen/_13sdp"/>
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -47,29 +43,34 @@
         </View>
     </LinearLayout>
 
+
     <LinearLayout
+        android:id="@+id/lnr_topic"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.1"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_below="@+id/lnr_search"
+        android:orientation="vertical">
+
+
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:weightSum="2">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5.5"
+            android:orientation="horizontal">
+
+
 
             <LinearLayout
                 android:id="@+id/createevents_lv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginBottom="22dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_weight="2.5">
+
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -84,32 +85,150 @@
                     android:gravity="center"
                     android:textColor="#333333"
                     android:textSize="@dimen/_13sdp" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:layout_weight="0.5">
 
                 <View
-                    android:layout_width="@dimen/_123sdp"
-                    android:layout_height="0.6dp"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginLeft="@dimen/_26sdp"
-                    android:layout_marginTop="@dimen/_1sdp"
+                    android:layout_width="0.7dp"
+                    android:layout_height="@dimen/_103sdp"
                     android:background="@color/colorPrimary">
 
                 </View>
             </LinearLayout>
 
+
+
+            <LinearLayout
+                android:id="@+id/searchproviders_lv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:layout_weight="2.5">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/search_event_serv_prov_land" />
+
+                <TextView
+                    android:id="@+id/admin_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:text="@string/searchevent_providers"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/_13sdp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5.5"
+            android:orientation="horizontal">
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_weight="2.5">
+
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.7dp"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginLeft="@dimen/_26sdp"
+
+                    android:background="@color/colorPrimary">
+
+                </View>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:text="•"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="40dp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:gravity="center"
+                android:layout_weight="2.5">
+
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.7dp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@color/colorPrimary">
+
+                </View>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5.5"
+            android:orientation="horizontal">
+
+
             <LinearLayout
                 android:id="@+id/create_lv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="top"
                 android:gravity="center"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:orientation="vertical">
+                android:layout_weight="2.5">
+
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -125,156 +244,78 @@
                     android:textSize="@dimen/_13sdp"
                     android:gravity="center"
                     android:text="@string/searchevent_land"
-                   />
+                    />
+
             </LinearLayout>
 
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:weightSum="2">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="top"
                 android:gravity="center"
-                android:layout_marginBottom="-18dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="0.6dp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimary"
-                        android:gravity="start|center">
-                    </View>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/admin_lv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_14sdp"
-                    android:gravity="center"
-                    android:layout_marginBottom="@dimen/_9sdp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/search_event_serv_prov_land" />
-
-                    <TextView
-                        android:id="@+id/admin_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/_10sdp"
-                        android:gravity="center"
-                        android:text="@string/searchevent_providers"
-                        android:textColor="#333333"
-                        android:textSize="@dimen/_13sdp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_marginBottom="-20dp"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:text="•"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="40dp" />
+                android:layout_weight="0.5">
 
                 <View
-                    android:layout_width="@dimen/_120sdp"
-                    android:layout_height="0.6dp"
-                    android:layout_gravity="center"
+                    android:layout_width="0.7dp"
+                    android:layout_height="@dimen/_103sdp"
                     android:layout_marginTop="@dimen/_1sdp"
                     android:background="@color/colorPrimary">
 
                 </View>
             </LinearLayout>
 
+
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/member_lv"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="top"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_weight="2.5">
 
 
-                <LinearLayout
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/nearby_events_land" />
+
+                <TextView
+                    android:id="@+id/member_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:paddingTop="@dimen/_10sdp"
+                    android:text="@string/nearbyevents"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/_13sdp" />
 
-                    <View
-                        android:layout_width="0.6dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:background="@color/colorPrimary">
 
-                    </View>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/member_lv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/_14sdp"
-                    android:gravity="center"
-                    android:layout_gravity="top"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/nearby_events_land" />
-
-                    <TextView
-                        android:id="@+id/member_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/_10sdp"
-                        android:text="@string/nearbyevents"
-                        android:textColor="#333333"
-                        android:textSize="@dimen/_13sdp" />
-                </LinearLayout>
             </LinearLayout>
 
+
+
         </LinearLayout>
+
+
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
 
-        android:layout_weight="1.5">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/vieweventfeed"
@@ -290,7 +331,7 @@
                 android:text="@string/vieweventfeed" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

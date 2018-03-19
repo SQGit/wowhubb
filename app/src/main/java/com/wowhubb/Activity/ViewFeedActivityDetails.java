@@ -1,6 +1,6 @@
 package com.wowhubb.Activity;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
@@ -8,39 +8,43 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wowhubb.FeedsData.Programschedule;
 import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.ImageView.CircularNetworkImageView;
 import com.wowhubb.R;
-import com.wowhubb.Utils.ItemDetailsWrapper;
 import com.wowhubb.app.ImageLoader;
-import com.wowhubb.data.FeedItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Salman on 27-10-2017.
  */
 
-public class ViewFeedActivityDetails extends Activity {
+public class ViewFeedActivityDetails extends AppCompatActivity {
+
+    public static int eventdayscount;
     static Bitmap bitmap;
     public ImageLoader imageLoader1;
-    String fulladdress, profilepicture, timestamp_str, description, eventname, name_str, eventdate, status, coverimage;
+    String fulladdress, profilepicture, timestamp_str, description, eventname, eventdate, status, coverimage, str_position;
     ImageView videoView;
     FrameLayout frameLayout;
-    ImageView video1plus, video2plus, video3plus;
+    ImageView video1plus, video2plus, video3plus, closeiv;
     SharedPreferences sharedPrefces;
     SharedPreferences.Editor edit;
-    String wowtagvideo, highligh1, highligh2, h_status, hl2_status,gifturl,donationurl;
-
-    List<FeedItem> list;
+    String eventtype, wowtagvideo, highligh1, highligh2, gifturl, donationurl, eventvenueaddress;
+    TextView eventshedule_tv, eventdiscussion_tv;
+    LinearLayout eventtours_lv;
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath)
             throws Throwable {
@@ -67,31 +71,34 @@ public class ViewFeedActivityDetails extends Activity {
         return bitmap;
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewmore_dialog_image);
 
-       // ItemDetailsWrapper wrap = (ItemDetailsWrapper) getIntent().getSerializableExtra("obj");
-        //list = wrap.getItemDetails();
-        Log.e("tag","programshedule-------------->>>"+list);
+        final ArrayList<Programschedule> programschedules = getIntent().getParcelableArrayListExtra("program");
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(ViewFeedActivityDetails.this);
         edit = sharedPrefces.edit();
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(ViewFeedActivityDetails.this, v1);
 
-        videoView = findViewById(R.id.video_view);
-        imageLoader1 = new ImageLoader(getApplicationContext());
+        videoView = findViewById(R.id.feedImage1);
 
-        TextView name = (TextView) findViewById(R.id.hoster_name);
-        TextView eventname_tv = (TextView) findViewById(R.id.eventname_tv);
         TextView timestamp = (TextView) findViewById(R.id.timestamp);
         TextView desc = (TextView) findViewById(R.id.desc_tv);
         TextView datetv = (TextView) findViewById(R.id.datetv);
+        TextView ticketurltv = (TextView) findViewById(R.id.ticketurl_tv);
+        TextView donatiionurltv = (TextView) findViewById(R.id.donationurl_tv);
         TextView addresstv = (TextView) findViewById(R.id.address_tv);
-        TextView giftrurl_tv = (TextView) findViewById(R.id.ticketurl_desc_tv);
+        TextView ticketrurl_tv = (TextView) findViewById(R.id.ticketurl_desc_tv);
         TextView donationurl_tv = (TextView) findViewById(R.id.donationturl_desc_tv);
-        ImageView profilePic = (ImageView) findViewById(R.id.imageview_profile);
+        eventshedule_tv = findViewById(R.id.tv_eventschedule);
+        eventdiscussion_tv = findViewById(R.id.tv_eventdiscussion);
+        eventtours_lv = findViewById(R.id.eventtours_lv);
+        closeiv = findViewById(R.id.close_iv);
+
+
         frameLayout = findViewById(R.id.framevideo1);
         ImageView highlight1_iv = findViewById(R.id.highlight1);
         ImageView highlight2_iv = findViewById(R.id.highlight2);
@@ -100,61 +107,130 @@ public class ViewFeedActivityDetails extends Activity {
         video3plus = findViewById(R.id.video3plus_iv);
         ImageView wowtagvideo1 = findViewById(R.id.video0_iv);
         ImageView feedImageView = (ImageView) findViewById(R.id.feedImage1);
+
+
+        closeiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            profilepicture = extras.getString("profilepicture");
-            timestamp_str = extras.getString("timestamp");
+            eventvenueaddress = extras.getString("eventvenueaddress");
             description = extras.getString("description");
             status = extras.getString("status");
             eventname = extras.getString("eventname");
-            name_str = extras.getString("name");
-            eventdate = extras.getString("eventdate");
+            str_position = extras.getString("str_position");
+            eventdate = extras.getString("eventstartdate");
             coverimage = extras.getString("coverpage");
-            highligh1 = extras.getString("highligh1");
-            highligh2 = extras.getString("highligh2");
-            fulladdress = extras.getString("fulladdress");
+            highligh1 = extras.getString("highlight1");
+            highligh2 = extras.getString("highlight2");
             wowtagvideo = extras.getString("wowtagvideo");
-            h_status = extras.getString("hl1_status");
-            hl2_status = extras.getString("hl2_status");
             gifturl = extras.getString("gifturl");
             donationurl = extras.getString("donationurl");
+            eventdayscount = extras.getInt("eventdayscount");
 
-            Log.e("tag", "Imagge-------" + h_status+hl2_status);
+            eventtype = extras.getString("eventtype");
 
-             if (!coverimage.equals("null")) {
-                    imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/event/" + coverimage, videoView);
-             }
+            Log.e("tag", "wowtagvideo-------" + wowtagvideo);
+            Log.e("tag", "Imagge22222222-------" + gifturl + highligh1);
 
-            name.setText(name_str);
-            eventname_tv.setText("- " + eventname);
-            timestamp.setText(timestamp_str);
-            desc.setText(description);
-            datetv.setText(eventdate);
-            addresstv.setText(fulladdress);
-            giftrurl_tv.setText(gifturl);
-            donationurl_tv.setText(donationurl);
+
+            if (description != null && !description.equals("null")) {
+                desc.setText(description);
+            }
+            if (eventdate != null && !eventdate.equals("null")) {
+                datetv.setText(eventdate);
+            }
+            if (eventvenueaddress != null && !eventvenueaddress.equals("null")) {
+                addresstv.setText(eventvenueaddress);
+            }
+
+            if (eventtype != null && !eventtype.equals("null")) {
+
+                if (eventtype.equals("personal_event")) {
+                    eventtours_lv.setVisibility(View.GONE);
+
+                    if (donationurl != null && !donationurl.equals("")) {
+                        donationurl_tv.setVisibility(View.VISIBLE);
+                        donatiionurltv.setVisibility(View.VISIBLE);
+                        donationurl_tv.setText(donationurl);
+                    } else {
+                        donationurl_tv.setVisibility(View.GONE);
+                        donatiionurltv.setVisibility(View.GONE);
+                    }
+
+                    if (gifturl != null && !gifturl.equals("")) {
+                        ticketrurl_tv.setVisibility(View.VISIBLE);
+                        ticketurltv.setVisibility(View.VISIBLE);
+                        ticketrurl_tv.setText(gifturl);
+                    } else {
+                        ticketrurl_tv.setVisibility(View.GONE);
+                        ticketurltv.setVisibility(View.GONE);
+                    }
+                } else {
+                    eventtours_lv.setVisibility(View.VISIBLE);
+                    donationurl_tv.setVisibility(View.GONE);
+                    donatiionurltv.setVisibility(View.GONE);
+                    ticketrurl_tv.setVisibility(View.GONE);
+                    ticketurltv.setVisibility(View.GONE);
+                }
+            }
         }
-        if (!coverimage.equals("null"))
-        {
-            imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/event/" + coverimage, feedImageView);
-        }
-        else
-        {
+        if (coverimage != null && !coverimage.equals("null")) {
+            Log.e("tag", "coverrrr------->");
+            Glide.with(ViewFeedActivityDetails.this).load("http://104.197.80.225:3010/wow/media/event/" + coverimage)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .crossFade()
+                    .into(videoView);
+        } else {
             feedImageView.setVisibility(View.GONE);
         }
-        if (profilepicture != null) {
-           // imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/personal/" + profilepicture, profilePic);
-            Glide.with(ViewFeedActivityDetails.this).load("http://104.197.80.225:3010/wow/media/personal/" +profilepicture).into(profilePic);
-
-        } else {
-            profilePic.setImageResource(R.drawable.profile_img);
+        if (programschedules != null && !programschedules.equals("null")) {
+            if (programschedules.size() > 0) {
+                eventshedule_tv.setVisibility(View.VISIBLE);
+            } else {
+                eventshedule_tv.setVisibility(View.GONE);
+            }
         }
+        eventdiscussion_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ViewFeedActivityDetails.this, ViewEventDiscussions.class);
+                intent.putParcelableArrayListExtra("program", programschedules);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            }
+        });
 
-        if (!wowtagvideo.equals("null")) {
+        eventshedule_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+         /*       Log.e("tag", "11111111------->" + programschedules.size());
+                if (programschedules.size() > 0) {
+                    Intent intent = new Intent(ViewFeedActivityDetails.this, ViewProgramSchedule.class);
+                    intent.putParcelableArrayListExtra("program", programschedules);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                } else {
+                    Toast.makeText(ViewFeedActivityDetails.this, "Sorry Schedule is Empty", Toast.LENGTH_LONG).show();
+                }*/
+
+
+            }
+
+        });
+
+        if (wowtagvideo != null && !wowtagvideo.equals("null")) {
+            Log.e("tag", "wowtag------->");
             String selectedVideoFilePath1 = "http://104.197.80.225:3010/wow/media/event/" + wowtagvideo;
             //videoView.setVideoURI(Uri.parse("https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4"));
-            Log.d("tag", "567231546" + selectedVideoFilePath1);
+            //  Log.d("tag", "567231546" + selectedVideoFilePath1);
             try {
                 retriveVideoFrameFromVideo(selectedVideoFilePath1);
                 wowtagvideo1.setImageBitmap(bitmap);
@@ -165,53 +241,35 @@ public class ViewFeedActivityDetails extends Activity {
             }
 
         }
-        if (h_status!=null) {
+        if (highligh1 != null && !highligh1.equals("null")) {
 
+            Glide.with(ViewFeedActivityDetails.this).load("http://104.197.80.225:3010/wow/media/event/" + highligh1)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                    .centerCrop()
+                    .crossFade()
+                    .into(highlight1_iv);
 
-            if (h_status.equals("image")) {
-                edit.putString("hl1_status", "image");
-                edit.commit();
-                imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/event/" + highligh1, highlight1_iv);
-            }
-           else {
-                String selectedVideoFilePath1 = "http://104.197.80.225:3010/wow/media/event/" + highligh1;
-                try {
-                    retriveVideoFrameFromVideo(selectedVideoFilePath1);
-                    highlight1_iv.setImageBitmap(bitmap);
-                    video2plus.setImageDrawable(ViewFeedActivityDetails.this.getDrawable(R.drawable.video_icon));
-                    edit.putString("hl1_status", "video");
-                    edit.commit();
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
-        }
-        if (hl2_status!=null) {
-
-
-            if (hl2_status.equals("image"))
-            {
-                edit.putString("hl2_status", "image");
-                edit.commit();
-                imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/event/" + highligh2, highlight2_iv);
-            }
-            else
-                {
-                String selectedVideoFilePath1 = "http://104.197.80.225:3010/wow/media/event/" + highligh2;
-                //videoView.setVideoURI(Uri.parse("https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4"));
-                Log.d("tag", "567231546" + selectedVideoFilePath1);
-                try {
-                    retriveVideoFrameFromVideo(selectedVideoFilePath1);
-                    highlight2_iv.setImageBitmap(bitmap);
-                    video3plus.setImageDrawable(ViewFeedActivityDetails.this.getDrawable(R.drawable.video_icon));
-                    edit.putString("hl2_status", "video");
-                    edit.commit();
-
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
 
         }
+        if (highligh2 != null && !highligh2.equals("null")) {
+
+            String selectedVideoFilePath1 = "http://104.197.80.225:3010/wow/media/event/" + highligh2;
+            //videoView.setVideoURI(Uri.parse("https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4"));
+            Log.d("tag", "567231546" + selectedVideoFilePath1);
+            try {
+                retriveVideoFrameFromVideo(selectedVideoFilePath1);
+                highlight2_iv.setImageBitmap(bitmap);
+                video3plus.setImageDrawable(ViewFeedActivityDetails.this.getDrawable(R.drawable.video_icon));
+                edit.putString("hl2_status", "video");
+                edit.commit();
+
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+
+
     }
+
+
 }

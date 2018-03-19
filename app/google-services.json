@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "687469958749",
+    "firebase_url": "https://wowhubb-186605.firebaseio.com",
+    "project_id": "wowhubb-186605",
+    "storage_bucket": "wowhubb-186605.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687469958749:android:5bae4f289836aece",
+        "android_client_info": {
+          "package_name": "com.wowhubb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "687469958749-g2rvo5vhb0jrvpvbuc3chg2lhi154qnf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0Rl3XBSo7boZjXEZeq4jiiYQjf36u9no"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

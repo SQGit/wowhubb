@@ -3,9 +3,12 @@
     <color name="colorPrimary">#e91e63</color>
     <color name="colorPrimaryDark">#e91e63</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="grey">#c2c2c2</color>
+    <color name="grey">#dadada</color>
+    <color name="dialoggrey">#6C6C6C</color>
+    <color name="greyview">#f5f5f5</color>
     <color name="headercolor">#333333</color>
     <color name="white">#FFFFFF</color>
+    <color name="tourorange">#FC6653</color>
     <color name="white_trans">#99FFFFFF</color>
     <color name="graybg">#f5f5f5</color>
     <color name="gray">#f0f0f0</color>
@@ -26,4 +29,6 @@
     <color name="green">#8dc63d</color>
     <color name="red">#ef4135</color>
     <color name="yellow">#E5F231</color>
+    <color name="tabcolor">#F2F2F2</color>
+
 </resources>

@@ -1,9 +1,13 @@
 package com.wowhubb.Fonts;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -51,6 +55,31 @@ public class FontsOverride {
         } catch (Exception e) {
         }
     }
+    public static class TypefaceSpan extends MetricAffectingSpan {
+        private Typeface mTypeface;
+        public TypefaceSpan(Typeface typeface) {
+            mTypeface = typeface;
+        }
 
+        @Override
+        public void updateMeasureState(TextPaint p) {
+            p.setTypeface(mTypeface);
+            p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
 
+        @Override
+        public void updateDrawState(TextPaint tp) {
+            tp.setTypeface(mTypeface);
+            tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
+    }
+
+    public static void hideSoftKeyboard(View view) {
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null) {
+                inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
 }

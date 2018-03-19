@@ -2,31 +2,43 @@ package com.wowhubb.Activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.wowhubb.Adapter.PagerAdapter;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Fragment.EventContactFragment;
 import com.wowhubb.Fragment.EventHighlightsFragment;
 import com.wowhubb.Fragment.EventTypeFragment;
 import com.wowhubb.Fragment.EventVenueFragment;
+import com.wowhubb.Fragment.ProgramScheduleFragmentNew;
 import com.wowhubb.Fragment.WowtagFragment;
 import com.wowhubb.R;
+import com.wowhubb.data.EventData;
 
 /**
  * Created by Ramya on 25-07-2017.
@@ -35,75 +47,111 @@ import com.wowhubb.R;
 public class CreateEventActivity extends AppCompatActivity {
 
     public static TextView skiptv;
+    public static TextView  publishtv;
+    public static Snackbar snackbar;
     static ViewPager pager;
-    FloatingActionButton fab;
+    public EventData eventData;
+    TextView fab, previous_fab;
     Context context = this;
-    TextView backiv;
+    String navdashboard;
+    Bundle extras;
+    Typeface lato;
+    TextView tv_snack;
+    int currentPage;
+    LinearLayout nextlv, previouslv,backiv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        eventData = new EventData();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
         getSupportActionBar().hide();
-        Log.e("tag", "dbcreated11");
+
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(CreateEventActivity.this, v1);
+        extras = getIntent().getExtras();
+        lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+        Log.e("tag", "navdashboard------------------->+" + navdashboard);
 
         pager = findViewById(R.id.pager);
         fab = findViewById(R.id.next_fb);
-        backiv = findViewById(R.id.backiv);
+        previous_fab = findViewById(R.id.previous_fb);
+        backiv = findViewById(R.id.back_lv);
         skiptv = findViewById(R.id.skiptv);
+        publishtv = findViewById(R.id.publishtv);
+        nextlv = findViewById(R.id.nextlv);
+        previouslv = findViewById(R.id.previouslv);
 
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        pager.setOffscreenPageLimit(1);
+        pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), width, height));
 
         final StepperIndicator indicator = findViewById(R.id.stepper_indicator);
-
-        View v2 = indicator.getRootView();
-        FontsOverride.overrideFonts(CreateEventActivity.this, v2);
         indicator.setViewPager(pager);
-
+        loadInitialFragment();
 
         indicator.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
             @Override
             public void onStepClicked(int step) {
+                //  pager.setCurrentItem(step);
             }
         });
+
+        //-----------------------------------------SNACKBAR----------------------------------------//
+
+        snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.RED);
+        View sbView = snackbar.getView();
+        tv_snack = (android.widget.TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        tv_snack.setTextColor(Color.WHITE);
+        tv_snack.setTypeface(lato);
+        previous_fab.setVisibility(View.INVISIBLE);
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("tag", "podsition---------->" + position);
+                currentPage = position;
                 switch (position) {
                     case 0:
                         fab.setVisibility(View.VISIBLE);
                         skiptv.setVisibility(View.GONE);
+                        publishtv.setVisibility(View.GONE);
                         break;
                     case 1:
                         fab.setVisibility(View.VISIBLE);
                         skiptv.setVisibility(View.GONE);
+                        publishtv.setVisibility(View.GONE);
                         break;
                     case 2:
                         fab.setVisibility(View.VISIBLE);
+                        publishtv.setVisibility(View.GONE);
                         skiptv.setVisibility(View.GONE);
                         break;
                     case 3:
                         fab.setVisibility(View.VISIBLE);
                         skiptv.setVisibility(View.VISIBLE);
+                        publishtv.setVisibility(View.GONE);
                         break;
                     case 4:
                         fab.setVisibility(View.VISIBLE);
                         skiptv.setVisibility(View.VISIBLE);
+                        publishtv.setVisibility(View.GONE);
                         break;
                     case 5:
-                        fab.setVisibility(View.VISIBLE);
-                        skiptv.setVisibility(View.GONE);
-                        break;
-                    case 6:
-                        skiptv.setVisibility(View.GONE);
                         fab.setVisibility(View.GONE);
+                        skiptv.setVisibility(View.GONE);
+                        publishtv.setVisibility(View.VISIBLE);
                         break;
+
                     default:
                         skiptv.setVisibility(View.GONE);
                         fab.setVisibility(View.VISIBLE);
+
+                        Log.e("tag", "11111111wwwwwww----");
                         break;
 
                 }
@@ -113,11 +161,13 @@ public class CreateEventActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                currentPage = position;
 
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
 
             }
         });
@@ -125,130 +175,424 @@ public class CreateEventActivity extends AppCompatActivity {
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                //startActivity(new Intent(CreateEventActivity.this, LandingPageActivity.class));
-                //overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+
+                if (extras != null) {
+                    navdashboard = extras.getString("navdashboard");
+                    if (navdashboard.equals("true")) {
+                        finish();
+                    }
+                } else {
+                    finish();
+                }
+
             }
         });
 
         skiptv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
-                //skiptv.setVisibility(View.INVISIBLE);
+                Log.e("tag", "Skip-----------" + currentPage);
+
+                if (currentPage == 3) {
+                    EventHighlightsFragment eventHighlightsFragment = new EventHighlightsFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.right_to_left, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, eventHighlightsFragment, "tag");
+                    fragmentTransaction.addToBackStack("tag");
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage + 1;
+                    pager.setCurrentItem(currentPage, true);
+                } else if (currentPage == 4) {
+                    EventContactFragment eventContactFragment = new EventContactFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.right_to_left, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, eventContactFragment, "tag");
+                    fragmentTransaction.addToBackStack("tag");
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage + 1;
+                    pager.setCurrentItem(currentPage, true);
+                }
+
+
+            }
+        });
+
+
+
+
+/*
+        previous_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (currentPage == 0) {
+                    previous_fab.setVisibility(View.GONE);
+                    //  pager.setCurrentItem(indicator.getCurrentStep() - 1, true);
+                    EventTypeFragment eventTypeFragment = new EventTypeFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+
+                    fragmentTransaction.replace(R.id.frame_layout, eventTypeFragment, "tag");
+                    // fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+
+
+                } else if (currentPage == 1) {
+                    previous_fab.setVisibility(View.GONE);
+                    //  pager.setCurrentItem(indicator.getCurrentStep() - 1, true);
+                    EventTypeFragment eventTypeFragment = new EventTypeFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+                    fragmentTransaction.replace(R.id.frame_layout, eventTypeFragment, "tag");
+                    // fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+                } else if (currentPage == 2) {
+
+                    WowtagFragment wowtagFragment = new WowtagFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.right_to_left, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, wowtagFragment, "tag");
+                    // fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+                } else if (currentPage == 3) {
+
+                    EventVenueFragment eventVenueFragment = new EventVenueFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, eventVenueFragment, "tag");
+                    //  fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+
+                } else if (currentPage == 4) {
+
+                    ProgramScheduleFragmentNew programScheduleFragmentNew = new ProgramScheduleFragmentNew();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, programScheduleFragmentNew, "tag");
+                    //fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+
+                } else if (currentPage == 5) {
+
+                    EventHighlightsFragment eventHighlightsFragment = new EventHighlightsFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_to_right);
+                    fragmentTransaction.replace(R.id.frame_layout, eventHighlightsFragment, "tag");
+                    // fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+
+                } else {
+
+
+                }
+
+            }
+        });*/
+
+
+        previous_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("tag", "fdshghfjhjfhj---------->>>>>>>" + currentPage);
+                if (currentPage == 0) {
+                    previous_fab.setVisibility(View.INVISIBLE);
+                    previous_fab.setEnabled(false);
+                    CreateEventActivity.super.onBackPressed();
+                    currentPage = currentPage + 1;
+                    pager.setCurrentItem(currentPage, true);
+                }
+                if (currentPage == 1) {
+                    previous_fab.setVisibility(View.INVISIBLE);
+                    previous_fab.setEnabled(false);
+                    CreateEventActivity.super.onBackPressed();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+                } else {
+                    previous_fab.setVisibility(View.VISIBLE);
+                    previous_fab.setEnabled(true);
+                    CreateEventActivity.super.onBackPressed();
+                    currentPage = currentPage - 1;
+                    pager.setCurrentItem(currentPage, true);
+                }
+
+
+            }
+        });
+        previouslv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previous_fab.performClick();
+            }
+        });
+
+        nextlv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab.performClick();
             }
         });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                indicator.getCurrentStep();
-                indicator.setLabelColor(R.color.colorPrimary);
-                Log.d("tag", "Current step------>" + indicator.getCurrentStep() + indicator.getStepCount());
 
+                Log.e("tag", "Current step------>");
+                Log.e("tag", " step------>" + currentPage);
                 final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String highlight1 = sharedPreferences.getString("highlight1", "");
                 String highlight2 = sharedPreferences.getString("highlight2", "");
                 String video1 = sharedPreferences.getString("video1", "");
                 String coverphoto = sharedPreferences.getString("coverpage", "");
-                Log.e("tag", "video------>" + video1);
 
-                if (indicator.getCurrentStep() == 0) {
+
+                if (currentPage == 0) {
                     fab.setVisibility(View.VISIBLE);
-                    if (!EventTypeFragment.eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
-                        EventTypeFragment.eventdate_et.setError(null);
-                        if (!EventTypeFragment.desc_et.getText().toString().trim().equalsIgnoreCase("")) {
-                            EventTypeFragment.desc_et.setError(null);
-                            pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
-                        } else {
-                            EventTypeFragment.desc_et.setError("Enter Description");
-                        }
+                    if (!EventTypeFragment.eventtopic_et.getText().toString().trim().equalsIgnoreCase("")) {
+                        EventTypeFragment.eventtopic_til.setError(null);
+                        if (EventTypeFragment.str_category != null) {
 
-                    } else {
-                        EventTypeFragment.eventdate_et.setError("Select Event Date");
-                    }
+                            if (!EventTypeFragment.eventtimezone_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                EventTypeFragment.eventtimezone_til.setError(null);
+                                if (!EventTypeFragment.eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                    EventTypeFragment.eventdate_til.setError(null);
+                                   /* if (!EventTypeFragment.eventdateto_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                        EventTypeFragment.eventdateto_til.setError(null);
+*/
+                                    if (EventTypeFragment.str_eventday != null) {
+                                        if (!EventTypeFragment.desc_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                            EventTypeFragment.desc_til.setError(null);
 
-                } else if (indicator.getCurrentStep() == 1) {
-                    fab.setVisibility(View.VISIBLE);
-                    if (!WowtagFragment.fromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                        WowtagFragment.fromtime_tv.setError(null);
-                        if (!WowtagFragment.totime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                            WowtagFragment.totime_tv.setError(null);
-                            pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                                            if (EventTypeFragment.selectedCoverFilePath != null) {
 
-                        } else {
-                            Toast.makeText(CreateEventActivity.this, "Select To Date", Toast.LENGTH_LONG).show();
-                            WowtagFragment.totime_tv.setError("Select To Date");
-                        }
+                                                WowtagFragment WowtagFragment = new WowtagFragment();
+                                                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                                fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+                                                fragmentTransaction.replace(R.id.frame_layout, WowtagFragment, "tag");
+                                                fragmentTransaction.addToBackStack("tag");
+                                                Log.e("tag", "jvkbjk" + currentPage);
+                                                fragmentTransaction.commit();
+                                                currentPage = currentPage + 1;
+                                                pager.setCurrentItem(currentPage, true);
+                                                previous_fab.setVisibility(View.VISIBLE);
+                                                // pager.setCurrentItem(currentPage);
+                                                Log.e("tag", "jvkbjk");
+                                            } else {
+                                                SpannableString s = new SpannableString("Please Capture any Cover Page Image for your Event");
+                                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                                                EventTypeFragment.scrollView.scrollTo(0, EventTypeFragment.scrollView.getBottom());
+                                            }
 
-
-                    } else {
-                        Toast.makeText(CreateEventActivity.this, "Select From Date", Toast.LENGTH_LONG).show();
-                        WowtagFragment.fromtime_tv.setError("Select From Date");
-                    }
-
-
-                } else if (indicator.getCurrentStep() == 2) {
-                    fab.setVisibility(View.VISIBLE);
-                    if (!EventVenueFragment.venuename.getText().toString().trim().equalsIgnoreCase("")) {
-                        EventVenueFragment.venuename.setError(null);
-                        if (!EventVenueFragment.address.getText().toString().trim().equalsIgnoreCase("")) {
-                            EventVenueFragment.address.setError(null);
-                            if (!EventVenueFragment.city.getText().toString().trim().equalsIgnoreCase("")) {
-                                EventVenueFragment.city.setError(null);
-
-                                if (!EventVenueFragment.state.getText().toString().trim().equalsIgnoreCase("")) {
-                                    EventVenueFragment.state.setError(null);
-                                    if (!EventVenueFragment.zipcode.getText().toString().trim().equalsIgnoreCase("")) {
-                                        EventVenueFragment.zipcode.setError(null);
-                                        pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                                        } else {
+                                            SpannableString s = new SpannableString("Enter Event Description");
+                                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            EventTypeFragment.desc_til.setError(s);
+                                            EventTypeFragment.desc_et.requestFocus();
+                                            EventTypeFragment.scrollView.scrollTo(0, EventTypeFragment.desc_til.getBottom());
+                                        }
                                     } else {
-                                        EventVenueFragment.zipcode.setError("Enter Zipcode");
-                                        EventVenueFragment.zipcode.requestFocus();
-                                    }
-                                } else {
-                                    EventVenueFragment.state.setError("Enter State");
-                                    EventVenueFragment.state.requestFocus();
-                                }
-                            } else {
-                                EventVenueFragment.city.setError("Enter City");
-                                EventVenueFragment.city.requestFocus();
-                            }
 
+
+                                        SpannableString s = new SpannableString("Select Event Days");
+                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        Toast.makeText(CreateEventActivity.this, s, Toast.LENGTH_LONG).show();
+                                        EventTypeFragment.eventDay_spn.setFocusable(true);
+
+                                    }
+
+
+                                   /* } else {
+                                        SpannableString s = new SpannableString("Select Event End Date");
+                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        EventTypeFragment.eventdateto_til.setError(s);
+
+
+                                    }*/
+                                } else {
+                                    SpannableString s = new SpannableString("Select Event Start Date");
+                                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    EventTypeFragment.eventdate_til.setError(s);
+
+
+                                }
+
+                            } else {
+
+                                SpannableString s = new SpannableString("Enter Event City");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                EventTypeFragment.eventtimezone_til.setError(s);
+                                EventTypeFragment.eventtimezone_et.requestFocus();
+                            }
                         } else {
-                            EventVenueFragment.address.setError("Enter Address");
-                            EventVenueFragment.address.requestFocus();
+                            SpannableString s = new SpannableString("Select Event Category");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        EventVenueFragment.venuename.setError("Enter Venue Name");
-                        EventVenueFragment.venuename.requestFocus();
+                        SpannableString s = new SpannableString("Enter Event Name");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        EventTypeFragment.eventtopic_til.setError(s);
+                        EventTypeFragment.eventtopic_et.setFocusable(true);
+                        EventTypeFragment.eventtopic_et.requestFocus();
+                        EventTypeFragment.scrollView.scrollTo(0, EventTypeFragment.scrollView.getTop());
                     }
-                } else if (indicator.getCurrentStep() == 3) {
+
+
+                } else if (currentPage == 1) {
+
+                    Log.e("tag", "11111222");
                     fab.setVisibility(View.VISIBLE);
-                    pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
-                } else if (indicator.getCurrentStep() == 4) {
-                    fab.setVisibility(View.VISIBLE);
-                    if (!EventHighlightsFragment.speaker_et.getText().toString().trim().equalsIgnoreCase("")) {
-                        EventHighlightsFragment.til_speaker.setError(null);
-                        pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                    Log.e("tag", "3333333333");
+                    if (!WowtagFragment.eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
+                        WowtagFragment.eventname_et.setError(null);
+
+                        if (WowtagFragment.selectedVideoFilePath1 != null) {
+
+                            if (!WowtagFragment.fromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                WowtagFragment.til_from.setError(null);
+                                if (!WowtagFragment.totime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                    WowtagFragment.til_to.setError(null);
+                                    Log.e("tag", "hgchgxc");
+                                    setData();
+                                    EventVenueFragment eventVenueFragment = new EventVenueFragment();
+                                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+                                    fragmentTransaction.replace(R.id.frame_layout, eventVenueFragment, "tag");
+                                    fragmentTransaction.addToBackStack("tag");
+                                    fragmentTransaction.commit();
+                                    currentPage = currentPage + 1;
+                                    pager.setCurrentItem(currentPage, true);
+                                    previous_fab.setVisibility(View.VISIBLE);
+
+                                } else {
+                                    SpannableString s = new SpannableString("Select End Date");
+                                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    WowtagFragment.til_to.setError(s);
+                                }
+
+                            } else {
+                                SpannableString s = new SpannableString("Select Start Date");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                WowtagFragment.til_from.setError(s);
+                            }
+                        } else {
+                            SpannableString s = new SpannableString("Select Wowtag Video");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        EventHighlightsFragment.til_speaker.setError("Enter the Speaker Name");
+                        SpannableString s = new SpannableString("Enter Event Title");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        WowtagFragment.eventname_et.setError(s);
+                        WowtagFragment.eventname_et.requestFocus();
                     }
-                } else if (indicator.getCurrentStep() == 5) {
-                    pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+
+
+                } else if (currentPage == 2) {
+                    fab.setVisibility(View.VISIBLE);
+
+                    // publishtv.setVisibility(View.VISIBLE);
+                    if (!EventVenueFragment.venuename.getText().toString().trim().equalsIgnoreCase("")) {
+                        Log.e("tag", "hsgdfd");
+                        EventVenueFragment.postDataToSQLite();
+                        // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                        Log.e("tag", "ifff" + EventVenueFragment.listBeneficiary.size());
+                        ProgramScheduleFragmentNew programScheduleFragmentNew = new ProgramScheduleFragmentNew();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+                        fragmentTransaction.replace(R.id.frame_layout, programScheduleFragmentNew, "tag");
+                        fragmentTransaction.addToBackStack("tag");
+                        fragmentTransaction.commit();
+                        currentPage = currentPage + 1;
+                        pager.setCurrentItem(currentPage, true);
+
+                    } else {
+
+                        // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                        ProgramScheduleFragmentNew programScheduleFragmentNew = new ProgramScheduleFragmentNew();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frame_layout, programScheduleFragmentNew, "tag");
+                        fragmentTransaction.addToBackStack(null);
+
+                        fragmentTransaction.commitAllowingStateLoss();
+                        currentPage = currentPage + 1;
+                        pager.setCurrentItem(currentPage, true);
+
+                    }
+
+                } else if (currentPage == 3) {
+                    fab.setVisibility(View.VISIBLE);
+                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                    EventHighlightsFragment eventHighlightsFragment = new EventHighlightsFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+                    fragmentTransaction.replace(R.id.frame_layout, eventHighlightsFragment, "tag");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage + 1;
+                    pager.setCurrentItem(currentPage, true);
+
+
+                } else if (currentPage == 4) {
+                    fab.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.INVISIBLE);
-                } else if (indicator.getCurrentStep() == 6) {
-                    pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
-                    // fab.setVisibility(View.INVISIBLE);
+                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                    EventContactFragment eventContactFragment = new EventContactFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+
+                    fragmentTransaction.replace(R.id.frame_layout, eventContactFragment, "tag");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    currentPage = currentPage + 1;
+                    pager.setCurrentItem(currentPage, true);
+
+
+                } else if (currentPage == 5) {
+                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                    fab.setVisibility(View.INVISIBLE);
+
 
                 } else {
-                    pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
+                    //  pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                     fab.setVisibility(View.VISIBLE);
                 }
 
             }
         });
 
+    }
+
+    private void setData() {
+        eventData.eventttitle = WowtagFragment.eventname_et.getText().toString();
+
+    }
+
+    private void loadInitialFragment() {
+        EventTypeFragment eventTypeFragment = new EventTypeFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
+
+        fragmentTransaction.replace(R.id.frame_layout, eventTypeFragment, "tag");
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commitAllowingStateLoss();
+        currentPage = 0;
+        previous_fab.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -276,4 +620,15 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        int counter = getSupportFragmentManager().getBackStackEntryCount();
+        Log.e("tag", "counter----->" + counter);
+
+        if (counter == 1) {
+            finish();
+            // super.onBackPressed();
+        }
+    }
 }

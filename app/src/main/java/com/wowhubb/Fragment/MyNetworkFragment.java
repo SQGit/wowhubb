@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 
-import com.wowhubb.Activity.EventFeedDashboard;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
@@ -60,11 +59,10 @@ public class MyNetworkFragment extends Fragment {
                                 transaction.commit();
                                 break;
                             case R.id.action_item2:
-                               /* selectedFragment = MyNetworkAddContact.newInstance();
+                                selectedFragment = MyNetworkContact.newInstance();
                                 FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
                                 transaction1.replace(R.id.frame_layout, selectedFragment);
                                 transaction1.commit();
-                                break;*/
                                 break;
                             case R.id.action_item3:
                                 selectedFragment = MyNetworkAddContact.newInstance();
@@ -77,7 +75,6 @@ public class MyNetworkFragment extends Fragment {
                         return true;
                     }
                 });
-
 
 
         return view;

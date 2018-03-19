@@ -46,15 +46,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_weight="0.5"
                 android:gravity="center">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageview_profile"
-                    android:layout_width="@dimen/_55sdp"
+                    android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_55sdp"
-
-                    android:layout_gravity="center_vertical|center_horizontal"
                     android:src="@drawable/profile_img" />
 
 
@@ -63,14 +61,14 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.4"
+                android:layout_weight="1.45"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/name"
+                    android:text=""
                     android:textColor="@color/headercolor" />
 
                 <android.support.design.widget.TextInputLayout
@@ -206,6 +204,15 @@
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
+
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til_spinmarried"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp">
+
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                     android:id="@+id/married_spn"
                     android:layout_width="match_parent"
@@ -214,7 +221,9 @@
                     android:hint="Marital Status"
                     android:textSize="@dimen/_13sdp"
                     android:textColorHint="@color/headercolor"
-                    app:met_floatingLabel="highlight" />
+              />
+
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout

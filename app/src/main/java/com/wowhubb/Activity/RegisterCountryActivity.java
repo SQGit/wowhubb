@@ -277,11 +277,11 @@ public class RegisterCountryActivity extends Activity {
                     if (jo.has("success")) {
                         String status = jo.getString("success");
                         if (status.equals("true")) {
-                            String otp = jo.getString("otp");
+                            //String otp = jo.getString("otp");
                             String msg = jo.getString("message");
                             SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit = sharedPrefces.edit();
-                            edit.putString("otp", otp);
+                           // edit.putString("otp", otp);
                             edit.putString("str_phone", str_phone);
                             edit.putString("loginstatus", "phone");
                             edit.commit();
@@ -345,11 +345,11 @@ public class RegisterCountryActivity extends Activity {
                     if (jo.has("success")) {
                         String status = jo.getString("success");
                         if (status.equals("true")) {
-                            String otp = jo.getString("otp");
+                           // String otp = jo.getString("otp");
                             String msg = jo.getString("message");
                             SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit = sharedPrefces.edit();
-                            edit.putString("otp", otp);
+                            //edit.putString("otp", otp);
                             edit.putString("str_email", str_phone);
                             edit.putString("loginstatus", "email");
                             edit.commit();

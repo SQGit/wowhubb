@@ -55,7 +55,7 @@ public class GiftRegistryFragment extends Fragment {
     Typeface lato;
     String profilepath, video1, video2, coverpage, token, eventId, highlights1, highlights2, highlight1_status, highlight2_status, highlightsvideo1, highlightsvideo2;
     AVLoadingIndicatorView av_loader;
-    String runtimeFrom, runtimeTo;
+    String runtimeFrom, runtimeTo,str_category;
     EditText eventregistryurl_et, donationurl_et, othersurl_et;
     private TextView callToAction, subaction;
     LinearLayout ll;
@@ -80,8 +80,8 @@ public class GiftRegistryFragment extends Fragment {
         token = sharedPreferences.getString("token", "");
         runtimeFrom = sharedPreferences.getString("runtimeFrom", "");
         runtimeTo = sharedPreferences.getString("runtimeTo", "");
-        Log.e("tag","VIDEOOOOOOOOOO11111111111111------->"+video1);
-        Log.e("tag","5552------->"+runtimeTo);
+        str_category = sharedPreferences.getString("str_category", "");
+
         CreateEventActivity.skiptv.setVisibility(View.INVISIBLE);
 
         av_loader = (AVLoadingIndicatorView) view.findViewById(R.id.avi);
@@ -199,7 +199,8 @@ public class GiftRegistryFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            av_loader.setVisibility(View.VISIBLE);
+            loader_dialog.show();
+            //av_loader.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -291,7 +292,7 @@ public class GiftRegistryFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            av_loader.setVisibility(View.GONE);
+            loader_dialog.dismiss();
             try {
                 JSONObject jo = new JSONObject(s.toString());
                 String success = jo.getString("success");
@@ -321,6 +322,7 @@ public class GiftRegistryFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            loader_dialog.show();
         }
 
         @Override
@@ -341,9 +343,32 @@ public class GiftRegistryFragment extends Fragment {
                 jsonObject.accumulate("eventvenuezipcode", EventVenueFragment.zipcode.getText().toString());
                 jsonObject.accumulate("runtimefrom", runtimeFrom);
                 jsonObject.accumulate("runtimeto", runtimeTo);
-                jsonObject.accumulate("giftregistryurl", eventregistryurl_et.getText().toString());
-                jsonObject.accumulate("donationsurl", donationurl_et.getText().toString());
-                jsonObject.accumulate("otherurl", othersurl_et.getText().toString());
+
+                String gift_url=eventregistryurl_et.getText().toString();
+                String donation_url=donationurl_et.getText().toString();
+                String other_url=othersurl_et.getText().toString();
+
+                if(!gift_url.matches(""))
+                {
+                    Log.e("tag","gift urllllll");
+                    jsonObject.accumulate("giftregistryurl", eventregistryurl_et.getText().toString());
+                }
+                if(!donation_url.matches(""))
+                {
+                    jsonObject.accumulate("donationsurl", donationurl_et.getText().toString());
+                }
+                if(!other_url.matches(""))
+                {
+                    jsonObject.accumulate("otherurl", othersurl_et.getText().toString());
+                }
+                if(str_category.equals("others"))
+                {
+                    jsonObject.accumulate("eventtype", EventTypeFragment.eventaddcategory_et.getText().toString());
+                }
+                else
+                {
+                    jsonObject.accumulate("eventtype", str_category);
+                }
 
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/info", json, token);
@@ -357,7 +382,7 @@ public class GiftRegistryFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "tag" + s);
-            av_loader.setVisibility(View.GONE);
+            loader_dialog.dismiss();
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);

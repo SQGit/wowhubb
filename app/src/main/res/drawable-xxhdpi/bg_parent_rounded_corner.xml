@@ -7,13 +7,16 @@
     </solid>
 
     <!-- view border color and width -->
-    <stroke
+ <stroke
+
         android:width="@dimen/feed_item_border_width"
-        android:color="@color/feed_item_border" >
+        android:color="@color/greyview" >
     </stroke>
 
     <!-- Here is the corner radius -->
-    <corners android:radius="@dimen/feed_item_corner_radius" >
+    <corners
+        android:bottomLeftRadius="@dimen/_10sdp"
+        android:bottomRightRadius="@dimen/_10sdp">
     </corners>
 
 </shape>

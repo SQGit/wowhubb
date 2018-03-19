@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,8 @@ import com.wowhubb.R;
 public class ReligionandHelalthEventsFragment extends Fragment {
     CheckBox cse_cb, hobbies_cb, parties_cb, charity_cb, family_cb, witness_cb;
     ImageView cse_iv, hobbies_iv, parties_ev, charity_iv, femily_iv, witness_iv;
-    String religion,charity,family,food,wellness,sports;
+    String religion, charity, family, food, wellness, sports;
+    boolean flag1, flag2, flag3, flag4, flag5, flag6 = true;
 
     @Nullable
     @Override
@@ -118,7 +120,7 @@ public class ReligionandHelalthEventsFragment extends Fragment {
 
         }
 
-    //------------------------TravelEducationEventsFragment-------------------------------//
+        //------------------------TravelEducationEventsFragment-------------------------------//
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +131,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
                 ft.commit();
             }
         });
+        cse_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag1 == true) {
+                    flag1 = false;
+                    cse_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("religion");
+                    edit.putString("religion", "10");
+                    edit.commit();
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    cse_cb.setChecked(false);
+                    flag1 = true;
+                    InterestActivity.list.remove("religion");
+                    edit.putString("religion", "0");
+                    edit.commit();
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         cse_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -150,7 +176,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
             }
         });
 
+        hobbies_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag2 == true) {
+                    flag2 = false;
+                    hobbies_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("food");
+                    edit.putString("food", "13");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    hobbies_cb.setChecked(false);
+                    flag2 = true;
+                    InterestActivity.list.remove("food");
+                    edit.putString("food", "13");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         hobbies_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -171,7 +221,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
             }
         });
 
+        parties_ev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag3 == true) {
+                    flag3 = false;
+                    parties_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("sports");
+                    edit.putString("sports", "15");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    parties_cb.setChecked(false);
+                    flag3 = true;
+                    InterestActivity.list.remove("sports");
+                    edit.putString("sports", "0");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         parties_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -191,7 +265,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
                 }
             }
         });
+        charity_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag4 == true) {
+                    flag4 = false;
+                    charity_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("charity");
+                    edit.putString("charity", "11");
+                    edit.commit();
+                    charity_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    charity_iv.setColorFilter(charity_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    charity_cb.setChecked(false);
+                    flag4 = true;
+                    InterestActivity.list.remove("charity");
+                    edit.putString("charity", "0");
+                    edit.commit();
+                    charity_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    charity_iv.setColorFilter(charity_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         charity_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -211,7 +309,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
                 }
             }
         });
+        femily_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag5 == true) {
+                    flag5 = false;
+                    family_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("family");
+                    edit.putString("family", "12");
+                    edit.commit();
+                    femily_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    femily_iv.setColorFilter(femily_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    family_cb.setChecked(false);
+                    flag5 = true;
+                    InterestActivity.list.remove("family");
+                    edit.putString("family", "0");
+                    edit.commit();
+                    femily_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    femily_iv.setColorFilter(femily_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         family_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -231,7 +353,31 @@ public class ReligionandHelalthEventsFragment extends Fragment {
                 }
             }
         });
+        witness_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag6 == true) {
+                    flag6 = false;
+                    witness_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("wellness");
+                    edit.putString("wellness", "14");
+                    edit.commit();
+                    witness_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    witness_iv.setColorFilter(witness_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    witness_cb.setChecked(false);
+                    flag6 = true;
+                    InterestActivity.list.remove("wellness");
+                    edit.putString("wellness", "0");
+                    edit.commit();
+                    witness_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    witness_iv.setColorFilter(witness_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         witness_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

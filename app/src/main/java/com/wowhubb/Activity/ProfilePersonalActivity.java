@@ -64,17 +64,16 @@ import java.util.List;
  * Created by Salman on 05-10-2017.
  */
 
-public class ProfilePersonalActivity extends Activity
-{
+public class ProfilePersonalActivity extends Activity {
 
     public final static int REQUEST_PROFILE = 1;
     public com.gun0912.tedpicker.Config img_config;
     ImageView backiv;
     EditText dobv_tv, wedding_et, anniversaries_et, social_function_et, parties_et, place_et, email_et, aboutme_et;
     LinearLayout layout_dob, layout_weddings, layout_anniversaries, layout_social, layout_parties;
-    TextInputLayout bday_til, wedding_til, anniversay_til, social_til, parties_til, place_til, email_til, til_aboutme;
+    TextInputLayout til_spinmarried,bday_til, wedding_til, anniversay_til, social_til, parties_til, place_til, email_til, til_aboutme;
     TextView save_et, uname_tv;
-    String maritalstatus,profilepath, aboutme_str, name, lname, str_profile_img, bday_str, wedding_str, anniversary_str, social_str, parties_str, marital_str, place_str, username, useremail, token;
+    String personalimage, maritalstatus, profilepath, aboutme_str, name, lname, str_profile_img, bday_str, wedding_str, anniversary_str, social_str, parties_str, marital_str, place_str, username, useremail, token;
     AVLoadingIndicatorView av_loader;
     ArrayList<Uri> image_uris;
     ImageView profile_iv;
@@ -171,6 +170,7 @@ public class ProfilePersonalActivity extends Activity
         email_et = findViewById(R.id.email_et);
         aboutme_et = findViewById(R.id.aboutme_et);
         til_aboutme = findViewById(R.id.til_aboutme);
+        til_spinmarried=findViewById(R.id.til_spinmarried);
 
         bday_til = findViewById(R.id.til_bday);
         wedding_til = findViewById(R.id.til_wedding);
@@ -195,13 +195,18 @@ public class ProfilePersonalActivity extends Activity
         email_til.setTypeface(lato);
         place_til.setTypeface(lato);
         til_aboutme.setTypeface(lato);
+        til_spinmarried.setTypeface(lato);
+        Log.e("tag", "cbvcv" + profilepath);
 
+        if (profilepath != null) {
+            Log.e("tag", "222222222----------" + profilepath);
+            Glide.with(ProfilePersonalActivity.this).load("http://104.197.80.225:3010/wow/media/personal/" + profilepath).into(profile_iv);
+        }
 
         final CustomAdapter arrayAdapter = new CustomAdapter(ProfilePersonalActivity.this, android.R.layout.simple_dropdown_item_1line, SPINNERLIST) {
             @Override
             public boolean isEnabled(int position) {
                 if (position == 0) {
-
                     return true;
                 } else {
                     return true;
@@ -248,9 +253,6 @@ public class ProfilePersonalActivity extends Activity
                 marital_str = adapterView.getItemAtPosition(i).toString();
             }
         });
-        if (profilepath != null) {
-            Glide.with(ProfilePersonalActivity.this).load(new File(profilepath)).into(profile_iv);
-        }
 
         if (name != null) {
             uname_tv.setText(name + " " + lname);
@@ -266,7 +268,6 @@ public class ProfilePersonalActivity extends Activity
         save_et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 place_str = place_et.getText().toString();
                 bday_str = dobv_tv.getText().toString();
                 wedding_str = wedding_et.getText().toString();
@@ -276,8 +277,7 @@ public class ProfilePersonalActivity extends Activity
                 aboutme_str = aboutme_et.getText().toString();
                 maritalstatus = sharedPreferences.getString("maritalstatus", "");
 
-                if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches()))
-                {
+                if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
                     email_til.setError(null);
                     new updateprofile().execute();
                 } else {
@@ -669,7 +669,19 @@ public class ProfilePersonalActivity extends Activity
                         String maritalstatus = message.getString("maritalstatus");
 
                         email_et.setText(email);
+                        if (message.has("personalimage")) {
+                            personalimage = message.getString("personalimage");
+                            if (!personalimage.equals("")) {
+                                Log.e("tag", "getprofileelseee------->" + personalimage);
+                                try {
+                                    Glide.with(ProfilePersonalActivity.this).load("http://104.197.80.225:3010/wow/media/personal/" + personalimage).into(profile_iv);
+                                    editor.putString("profilepath", personalimage);
+                                    editor.commit();
+                                } catch (IllegalArgumentException e) {
 
+                                }
+                            }
+                        }
                         if (place.equals("null")) {
                             place_et.setText("");
                         } else {
@@ -724,8 +736,7 @@ public class ProfilePersonalActivity extends Activity
 
                 }
 
-            } else
-            {
+            } else {
 
 
             }
@@ -733,7 +744,6 @@ public class ProfilePersonalActivity extends Activity
         }
 
     }
-
 
 
 }

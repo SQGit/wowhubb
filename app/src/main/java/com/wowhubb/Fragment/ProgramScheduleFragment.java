@@ -173,53 +173,6 @@ public class ProgramScheduleFragment extends Fragment {
 
             }
         });
-        EventVenueFragment.oneday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked)
-                    EventVenueFragment.twoday.setChecked(false);
-                EventVenueFragment.threeday.setChecked(false);
-                EventVenueFragment.checkboxstatus = "oneday";
-                Log.e("tag", "STATUSqwqww-----" + EventVenueFragment.checkboxstatus);
-                lv2.setVisibility(View.GONE);
-                lv3.setVisibility(View.GONE);
-                lv4.setVisibility(View.GONE);
-
-            }
-        });
-        EventVenueFragment.twoday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked)
-                    EventVenueFragment.oneday.setChecked(false);
-                EventVenueFragment.threeday.setChecked(false);
-                EventVenueFragment.checkboxstatus = "twoday";
-                Log.e("tag", "STATUSqwqww-----" + EventVenueFragment.checkboxstatus);
-                lv1.setVisibility(View.VISIBLE);
-                lv2.setVisibility(View.VISIBLE);
-                lv3.setVisibility(View.GONE);
-                lv4.setVisibility(View.GONE);
-            }
-        });
-
-
-        EventVenueFragment.threeday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked)
-                    EventVenueFragment.twoday.setChecked(false);
-                EventVenueFragment.oneday.setChecked(false);
-                EventVenueFragment.checkboxstatus = "threeday";
-                Log.e("tag", "STATUSqwqww-----" + EventVenueFragment.checkboxstatus);
-                lv1.setVisibility(View.VISIBLE);
-                lv2.setVisibility(View.VISIBLE);
-                lv3.setVisibility(View.VISIBLE);
-                lv4.setVisibility(View.VISIBLE);
-            }
-        });
 
 
         return view;

@@ -35,6 +35,7 @@ public class TravelEducationEventsFragment extends Fragment {
     CheckBox cse_cb, hobbies_cb, parties_cb, autoboat_cb, holiday_cb, political_cb;
     ImageView cse_iv, hobbies_iv, parties_ev, autoboat_iv, holiday_iv, political_iv;
     String token;
+    boolean flag1, flag2, flag3, flag4, flag5, flag6 = true;
 
     @Nullable
     @Override
@@ -46,7 +47,8 @@ public class TravelEducationEventsFragment extends Fragment {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         token = sharedPreferences.getString("token", "");
         ImageView next = (ImageView) view.findViewById(R.id.submit_iv);
-
+        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor edit = sharedPrefces.edit();
         cse_cb = (CheckBox) view.findViewById(R.id.comedy_cb);
         hobbies_cb = (CheckBox) view.findViewById(R.id.hobbies_cb);
         parties_cb = (CheckBox) view.findViewById(R.id.musicarts_cb);
@@ -71,7 +73,32 @@ public class TravelEducationEventsFragment extends Fragment {
             }
         });
 
+        cse_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag1 == true) {
+                    flag1 = false;
+                    cse_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
 
+                    edit.putString("comedy", "15");
+                    edit.commit();
+                    InterestActivity.list.add("comedy");
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    cse_cb.setChecked(false);
+                    flag1 = true;
+                    InterestActivity.list.remove("comedy");
+                    edit.putString("comedy", "0");
+                    edit.commit();
+                    cse_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    cse_iv.setColorFilter(cse_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
         cse_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -87,7 +114,31 @@ public class TravelEducationEventsFragment extends Fragment {
                 }
             }
         });
+        hobbies_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag2 == true) {
+                    flag2 = false;
+                    hobbies_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("religion");
+                    edit.putString("religion", "16");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    hobbies_cb.setChecked(false);
+                    flag2 = true;
+                    InterestActivity.list.remove("religion");
+                    edit.putString("religion", "0");
+                    edit.commit();
+                    hobbies_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    hobbies_iv.setColorFilter(hobbies_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
 
         hobbies_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -103,7 +154,31 @@ public class TravelEducationEventsFragment extends Fragment {
             }
         });
 
+        parties_ev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag3== true) {
+                    flag3 = false;
+                    parties_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("religion");
+                    edit.putString("religion", "10");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    parties_cb.setChecked(false);
+                    flag3 = true;
+                    InterestActivity.list.remove("religion");
+                    edit.putString("religion", "0");
+                    edit.commit();
+                    parties_ev.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    parties_ev.setColorFilter(parties_ev.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         parties_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -117,7 +192,33 @@ public class TravelEducationEventsFragment extends Fragment {
                 }
             }
         });
+        autoboat_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag4 == true) {
+                    flag4 = false;
+                    autoboat_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                   // InterestActivity.list.add("religion");
+                    edit.putString("auto", "10");
+                    edit.commit();
+                    InterestActivity.list.add("auto");
+                    autoboat_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    autoboat_iv.setColorFilter(autoboat_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    autoboat_cb.setChecked(false);
+                    flag4 = true;
+                   // InterestActivity.list.remove("religion");
+                    edit.putString("auto", "0");
+                    edit.commit();
+                    InterestActivity.list.remove("auto");
+                    autoboat_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    autoboat_iv.setColorFilter(autoboat_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
 
+            }
+        });
         autoboat_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -133,7 +234,32 @@ public class TravelEducationEventsFragment extends Fragment {
                 }
             }
         });
+        political_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag5 == true) {
+                    flag5 = false;
+                    political_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    InterestActivity.list.add("political");
+                    political_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    political_iv.setColorFilter(political_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                    edit.putString("political", "10");
+                    edit.commit();
 
+                } else {
+                    Log.e("tag", "22222222222");
+                    political_cb.setChecked(false);
+                    flag5 = true;
+                    edit.putString("political", "0");
+                    edit.commit();
+                    InterestActivity.list.remove("political");
+                    political_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    political_iv.setColorFilter(political_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
         political_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -147,6 +273,31 @@ public class TravelEducationEventsFragment extends Fragment {
                     political_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
                     political_iv.setColorFilter(political_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                 }
+            }
+        });
+        holiday_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag6 == true) {
+                    flag6 = false;
+                    holiday_cb.setChecked(true);
+                    Log.e("tag", "11111111111111111");
+                    edit.putString("holiday", "10");
+                    edit.commit();
+                    InterestActivity.list.add("holiday");
+                    holiday_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    holiday_iv.setColorFilter(holiday_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag", "22222222222");
+                    holiday_cb.setChecked(false);
+                    flag6 = true;
+                    edit.putString("holiday", "0");
+                    edit.commit();
+                    InterestActivity.list.remove("holiday");
+                    holiday_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    holiday_iv.setColorFilter(holiday_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
             }
         });
         holiday_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -188,7 +339,7 @@ public class TravelEducationEventsFragment extends Fragment {
                 JSONArray jsArray = new JSONArray(InterestActivity.list);
                 jsonObject.put("interests", jsArray);
                 json = jsonObject.toString();
-                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/getinterests", json, token);
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/updateinterests", json, token);
             } catch (Exception e) {
                 Log.e("InputStream", e.getLocalizedMessage());
             }

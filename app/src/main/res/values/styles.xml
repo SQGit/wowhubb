@@ -6,7 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
+
     <style name="ted_pick_theme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/oror</item>
         <item name="colorPrimaryDark">@color/brown</item>
@@ -16,7 +18,6 @@
         <item name="android:windowDisablePreview">true</item>
 
     </style>
-
 
     <style name="pin_edittext_style">
         <item name="android:gravity">center</item>
@@ -28,16 +29,90 @@
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
-
+    <style name="dialog" parent="android:Theme.Holo.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
     <style name="AppTheme1" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
+        <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionBarStyle">@style/AppBarOverlay</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowBackground">@drawable/bg_white</item>
+    </style>
+
+    <style name="AppBarOverlay" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="tabIndicatorHeight">4dp</item>
+    </style>
+
+
+    <style name="DatePickerSpinner">
+        <item name="android:textSize">20dp</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="YourTheme" parent="AlertDialog.AppCompat">
+        <item name="android:divider">@color/white</item>
+    </style>
+
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.DatePicker">
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+    </style>
+
+    <style name="MyDatePickerSpinnerStyle" parent="@android:style/Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="MyDatePickerStyle1" parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+    </style>
+
+    <style name="MyDatePickerSpinnerStyle1" parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
 
 
+
+    <style name="Theme.MyFancyTheme" parent="android:Theme.Holo">
+        <item name="android:homeAsUpIndicator">@drawable/whitepre_arrow</item>
+    </style>
+
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/whitepre_arrow</item>
+
+    </style>
 </resources>

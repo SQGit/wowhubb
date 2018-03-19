@@ -1,0 +1,101 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efd4dd"
+        android:padding="@dimen/_5sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:text="Date "
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_14sdp" />
+
+
+    </LinearLayout>
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        style="@style/MyDatePickerStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:theme="@style/MyDatePickerSpinnerStyle" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey">
+
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/canceltv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/textcolr"
+android:background="@drawable/selector_bg"
+                android:text="Cancel" />
+
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@color/grey">
+
+            </View>
+
+            <TextView
+                android:id="@+id/oktv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/textcolr"
+                android:background="@drawable/selector_bg"
+
+                android:text="Ok" />
+
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:background="@color/grey">
+
+            </View>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/expandedListItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="skjldv"
+        android:gravity="start|center"
+        android:layout_gravity="center"
+        android:paddingLeft="@dimen/_17sdp"
+        android:paddingRight="@dimen/_5sdp"
+        android:paddingBottom="10dp" />
+</LinearLayout>

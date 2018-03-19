@@ -15,10 +15,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.wowhubb.Activity.InterestActivity;
-import com.wowhubb.Activity.SplashActivity;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 
@@ -31,7 +29,8 @@ public class BusinessEventsFragment extends Fragment {
 
     ImageView bne_iv, ste_iv, pte_iv;
     CheckBox bne_cb, ste_cb, pte_cb;
-    String bne, ste,pte;
+    String bne, ste, pte;
+    boolean flag1,flag2,flag3 = true;
 
     @Nullable
     @Override
@@ -55,10 +54,8 @@ public class BusinessEventsFragment extends Fragment {
         pte = sharedPrefces.getString("pte", "");
 
 
-
         if (!bne.equals("")) {
-            if (bne.equals("1"))
-            {
+            if (bne.equals("1")) {
                 bne_cb.setChecked(true);
                 bne_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
                 bne_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -96,6 +93,80 @@ public class BusinessEventsFragment extends Fragment {
             }
         });
 
+        bne_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag1 == true) {
+                    flag1 = false;
+                    bne_cb.setChecked(true);
+                    Log.e("tag","11111111111111111");
+                    edit.putString("bne", "1");
+                    edit.commit();
+                    InterestActivity.list.add("business");
+                    bne_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    bne_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag","22222222222");
+                    bne_cb.setChecked(false);
+                    flag1 = true;
+                    InterestActivity.list.remove("business");
+                    edit.putString("bne", "0");
+                    edit.commit();
+                    bne_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    bne_iv.setColorFilter(bne_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
+
+        ste_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag2 == true) {
+                    flag2 = false;
+                    ste_cb.setChecked(true);
+                    edit.putString("ste", "2");
+                    edit.commit();
+                    InterestActivity.list.add("startup");
+                    ste_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    ste_iv.setColorFilter(ste_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag","22222222222");
+                    ste_cb.setChecked(false);
+                    flag2 = true;
+                    InterestActivity.list.remove("startup");
+                    edit.putString("ste", "0");
+                    edit.commit();
+                    ste_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    ste_iv.setColorFilter(ste_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
+        pte_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (flag3 == true) {
+                    flag3 = false;
+                    pte_cb.setChecked(true);
+                    InterestActivity.list.add("professional");
+                    edit.putString("pte", "3");
+                    edit.commit();
+                    pte_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest_color));
+                    pte_iv.setColorFilter(pte_iv.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    Log.e("tag","22222222222");
+                    pte_cb.setChecked(false);
+                    flag3 = true;
+                    InterestActivity.list.remove("professional");
+                    edit.putString("pte", "0");
+                    edit.commit();
+                    pte_iv.setBackground(getResources().getDrawable(R.drawable.selector_interest));
+                    pte_iv.setColorFilter(pte_iv.getContext().getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                }
+
+            }
+        });
 
         bne_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,14 +28,18 @@ public class InterestActivity extends Activity {
     TextView head_tv, skip_tv;
     Typeface latoheading, lato;
     ImageView backiv;
+    String navdashboard;
+    Bundle extras;
     public static ArrayList<String> list;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_interest);
-
+         extras = getIntent().getExtras();
         //-----------------------------------------SNACKBAR----------------------------------------//
-
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(InterestActivity.this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String firstname = sharedPreferences.getString("firsttime", "");
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(InterestActivity.this, v1);
         latoheading = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/latoheading.ttf");
@@ -45,11 +51,26 @@ public class InterestActivity extends Activity {
         head_tv.setTypeface(latoheading);
         list = new ArrayList<String>();
 
+        if(firstname.equals("true"))
+        {
+            list.clear();
+        }
+
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                startActivity(new Intent(InterestActivity.this, ProfileActivity.class));
+                if (extras != null) {
+                    navdashboard = extras.getString("navdashboard");
+                    if (navdashboard.equals("true")) {
+                        finish();
+                    }
+                }
+                else
+                {
+                    startActivity(new Intent(InterestActivity.this, LoginActivity.class));
+                    overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                }
 
             }
         });

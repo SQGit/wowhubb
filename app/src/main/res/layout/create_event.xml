@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/top"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_white">
@@ -14,31 +15,57 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_7sdp"
+            android:layout_marginTop="@dimen/_7sdp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/backiv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/back_arrow"
-                android:text="@string/createevents"
-                android:textColor="@color/headercolor"
-                android:textSize="@dimen/_18sdp" />
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:id="@+id/back_lv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/_1sdp"
+
+                        android:src="@drawable/back_arrow" />
+
+                    <TextView
+                        android:id="@+id/backtv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/createevents"
+                        android:textColor="@color/headercolor"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/skiptv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/_6sdp"
-                android:drawablePadding="@dimen/_5sdp"
-                android:padding="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/_5sdp"
+
+                android:paddingRight="@dimen/_5sdp"
                 android:text="Skip"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
@@ -58,34 +85,133 @@
         android:id="@+id/stepper_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ll"
         android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="monospace"
         app:stpi_bottomIndicatorHeight="@dimen/_10sdp"
         app:stpi_circleStrokeWidth="@dimen/_1sdp"
         app:stpi_labelColor="@color/textcolr"
         app:stpi_labelSize="@dimen/_9sdp"
         app:stpi_labels="@array/stepLabels"
-        app:stpi_lineMargin="@dimen/_25sdp"
-        app:stpi_showLabels="true"
-        android:layout_below="@+id/ll"
-        android:layout_alignParentStart="true" />
+        app:stpi_lineMargin="@dimen/_32sdp"
+        app:stpi_showLabels="true" />
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <FrameLayout
+        android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/stepper_indicator"
-        android:layout_marginTop="@dimen/_5sdp" />
+        android:layout_marginBottom="@dimen/_51sdp">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/next_fb"
-        android:layout_width="wrap_content"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></FrameLayout>
+
+    </FrameLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@+id/rl"
+        android:background="@drawable/dropshadow" />
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/_10sdp"
-        android:src="@drawable/white_arrow"
-        app:backgroundTint="@color/colorPrimary" />
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/previouslv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/previous_fb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:drawableLeft="@drawable/left_arrow"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:gravity="left"
+                    android:text="Previous"
+                    android:textColor="@drawable/selector_text"
+                    android:textSize="@dimen/_12sdp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_7sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/publishtv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_toLeftOf="@+id/next_fb"
+                    android:layout_toRightOf="@+id/previous_fb"
+                    android:background="@drawable/btnbg"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingRight="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_7sdp"
+                    android:text="Publish"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/nextlv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/next_fb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:drawableRight="@drawable/circleright_arrow"
+                    android:gravity="right"
+                    android:text="Next"
+                    android:textColor="@drawable/selector_text"
+                    android:textSize="@dimen/_12sdp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/lnr_del_data"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/gray"
+        android:padding="@dimen/_5sdp"
+        android:layout_margin="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_10sdp">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="8"
+        android:orientation="horizontal">
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/txt_itinerary_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_action_sym"
+                android:drawablePadding="-8dp"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:gravity="start|center"
+                android:paddingLeft="-15dp"
+                android:text="Event Itinerary Time"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_11sdp" />
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/txt_itinerary_val"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="8:00AM - 7:00AM"
+                android:textSize="@dimen/_9sdp"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:textColor="@color/brown"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/txt_facilitator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_action_sym"
+                android:drawablePadding="-8dp"
+                android:gravity="start|center"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:paddingLeft="-10dp"
+                android:text="Event Facilitator"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_11sdp" />
+
+
+
+            <TextView
+                android:id="@+id/txt_facilitator_val"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="TDJakes"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/_9sdp"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:textColor="@color/brown"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="8"
+            android:orientation="horizontal">
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_topic_agenda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_action_sym"
+                    android:drawablePadding="-8dp"
+                    android:gravity="start|center"
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="bold"
+                    android:paddingLeft="-15dp"
+                    android:text="Event Topic Agenda"
+                    android:textColor="@color/textcolr"
+                    />
+
+
+
+
+                <TextView
+                    android:id="@+id/txt_agenda_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:text="Guest Registration/Coffee and Pastries"
+                    android:textColor="@color/textcolr"
+                    android:textSize="@dimen/_10sdp" />
+
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:padding="@dimen/_7sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:orientation="vertical">
+
+
+
+                <ImageView
+                    android:id="@+id/img_delete_slot"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:gravity="start|center"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:src="@drawable/del_slot"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_event_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_sym"
+            android:drawablePadding="-8dp"
+            android:gravity="start|center"
+            android:paddingLeft="-15dp"
+            android:text="Event Location"
+            android:textStyle="bold"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_11sdp"/>
+
+
+
+
+        <TextView
+            android:id="@+id/txt_location_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:text="Glass House Foyer"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_10sdp"/>
+
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

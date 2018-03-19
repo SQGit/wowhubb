@@ -49,14 +49,14 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
     Typeface latoheading, lato;
     TextView head_tv, resendotp;
     ImageView submit, backiv;
-    String loginstatus, str_otp, str_phone, token,otp;
+    String loginstatus, str_otp, str_phone, type,otp,token;
     AVLoadingIndicatorView av_loader;
     private EditText mPinFirstDigitEditText;
     private EditText mPinSecondDigitEditText;
     private EditText mPinThirdDigitEditText;
     private EditText mPinForthDigitEditText;
     private EditText mPinHiddenEditText;
-    String str_email;
+    String str_email, password, value;
     Snackbar snackbar;
     TextView tv_snack;
     @Override
@@ -95,6 +95,23 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_otp);
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            type = extras.getString("type");
+            value = extras.getString("value");
+            password = extras.getString("password");
+
+            Log.e("tag", "999------type" + type + value + password);
+            if (type.equals("email")) {
+                new loginresendotp_email(value, password, type).execute();
+            } else {
+                new loginresendotp_phone(value, password, type).execute();
+                Log.e("tag", "999------type" + type + value + password);
+            }
+
+           // return;
+        }
+
         init();
         setPINListeners();
 
@@ -106,7 +123,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         //----------------------------------------------------------------------------------------//
 
         head_tv = (TextView) findViewById(R.id.head_tv);
-        submit = (ImageView) findViewById(R.id.submit_iv);
+        submit = (ImageView) findViewById(R.id.submit);
         backiv = (ImageView) findViewById(R.id.backiv);
         resendotp = findViewById(R.id.resendotp_tv);
         head_tv.setTypeface(latoheading);
@@ -133,7 +150,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegisterOtpActivity.this, RegisterCountryActivity.class));
+               // startActivity(new Intent(RegisterOtpActivity.this, RegisterCountryActivity.class));
                 finish();
             }
         });
@@ -150,7 +167,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                     mPinThirdDigitEditText.setText("");
                     setFocusedPinBackground(mPinFirstDigitEditText);
                     mPinFirstDigitEditText.setText("");
-                    new loginresendotp_email().execute();
+                   // new loginresendotp_email().execute();
 
                 } else {
                     mPinFirstDigitEditText.setText("");
@@ -159,7 +176,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                     mPinThirdDigitEditText.setText("");
                     setFocusedPinBackground(mPinFirstDigitEditText);
                     mPinFirstDigitEditText.setText("");
-                    new loginresendotp_phone().execute();
+                   // new loginresendotp_phone().execute();
                 }
 
             }
@@ -172,6 +189,8 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                 final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 loginstatus = sharedPreferences.getString("loginstatus", "");
                 otp = sharedPreferences.getString("otp", "");
+                str_phone = sharedPreferences.getString("str_phone", "");
+                str_email = sharedPreferences.getString("str_email", "");
 
                 String firstpin=mPinFirstDigitEditText.getText().toString();
                 String secondpin=mPinSecondDigitEditText.getText().toString();
@@ -180,31 +199,51 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
 
                 str_otp = firstpin+secondpin+thirdpin+fourthpin;
 
-                Log.e("tag","pin------"+str_otp);
+                Log.e("tag","pin------"+value+str_email);
 
-                if (str_otp.length() > 0) {
-                    if (otp.equals(str_otp)) {
-                        startActivity(new Intent(RegisterOtpActivity.this, RegisterAllDetailsActivity.class));
-                        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-                        finish();
+                Log.e("tag","loginstatus------"+type);
+                if(type.equals("phone"))
+                {
+                    if (str_otp.length() > 0) {
+                        new verifyotp(str_otp,value,type).execute();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Incorrect OTP", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Enter OTP", Toast.LENGTH_LONG).show();
 
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Enter OTP", Toast.LENGTH_LONG).show();
 
                 }
+                else
+                {
+                    if (str_otp.length() > 0) {
+                        new verifyotp(str_otp,value,type).execute();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Enter OTP", Toast.LENGTH_LONG).show();
+
+                    }
+
+
+                }
+
+
+
+
+
 
             }
         });
 
     }
+    public class verifyotp extends AsyncTask<String, Void, String> {
 
+        String otp, otptype, value;
 
-    //------------------------------ASYNC TASK FOR PHONEOTP---------------------------------------//
+        public verifyotp(String otp, String value, String otptype) {
+            this.otp = otp;
+            this.otptype = otptype;
+            this.value = value;
 
-    public class loginresendotp_phone extends AsyncTask<String, Void, String> {
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -216,7 +255,111 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("tonumber", str_phone);
+                jsonObject.accumulate("otp", otp);
+
+
+                if (otptype.equals("email")) {
+                    jsonObject.accumulate("email", value);
+                    jsonObject.accumulate("password", password);
+                } else {
+                    jsonObject.accumulate("phone", value);
+                    jsonObject.accumulate("password", password);
+                }
+
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_VERIFYOTP, json);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "RESULTT------>>>>>>>" + s);
+            av_loader.setVisibility(View.GONE);
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    String status = jo.getString("success");
+                    if (status.equals("true")) {
+                        String code = jo.getString("code");
+                        if(code.equals("200"))
+                        {
+                            String token = jo.getString("token");
+
+                            JSONObject user_details = jo.getJSONObject("user");
+                            String lastname = user_details.getString("lastname");
+                            String name = user_details.getString("firstname");
+                            String email = user_details.getString("email");
+                            String phone = user_details.getString("phone");
+                            String wowtagid = user_details.getString("wowtagid");
+                            String firsttime = user_details.getString("firsttime");
+                            SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor edit = sharedPrefces.edit();
+                            edit.putString("str_phone", phone);
+                            edit.putString("str_name", name);
+                            edit.putString("str_email", email);
+                            edit.putString("str_lname", lastname);
+                            edit.putString("token", token);
+                            edit.putString("loginstatus", type);
+                            edit.putString("status", "true");
+                            edit.putString("wowtagid", wowtagid);
+                            edit.commit();
+
+                            if (firsttime.equals("false")) {
+                                startActivity(new Intent(RegisterOtpActivity.this, LandingPageActivity.class));
+                                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                finish();
+                            } else {
+                                startActivity(new Intent(RegisterOtpActivity.this, InterestActivity.class));
+                                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                finish();
+                            }
+
+                        }
+
+                    } else {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("tag", "nt" + e.toString());
+                }
+            } else {
+
+            }
+
+        }
+
+    }
+
+    public class loginresendotp_phone extends AsyncTask<String, Void, String> {
+        String phone_str, str_pwd, type;
+
+        public loginresendotp_phone(String phone_str, String str_pwd, String type) {
+            this.phone_str = phone_str;
+            this.str_pwd = str_pwd;
+            this.type = type;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            av_loader.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("tonumber", phone_str);
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_OTP, json);
             } catch (Exception e) {
@@ -235,12 +378,8 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
-                        String otp = jo.getString("otp");
-                        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor edit = sharedPrefces.edit();
-                        edit.putString("str_phone", str_phone);
-                        edit.putString("otp",otp);
-                        edit.commit();
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 
 
                     } else {
@@ -262,14 +401,20 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
 
     }
 
-
-    //------------------------------ASYNC TASK FOR EMAILOTP----------------------------------------//
-
     public class loginresendotp_email extends AsyncTask<String, Void, String> {
+        String phone_str, str_pwd, type;
+
+        public loginresendotp_email(String phone_str, String str_pwd, String type) {
+            this.phone_str = phone_str;
+            this.str_pwd = str_pwd;
+            this.type = type;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             av_loader.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -277,7 +422,8 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("toemail", str_email);
+                jsonObject.accumulate("toemail", phone_str);
+                //jsonObject.accumulate("password", str_pwd);
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_MAILOTP, json);
             } catch (Exception e) {
@@ -290,11 +436,26 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             av_loader.setVisibility(View.GONE);
+
+            Log.e("tag", "RESSULT---------" + s.toString());
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
-                    if (status.equals("true")) {
+                    String code = jo.getString("code");
+
+                    if (code.equals("200")) {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    } else {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+
+
+                   /* if (status.equals("true")) {
                        String otp = jo.getString("otp");
                        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor edit = sharedPrefces.edit();
@@ -306,17 +467,21 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    }
+                    }*/
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("tag", "nt" + e.toString());
                 }
-            } else {}
+            } else {
+            }
 
         }
 
     }
+
+
+
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         final int id = v.getId();

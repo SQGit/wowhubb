@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center_horizontal"
     android:background="@color/colorPrimary"
     android:gravity="bottom"
@@ -41,8 +42,11 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageview_profile"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
+                    android:layout_width="@dimen/_47sdp"
+                    android:layout_height="@dimen/_47sdp"
+                    app:civ_border_color="@color/graybg"
+                    app:civ_border_width="1dp"
+                    android:layout_margin="@dimen/_3sdp"
                     android:src="@drawable/profile_img" />
 
 

@@ -2,9 +2,11 @@ package com.wowhubb.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -24,8 +27,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.format.DateFormat;
-import android.util.Base64;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,23 +45,30 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.wowhubb.Activity.CreateEventActivity;
+import com.wowhubb.Adapter.ExpandableListAdapter;
+import com.wowhubb.Adapter.ExpandableListDataPump;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.GetFilePathFromDevice;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
+import com.wowhubb.data.EventData;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
@@ -68,25 +79,31 @@ public class WowtagFragment extends Fragment {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private static final int INTENT_REQUEST_GET_COVERIMAGES = 11;
     private static final int INTENT_REQUEST_GET_VIDEO1 = 12;
-    private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
-    public static TextView fromtime_tv, totime_tv;
-    public static TextInputLayout til_from, til_to;
+    private static final int INTENT_REQUEST_GET_VIDEO11 = 13;
+    public static TextView fromtime_tv, totime_tv, helpfultips_tv;
+    public static TextInputLayout til_from, til_to, til_eventtile;
     public static String selectedVideoFilePath, selectedCoverFilePath, temp;
     public static EditText eventname_et;
     public static SharedPreferences.Editor edit;
+    public static String selectedVideoFilePath1;
+    public EventData eventData;
     LinearLayout fromlv, tolv, layout_fromdate, layout_todate;
     Typeface lato;
     ImageView tickiv;
     FrameLayout framevideo1, framecoverpage, framehighlight1, fraehighlight2;
-    ImageView video0_iv, cover_iv, highl1_iv, highl2_iv;
-    ImageView video1plus, coverplus, h1plus, h2plus, wowtagiv;
-    Dialog dialog;
+    ImageView video0_iv, video1plus, highl1_iv, highl2_iv;
+    ImageView coverplus, h1plus, h2plus, wowtagiv;
+    Dialog dialog, cdialog, ctimedialog;
     SharedPreferences sharedPrefces;
-    static String selectedVideoFilePath1;
     TextView txt_fromgallery, txt_takevideo;
-    ImageView img_take_gallery, img_take_video;
-    private Uri fileUri;
-
+    String strDateFormat1;
+    File videoMediaFile;
+    ExpandableListView expandableListView;
+    ExpandableListAdapter expandableListAdapter;
+    List expandableListTitle;
+    HashMap<String, List<String>> expandableListDetail;
+    Calendar wowtagfrom;
+    private Uri fileUri, videoUri;
 
     public static WowtagFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
@@ -96,6 +113,53 @@ public class WowtagFragment extends Fragment {
         final WowtagFragment fragment = new WowtagFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    public static String getFilePathFromURI(Context context, Uri contentUri) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String path = context.getFilesDir().getAbsolutePath();
+            File copyFile = new File(path + File.separator + fileName);
+            copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public static String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            OutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -132,43 +196,17 @@ public class WowtagFragment extends Fragment {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
                     + "VID_" + timeStamp + ".mp4");
 
-        /*    FileInputStream fin = null;
-            try {
-                fin = new FileInputStream(mediaFile);
-
-                selectedVideoFilePath1 = convertStreamToString(fin);
-                edit.putString("video1", selectedVideoFilePath1);
-                edit.commit();
-                dialog.dismiss();
-                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                fin.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
         } else {
             return null;
         }
 
         return mediaFile;
     }
-    public static String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        reader.close();
-        return sb.toString();
-    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        eventData = ((CreateEventActivity) getActivity()).eventData;
         final View view = inflater.inflate(R.layout.activity_wowtag, container, false);
         FontsOverride.overrideFonts(getActivity(), view);
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -182,30 +220,100 @@ public class WowtagFragment extends Fragment {
         layout_todate = view.findViewById(R.id.layout_todate);
         tickiv = view.findViewById(R.id.tickiv);
         eventname_et = view.findViewById(R.id.eventtitle_et);
+        eventname_et.setText(eventData.eventttitle);
+        video0_iv = (ImageView) view.findViewById(R.id.video0_iv);
+        video1plus = view.findViewById(R.id.video1plus_iv);
+        wowtagfrom = Calendar.getInstance();
+        Log.e("tag", "11111-------" + eventData.eventwowvideo);
+        try {
+            if (eventData.eventwowvideo != "") {
+                Log.e("tag", "11111-dddd------" + eventData.eventwowvideo);
+                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventData.eventwowvideo, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+            } else if (eventData.eventwowvideo == null) {
+                Log.e("tag", "22222222222-dddd------" + eventData.eventwowvideo);
+                video0_iv.setImageResource(R.drawable.dotted_square);
+                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+            }
+        } catch (NullPointerException e) {
+
+        }
+
+        fromtime_tv.setText(eventData.eventstarttime);
+        totime_tv.setText(eventData.eventendtime);
 
         til_from = (TextInputLayout) view.findViewById(R.id.til_from);
         til_to = (TextInputLayout) view.findViewById(R.id.til_to);
+
+
         lato = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf");
-        video1plus = view.findViewById(R.id.video1plus_iv);
+
         coverplus = view.findViewById(R.id.coverplusiv);
         framevideo1 = view.findViewById(R.id.framevideo1);
-        framecoverpage = view.findViewById(R.id.frame_cover);
-
-        video0_iv = (ImageView) view.findViewById(R.id.video0_iv);
-        cover_iv = (ImageView) view.findViewById(R.id.coverpage_iv);
-
+        helpfultips_tv = view.findViewById(R.id.helpfultips_tv);
 
         til_from.setTypeface(lato);
         til_to.setTypeface(lato);
 
-        framecoverpage.setOnClickListener(new View.OnClickListener() {
+        helpfultips_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkPermission()) {
-                    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    pickIntent.setType("image/*");
-                    startActivityForResult(pickIntent, INTENT_REQUEST_GET_COVERIMAGES);
-                }
+                dialog = new Dialog(getActivity());
+                // Include dialog.xml file
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_helpfultips);
+
+                View v1 = dialog.getWindow().getDecorView().getRootView();
+
+                ImageView close = dialog.findViewById(R.id.closeiv);
+                FontsOverride.overrideFonts(dialog.getContext(), v1);
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Window view1 = ((Dialog) dialog).getWindow();
+                        // view1.setBackgroundDrawableResource(R.drawable.border_graybg);
+
+                    }
+                });
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                expandableListView = (ExpandableListView) dialog.findViewById(R.id.expandableListView);
+                expandableListDetail = ExpandableListDataPump.getData();
+                expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
+                expandableListAdapter = new ExpandableListAdapter(dialog.getContext(), expandableListTitle, expandableListDetail);
+                expandableListView.setAdapter(expandableListAdapter);
+                expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+
+                    public void onGroupExpand(int groupPosition) {
+
+                    }
+                });
+
+                expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+
+                    public void onGroupCollapse(int groupPosition) {
+
+
+                    }
+                });
+
+                expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(ExpandableListView parent, View v,
+                                                int groupPosition, int childPosition, long id) {
+
+
+                        return true;
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -225,9 +333,9 @@ public class WowtagFragment extends Fragment {
                     }
                 });
                 txt_fromgallery = (TextView) dialog.findViewById(R.id.txt_fromgallery);
-                img_take_gallery = (ImageView) dialog.findViewById(R.id.img_take_gallery);
+                //img_take_gallery = (ImageView) dialog.findViewById(R.id.img_take_gallery);
                 txt_takevideo = (TextView) dialog.findViewById(R.id.txt_takevideo);
-                img_take_video = (ImageView) dialog.findViewById(R.id.img_take_video);
+                //img_take_video = (ImageView) dialog.findViewById(R.id.img_take_video);
 
 
                 ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
@@ -237,11 +345,10 @@ public class WowtagFragment extends Fragment {
 
                 txt_fromgallery.setTextColor(Color.parseColor("#3c3c3c"));
                 txt_takevideo.setTextColor(Color.parseColor("#3c3c3c"));
-                img_take_gallery.setImageResource(R.drawable.gallery_black);
-                img_take_video.setImageResource(R.drawable.video_black);
+
 
                 txt_fromgallery.setText("From Gallery");
-                txt_takevideo.setText(" Take Video");
+                txt_takevideo.setText("Take Video   ");
 
                 lnr_gallery.setBackgroundResource(R.drawable.btn_bg_white);
                 lnr_video.setBackgroundResource(R.drawable.btn_bg_white);
@@ -252,16 +359,13 @@ public class WowtagFragment extends Fragment {
                 lnr_gallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dialog.dismiss();
 
+                        dialog.dismiss();
                         lnr_gallery.setBackgroundResource(R.drawable.btnbg);
                         txt_fromgallery.setTextColor(Color.parseColor("#FFFFFF"));
-                        img_take_gallery.setImageResource(R.drawable.gallery_white);
 
                         lnr_video.setBackgroundResource(R.drawable.btn_bg_white);
                         txt_takevideo.setTextColor(Color.parseColor("#3c3c3c"));
-                        img_take_video.setImageResource(R.drawable.video_black);
-
 
                         if (checkPermission()) {
                             Intent intent = new Intent();
@@ -280,34 +384,42 @@ public class WowtagFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        lnr_video.setBackgroundResource(R.drawable.btnbg);
-                        txt_takevideo.setTextColor(Color.parseColor("#FFFFFF"));
-                        img_take_video.setImageResource(R.drawable.video_white);
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Log.e("tag", "111111------->>>>>>>>>NOUGAT");
+                            if (checkPermission()) {
+                                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                videoUri = getOutputMediaFileUri2(MEDIA_TYPE_VIDEO);
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); // set the image file
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO11);
+                                dialog.dismiss();
+                            }
 
-                        lnr_gallery.setBackgroundResource(R.drawable.btn_bg_white);
-                        txt_fromgallery.setTextColor(Color.parseColor("#3c3c3c"));
-                        img_take_gallery.setImageResource(R.drawable.gallery_black);
+                        } else {
+                            Log.e("tag", "111111------->>>>>>>>>BELOWWWW");
+                            lnr_video.setBackgroundResource(R.drawable.btnbg);
+                            txt_takevideo.setTextColor(Color.parseColor("#FFFFFF"));
+                            lnr_gallery.setBackgroundResource(R.drawable.btn_bg_white);
+                            txt_fromgallery.setTextColor(Color.parseColor("#3c3c3c"));
 
-
-                        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-                        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
-
-                        // set video quality
-                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
-                        // name
-
-                        // start the video capture Intent
-                        startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO1);
-                        dialog.dismiss();
+                            if (checkPermission()) {
+                                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                // start the video capture Intent
+                                startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO1);
+                                dialog.dismiss();
+                            }
+                        }
 
                     }
                 });
 
 
-               dialog.show();
+                dialog.show();
 
 
             }
@@ -316,8 +428,58 @@ public class WowtagFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 fromtime_tv.setError(null);
-                DialogFragment newFragment = new SelectDateFragment();
-                newFragment.show(getFragmentManager(), "DatePicker");
+                cdialog = new Dialog(getActivity());
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.setContentView(R.layout.dialog_customcalendar);
+                View v1 = cdialog.getWindow().getDecorView().getRootView();
+
+                final DatePicker dp = cdialog.findViewById(R.id.datePicker);
+                TextView ok = cdialog.findViewById(R.id.oktv);
+                TextView cancel = cdialog.findViewById(R.id.canceltv);
+                //  dp.setMinDate(System.currentTimeMillis() - 1000);
+                //   dp.setOnDateChangedListener(dateChangedListener);
+                FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                Log.e("tag", "111----------" + EventTypeFragment.wowtagto);
+                try {
+                    long selectedMilli = EventTypeFragment.wowtagfrom.getTimeInMillis();
+                    //    dp.setMinDate(selectedMilli - 1000);
+                    dp.setMinDate(System.currentTimeMillis() - 1000);
+                    long selectedMillisec = EventTypeFragment.wowtagto.getTimeInMillis();
+                    dp.setMaxDate(selectedMillisec - 1000);
+                } catch (NullPointerException e) {
+
+                }
+
+
+                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Window view1 = ((Dialog) cdialog).getWindow();
+
+                    }
+                });
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cdialog.dismiss();
+                    }
+                });
+
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        ///cdialog.dismiss();
+                        int day = dp.getDayOfMonth();
+                        int month = dp.getMonth();
+                        int year = dp.getYear();
+                        wowtagfrom.set(year, month, day);
+                        populateSetDate(year, month + 1, day);
+                        cdialog.dismiss();
+                    }
+                });
+                cdialog.show();
+
             }
         });
 
@@ -325,8 +487,60 @@ public class WowtagFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 totime_tv.setError(null);
-                DialogFragment newFragment = new SelectDateFragmentTo();
-                newFragment.show(getFragmentManager(), "DatePicker");
+                cdialog = new Dialog(getActivity());
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.setContentView(R.layout.dialog_customcalendar);
+                View v1 = cdialog.getWindow().getDecorView().getRootView();
+
+                final DatePicker dp = cdialog.findViewById(R.id.datePicker);
+                TextView ok = cdialog.findViewById(R.id.oktv);
+                TextView cancel = cdialog.findViewById(R.id.canceltv);
+                // dp.setMinDate(System.currentTimeMillis() - 1000);
+                //   dp.setOnDateChangedListener(dateChangedListener);
+
+                Log.e("tag", "111----------" + EventTypeFragment.wowtagfrom);
+
+                FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                try {
+                    long selectedMilli = wowtagfrom.getTimeInMillis();
+                    dp.setMinDate(selectedMilli - 1000);
+                    // dp.setMinDate(selectedMilli - 1000);
+                    //dp.setMinDate(System.currentTimeMillis() - 1000);
+
+                    long selectedMillisec = EventTypeFragment.wowtagto.getTimeInMillis();
+                    dp.setMaxDate(selectedMillisec - 1000);
+
+                } catch (NullPointerException e) {
+
+                }
+                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Window view1 = ((Dialog) cdialog).getWindow();
+
+                    }
+                });
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cdialog.dismiss();
+                    }
+                });
+
+
+                ok.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        ///cdialog.dismiss();
+                        int day = dp.getDayOfMonth();
+                        int month = dp.getMonth();
+                        int year = dp.getYear();
+                        populateSetDateTo(year, month + 1, day);
+                        cdialog.dismiss();
+                    }
+                });
+                cdialog.show();
+
             }
         });
 
@@ -337,13 +551,11 @@ public class WowtagFragment extends Fragment {
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED)) {
-            Log.e("tag", "Permission is granted");
+        int result2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
+        if ((result == PackageManager.PERMISSION_GRANTED) && (result1 == PackageManager.PERMISSION_GRANTED) && (result2 == PackageManager.PERMISSION_GRANTED)) {
             return true;
         } else {
-            Log.e("tag", "Permission is revoked");
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             return false;
 
         }
@@ -354,51 +566,100 @@ public class WowtagFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             Log.e("tag", "code------------->" + resultCode);
             if (requestCode == INTENT_REQUEST_GET_COVERIMAGES) {
-                Uri selectedMediaUri = data.getData();
-                selectedCoverFilePath = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedMediaUri);
-                    // Log.d(TAG, String.valueOf(bitmap));
-                    cover_iv.setImageBitmap(bitmap);
-                    coverplus.setVisibility(View.GONE);
-                    edit.putString("coverpage", selectedCoverFilePath);
-                    edit.commit();
-                    // video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            } else if (requestCode == INTENT_REQUEST_GET_VIDEO1) {
-                Uri selectedMediaUri = data.getData();
-                 selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-                Log.e("tag", "qqqqqqqqqqqqqqqqqq------------"+selectedVideoFilePath1);
-                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                edit.putString("video1", selectedVideoFilePath1);
-                edit.commit();
-
-            } else {
-                Uri selectedMediaUri = data.getData();
-
-                if (selectedMediaUri.toString().contains("image")) {
-                    try
-                    {
-                        String selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                    Uri selectedMediaUri = data.getData();
+                    selectedCoverFilePath = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                    try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedMediaUri);
-                        highl2_iv.setImageBitmap(bitmap);
-                        h2plus.setVisibility(View.GONE);
-
-                    } catch (Exception e) {
+                        // Log.d(TAG, String.valueOf(bitmap));
+                        // cover_iv.setImageBitmap(bitmap);
+                        //  coverplus.setVisibility(View.GONE);
+                        edit.putString("coverpage", selectedCoverFilePath);
+                        edit.commit();
+                        // video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } catch (NullPointerException e) {
 
+                }
 
-                } else if (selectedMediaUri.toString().contains("video")) {
-                    Log.d("tag", "567231546" + selectedMediaUri);
-                    String selectedVideoFilePath = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-                    highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    h2plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+            } else if (requestCode == INTENT_REQUEST_GET_VIDEO1) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        Uri selectedMediaUri = data.getData();
+                        selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                        Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+                    } catch (NullPointerException e) {
+
+                    }
+                } else {
+                    try {
+                        Uri selectedMediaUri = data.getData();
+                        selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                        Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+                    } catch (NullPointerException e) {
+
+                    }
+                }
+
+            } else if (requestCode == INTENT_REQUEST_GET_VIDEO11) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        Uri selectedMediaUri = videoUri;
+                        selectedVideoFilePath1 = getFilePathFromURI(getActivity(), selectedMediaUri);
+                        Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+                    } catch (NullPointerException e) {
+
+                    }
+                } else {
+                    try {
+                        Uri selectedMediaUri = data.getData();
+                        selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                        Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+                    } catch (NullPointerException e) {
+
+                    }
+                }
+            } else {
+
+                try {
+                    Uri selectedMediaUri = data.getData();
+                    if (selectedMediaUri.toString().contains("image")) {
+                        try {
+                            String selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedMediaUri);
+                            highl2_iv.setImageBitmap(bitmap);
+                            h2plus.setVisibility(View.GONE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    } else if (selectedMediaUri.toString().contains("video")) {
+                        Log.d("tag", "567231546" + selectedMediaUri);
+                        String selectedVideoFilePath = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
+                        highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        h2plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+
+                    }
+                } catch (NullPointerException e) {
 
                 }
 
@@ -408,19 +669,33 @@ public class WowtagFragment extends Fragment {
 
     }
 
-    public String BitMapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
+    /**
+     * Here we store the file url as it will be null after returning from camera
+     * app
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save file url in bundle as it will be null on screen orientation
+        // changes
+        outState.putParcelable("file_uri", fileUri);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        // get the file url
+//        fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
     public Uri getOutputMediaFileUri(int type) {
-        Uri selectedMediaUri =Uri.fromFile(getOutputMediaFile(type));
-        Log.e("tag","r7e7t8e7t---------->>"+selectedMediaUri);
+        Uri selectedMediaUri = Uri.fromFile(getOutputMediaFile(type));
+        // Uri selectedMediaUri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider",getOutputMediaFile(type));
+
+        Log.e("tag", "r7e7t8e7t---------->>" + selectedMediaUri);
         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-        Log.e("tag","11111111111--------->>"+selectedVideoFilePath1);
+        Log.e("tag", "11111111111--------->>" + selectedVideoFilePath1);
         video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
         video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
         edit.putString("video1", selectedVideoFilePath1);
@@ -428,21 +703,319 @@ public class WowtagFragment extends Fragment {
         return selectedMediaUri;
     }
 
+    public Uri getOutputMediaFileUri2(int type) {
+        File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+        //videoUri = Uri.fromFile(mediaFile);
+        Log.e("tag", "gsdhdgshghdsgf--------" + getActivity().getPackageName());
+        String authorities = getActivity().getPackageName() + ".fileprovider";
+        videoUri = FileProvider.getUriForFile(getActivity(), authorities, getOutputMediaFile(type));
+        Log.e("tag", "11111111111--------->>" + videoUri);
+
+        return videoUri;
+    }
+
+    private void takePicture() {
+        if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+            //videoUri = Uri.fromFile(mediaFile);
+            String authorities = getActivity().getPackageName() + ".fileprovider";
+            videoUri = FileProvider.getUriForFile(getActivity(), authorities, mediaFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO11);
+
+        } else {
+            Toast.makeText(getActivity(), "No camera on device", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private File createImageFileWith() throws IOException {
+        // Create an image file name
+        File Video_folder = new File(Environment.getExternalStorageDirectory(),
+                "Sample/Videos");
+        videoMediaFile = null;
+
+        try {
+            videoMediaFile = File.createTempFile(
+                    "VID_" + System.currentTimeMillis(),
+                    ".mp4",
+                    Video_folder
+            );
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoMediaFile));
+            startActivityForResult(takeVideoIntent, INTENT_REQUEST_GET_VIDEO11);
+        } catch (Exception e) {
+            Log.e("Image Capturing", e.toString());
+        }
+        return videoMediaFile;
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        setData();
+    }
+
+    private void setData() {
+        eventData.eventttitle = eventname_et.getText().toString();
+        eventData.eventwowvideo = selectedVideoFilePath1;
+        eventData.eventstarttime = fromtime_tv.getText().toString().trim();
+        eventData.eventendtime = totime_tv.getText().toString().trim();
+
+
+    }
+
+    private void populateSetDate(int year, int month, int day) {
+        String strDateFormatTo = month + "/" + day + "/" + year;
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = null;
+
+        try {
+            newDate = spf.parse(strDateFormatTo);
+            spf = new SimpleDateFormat("MMM/dd/yyyy");
+            strDateFormatTo = spf.format(newDate);
+            totime_tv.setText("");
+            fromtime_tv.setText(strDateFormatTo);
+            Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
+
+           /* ctimedialog = new Dialog(getActivity());
+            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            ctimedialog.setContentView(R.layout.dialog_customtime);
+            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
+
+            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
+            TextView ok = ctimedialog.findViewById(R.id.oktv);
+            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+
+            //   dp.setOnDateChangedListener(dateChangedListener);
+            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
+
+            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Window view1 = ((Dialog) ctimedialog).getWindow();
+
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ctimedialog.dismiss();
+                }
+            });
+
+
+            ok.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+
+                    int hour = 0;
+                    int min = 0;
+
+                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        hour = dp.getHour();
+                        min = dp.getMinute();
+                    } else {
+                        hour = dp.getCurrentHour();
+                        min = dp.getCurrentMinute();
+                    }
+
+                    ctimedialog.dismiss();
+                    populateSetTime(hour, min);
+                }
+            });
+            ctimedialog.show();*/
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateSetTime(int hourOfDay, int minute) {
+        strDateFormat1 = fromtime_tv.getText().toString();
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = null;
+
+        String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
+
+
+        String runtimeFrom = strDateFormat1 + " " + strDateFormat;
+        Log.e("tag", "RUNTIME---------->" + runtimeFrom);
+        //  edit.putString("runtimeFrom", runtimeFrom);
+        // edit.commit();
+        strDateFormat = strDateFormat + " a";
+        try {
+            newDate = spf.parse(strDateFormat1);
+            spf = new SimpleDateFormat("MMM/dd/yyyy");
+            strDateFormat1 = spf.format(newDate);
+            System.out.println(strDateFormat1);
+            Log.e("tag", "dvhdsvjvj" + strDateFormat1);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+
+
+        try {
+            Date dt = parseFormat.parse(strDateFormat);
+            System.out.println(outputFormat.format(dt));
+            fromtime_tv.setText(strDateFormat1 + " " + outputFormat.format(dt));
+
+
+            int strdayscounrt = sharedPrefces.getInt("str_eventday", 0);
+            if (strdayscounrt == 1) {
+
+
+                totime_tv.setText("");
+                totime_tv.setText(strDateFormat1 + " " + outputFormat.format(dt));
+
+
+            }
+
+
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+
+
+    }
+
+    private void populateSetDateTo(int year, int month, int day) {
+        String strDateFormatTo = month + "/" + day + "/" + year;
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = null;
+
+        try {
+            newDate = spf.parse(strDateFormatTo);
+            spf = new SimpleDateFormat("MMM/dd/yyyy");
+            strDateFormatTo = spf.format(newDate);
+            totime_tv.setText(strDateFormatTo);
+            Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
+
+          /*  ctimedialog = new Dialog(getActivity());
+            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            ctimedialog.setContentView(R.layout.dialog_customtime);
+            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
+
+            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
+            TextView ok = ctimedialog.findViewById(R.id.oktv);
+            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+
+            //   dp.setOnDateChangedListener(dateChangedListener);
+            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
+
+            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Window view1 = ((Dialog) ctimedialog).getWindow();
+
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ctimedialog.dismiss();
+                }
+            });
+
+
+            ok.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+
+
+                    int hour = 0;
+                    int min = 0;
+
+                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        hour = dp.getHour();
+                        min = dp.getMinute();
+                    } else {
+                        hour = dp.getCurrentHour();
+                        min = dp.getCurrentMinute();
+                    }
+
+                    ctimedialog.dismiss();
+                    populateSetTimeTo(hour, min);
+                }
+            });
+            ctimedialog.show();*/
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateSetTimeTo(int hourOfDay, int minute) {
+        strDateFormat1 = totime_tv.getText().toString();
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = null;
+
+        String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
+
+
+        String runtimeFrom = strDateFormat1 + " " + strDateFormat;
+        Log.e("tag", "RUNTIME---------->" + runtimeFrom);
+        //  edit.putString("runtimeFrom", runtimeFrom);
+        // edit.commit();
+        strDateFormat = strDateFormat + " a";
+        try {
+            newDate = spf.parse(strDateFormat1);
+            spf = new SimpleDateFormat("MMM/dd/yyyy");
+            strDateFormat1 = spf.format(newDate);
+            System.out.println(strDateFormat1);
+            Log.e("tag", "dvhdsvjvj" + strDateFormat1);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+
+
+        try {
+            Date dt = parseFormat.parse(strDateFormat);
+            System.out.println(outputFormat.format(dt));
+            totime_tv.setText(strDateFormat1 + " " + outputFormat.format(dt));
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+
+
+    }
+
     @SuppressLint("ValidFragment")
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar calendar = Calendar.getInstance();
-            int yy = calendar.get(Calendar.YEAR);
-            int mm = calendar.get(Calendar.MONTH);
-            int dd = calendar.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), this, yy, mm, dd);
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-            /*Calendar c = Calendar.getInstance();
-            c.add(Calendar.DATE, 1);
-            Date newDate = c.getTime();
-            da.getDatePicker().setMinDate(newDate.getTime()-(newDate.getTime()%(24*60*60*1000)));*/
+            DatePickerDialog da = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
+            //Set a title for DatePickerDialog
+            da.setTitle("Set a Date");
+            //  da.getDatePicker().setDrawingCacheBackgroundColor(getContext().getColor(R.color.textcolr));
+
+            //DatePickerDialog da = new DatePickerDialog(getActivity(), this, yy, mm, dd);
+            //Calendar cal = new GregorianCalendar(year, month, day);
+            DatePicker dp = da.getDatePicker();
+            //Set the DatePicker minimum date selection to current date
+            dp.setMinDate(c.getTimeInMillis());
 
             return da;
 
@@ -450,7 +1023,6 @@ public class WowtagFragment extends Fragment {
 
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
             populateSetDate(yy, mm + 1, dd);
-
         }
 
         public void populateSetDate(int year, int month, int day) {
@@ -459,6 +1031,7 @@ public class WowtagFragment extends Fragment {
             newFragment.show(getFragmentManager(), "TimePicker");
 
         }
+
     }
 
     @SuppressLint("ValidFragment")
@@ -471,8 +1044,8 @@ public class WowtagFragment extends Fragment {
             int minute = c.get(Calendar.MINUTE);
 
             //Create and return a new instance of TimePickerDialog
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT
+                    , this, hour, minute, false);
         }
 
         //onTimeSet() callback method
@@ -522,12 +1095,23 @@ public class WowtagFragment extends Fragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar calendar = Calendar.getInstance();
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-            int yy = calendar.get(Calendar.YEAR);
-            int mm = calendar.get(Calendar.MONTH);
-            int dd = calendar.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(getActivity(), this, yy, mm, dd);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT, this, year, month, day);
+            //Set a title for DatePickerDialog
+            da.setTitle("Set a Date");
+            //  da.getDatePicker().setDrawingCacheBackgroundColor(getContext().getColor(R.color.textcolr));
+
+            //DatePickerDialog da = new DatePickerDialog(getActivity(), this, yy, mm, dd);
+            //Calendar cal = new GregorianCalendar(year, month, day);
+            DatePicker dp = da.getDatePicker();
+            //Set the DatePicker minimum date selection to current date
+            dp.setMinDate(c.getTimeInMillis());
+
+            return da;
         }
 
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
@@ -553,8 +1137,8 @@ public class WowtagFragment extends Fragment {
             int minute = c.get(Calendar.MINUTE);
 
             //Create and return a new instance of TimePickerDialog
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT
+                    , this, hour, minute, false);
         }
 
         //onTimeSet() callback method
@@ -582,7 +1166,6 @@ public class WowtagFragment extends Fragment {
 
             SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
             SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
-
 
             try {
                 Date dt = parseFormat.parse(strDateFormat);

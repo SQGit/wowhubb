@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
+            android:singleLine="true"
+            android:orientation="vertical"
+            android:layout_weight="3">
+
+
+
+            <TextView
+                android:id="@+id/event_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Time"
+                android:textStyle="bold"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_10sdp"
+                android:gravity="left|center"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
+            android:orientation="vertical"
+            android:singleLine="true"
+            android:layout_weight="3">
+
+
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Event"
+                android:textStyle="bold"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_10sdp"
+                android:gravity="left|center"
+                />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
+            android:orientation="vertical"
+            android:layout_weight="3">
+
+
+            <TextView
+                android:id="@+id/event_who"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Who"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_10sdp"
+                android:gravity="left|center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/event_where"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Where"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_10sdp"
+                android:gravity="left|center"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_54"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/map"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_eventhighlight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:indicatorColor="#e91e63"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

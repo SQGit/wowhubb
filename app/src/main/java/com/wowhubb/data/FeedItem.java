@@ -2,13 +2,93 @@ package com.wowhubb.data;
 
 public class FeedItem {
     String eventid, pcoordinator, peventname, pftime, pttime, peventno, designation, pday, friendid, friendname, friendwowtagid, friendpic, friiendsstatus, receivedstatus;
+    String comment, userfname,userimage,mutualfriends;
     private int id;
     private String fulladdress, name, status, image, profilePic, timeStamp, url, wowtagvideo, highlight1, highlight2, eventname, description, eventdate, coverimage;
-    private String highlightvideo2, highlightvideo1;
-    private String eventtopic, runtimefrom, runtimeto, giftregistryurl, donationurl, othersurl;
+    private String highlightvideo2, highlightvideo1,wowcount,commentscount;
+    private String eventtopic, runtimefrom, runtimeto, giftregistryurl, donationurl, othersurl,timezone,category,eventstartdate,eventenddate;
 
+    public FeedItem()
+    { }
 
-    public FeedItem() {
+    public String getMutualfriends() {
+        return mutualfriends;
+    }
+
+    public void setMutualfriends(String mutualfriends) {
+        this.mutualfriends = mutualfriends;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getEventstartdate() {
+        return eventstartdate;
+    }
+
+    public void setEventstartdate(String eventstartdate) {
+        this.eventstartdate = eventstartdate;
+    }
+
+    public String getEventenddate() {
+        return eventenddate;
+    }
+
+    public void setEventenddate(String eventenddate) {
+        this.eventenddate = eventenddate;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public String getCommentscount() {
+        return commentscount;
+    }
+
+    public void setCommentscount(String commentscount) {
+        this.commentscount = commentscount;
+    }
+
+    public String getWowcount() {
+        return wowcount;
+    }
+
+    public void setWowcount(String wowcount) {
+        this.wowcount = wowcount;
+    }
+
+    public String getUserimage() {
+        return userimage;
+    }
+
+    public void setUserimage(String userimage) {
+        this.userimage = userimage;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getUserfname() {
+        return userfname;
+    }
+
+    public void setUserfname(String userfname) {
+        this.userfname = userfname;
     }
 
     public String getDesignation() {

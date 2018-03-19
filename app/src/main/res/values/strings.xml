@@ -55,8 +55,8 @@
     <string name="Eventhighlights">Event Highlights(Video/Image)</string>
     <string name="Eventdate"><![CDATA[Event date & Time]]></string>
     <string name="speaker">Speaker</string>
-    <string name="From">From</string>
-    <string name="To">To</string>
+    <string name="From"><![CDATA[Event Start Date & Time]]></string>
+    <string name="To"><![CDATA[Event End Date & Time]]></string>
     <string name="rspv">RSVP</string>
     <string name="learnmore">Learn More</string>
     <string name="booknow">Book Now</string>
@@ -79,7 +79,7 @@
     <string name="searchevent_land"><![CDATA[Search & Book \nyour Event Venue]]></string>
     <string name="nearbyevents">Search for Nearby \n       Events</string>
     <string name="searchevent_providers">Search for Event \nService Providers</string>
-    <string name="createevents_land">Create Your \n Events</string>
+    <string name="createevents_land">Create an \n Event</string>
     <string name="personal">Personal Profile</string>
     <string name="addmore">+ Add More</string>
     <string name="Ok">Ok</string>
@@ -90,7 +90,7 @@
     <string name="uploadvideo">Upload Self Intro Video</string>
     <string name="browse">Browse</string>
     <string name="save">Save</string>
-
+    <string name="edit_wowtag"><u>Edit Wowtag Video</u></string>
     <string name="Personal">Personal</string>
     <string name="Professional">Professional</string>
     <string name="connection">102 Connections</string>
@@ -105,9 +105,58 @@
         <item>Event Venue</item>
         <item>Program Schedule</item>
         <item>Event Highlights</item>
-        <item>Event Contact</item>
-        <item>Event Links</item>
+        <item>Event Contact/URL Links</item>
+
     </string-array>
+
+
+    <string-array name="quickstepLabels">
+        <item>Event Details</item>
+        <item>!Wowtag</item>
+        <item>Event Venue</item>
+        <item>Event Contact/URL Links</item>
+
+    </string-array>
+
+    <string-array name="switch_data">
+        <item>Miles</item>
+        <item>Kilometers</item>
+
+
+    </string-array>
+
+
+    <string-array name="miles_data">
+        <item>5 Miles</item>
+        <item>10 Miles</item>
+        <item>15 Miles</item>
+        <item>20 Miles</item>
+        <item>25 Miles</item>
+        <item>50 Miles</item>
+        <item>100 Miles</item>
+    </string-array>
+
+
+    <string-array name="kilometer_data">
+        <item>5 Kms</item>
+        <item>10 Kms</item>
+        <item>15 Kms</item>
+        <item>20 Kms</item>
+        <item>25 Kms</item>
+        <item>50 Kms</item>
+        <item>100 Kms</item>
+    </string-array>
+
+
+    <string-array name="sortby">
+        <item>Most Popular</item>
+        <item>Distance</item>
+        <item>Best Reviews</item>
+
+    </string-array>
+
+
+
 
         <string name="pin_content_desc">PIN input field</string>
         <string name="pin_label_text">PIN</string>
@@ -120,4 +169,49 @@
     <string name="wownw1">\@#coll group</string>
     <string name="wownw2"><![CDATA[Eventzz%&]]></string>
     <string name="networkError">Network Error! Please Try Again Later.</string>
+    <string name="file_provider_authority" translatable="false">com.quiro.fileproviderexample.fileprovider</string>
+    <string name="timeslot">Timeslot is Empty</string>
+    <string name="underdev">Under Development</string>
+    <string name="venueempty">Venues is Empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="Next">Next</string>
+    <string name="event_service">Venues - Service Provider</string>
+
+    <string name="categoryError">Empty Category! Please Select any Category.</string>
+    <string name="wowtagfrom">Run Time From</string>
+    <string name="wowtagto">Run Time To</string>
+
+
+    <string name="clear_filter"><u>Clear Filters</u></string>
+    <string name="ginacakes"><u>www.ginacakes.com</u></string>
+    <string name="ginacakes1">www.amazingbakery.com</string>
+
+    <string name="visit_page"><u>Visit Page</u></string>
+    <string name="ticketlink"><u>www.travelplace.com</u></string>
+    <string name="nearbyevent">Near by Events</string>
+    <string name="search_book">Search &amp; Book Events</string>
+    <string name="privacy">Privacy</string>
+    <string name="chatsettings">Chats Settings</string>
+    <string name="videos"><![CDATA[Videos & Photos]]></string>
+    <string name="sounds">Sounds</string>
+    <string name="language">Language</string>
+    <string name="loginsecurity">Login Security</string>
+    <string name="notifications">Notifications</string>
+    <string name="emailnotification">Email Notifications</string>
+    <string name="phone">Phone</string>
+    <string name="eventfeed">Event Feed</string>
+    <string name="group">Group</string>
+    <string name="coupons">Coupons</string>
+    <string name="network">Network</string>
+    <string name="managefeedpost">Manage Event Feed Post</string>
+    <string name="manageprofile">Manage Profile</string>
+    <string name="managecoupons">Manage Coupons</string>
+    <string name="managefriendlist">Manage Friend List</string>
+    <string name="quickhint">Create a quick event invite video or upload a one Add a unique (!WOWTAG)title(Catchword or Pharse)to help you event attendee to quickly access and RSVP for your event Add your Event Venue,Event Time,Event Date and publish and send instant invitation link to all your contacts on your mobile devices.</string>
+    <string name="watchvideo">Watch Video</string>
+    <string name="generalhints">Create a quick event invite video or upload a one Add a unique (!WOWTAG)title(Catchword or Pharse)to help you event attendee to quickly access and RSVP for your event Add your Event Venue,Event Time,Event Date Add Event Schedule Add Event highlights Add Event Contacts and Donations and Registry.</string>
+    <string name="shareyourthoughts">Share Your Thoughts</string>
+    <string name="whatsonyourmind">Whats on your mind..</string>
+    <string name="quickevents">Quick Event</string>
+
 </resources>

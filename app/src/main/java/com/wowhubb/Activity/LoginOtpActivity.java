@@ -201,7 +201,7 @@ public class LoginOtpActivity extends Activity implements View.OnFocusChangeList
                         SharedPreferences.Editor edit = sharedPrefces.edit();
                         edit.putString("str_phone", str_phone);
                         edit.commit();
-                        startActivity(new Intent(LoginOtpActivity.this, InterestActivity.class));
+                        startActivity(new Intent(LoginOtpActivity.this, LoginActivity.class));
                         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
 
                     } else {
@@ -262,7 +262,7 @@ public class LoginOtpActivity extends Activity implements View.OnFocusChangeList
                         edit.putString("str_phone", str_phone);
                         edit.putString("token", token);
                         edit.commit();
-                        startActivity(new Intent(LoginOtpActivity.this, InterestActivity.class));
+                        startActivity(new Intent(LoginOtpActivity.this, LoginActivity.class));
                         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
 
                     } else {

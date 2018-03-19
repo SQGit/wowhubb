@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:id="@+id/tab"
     android:textColor="@color/textcolr"
-    android:textSize="@dimen/_12sdp"
+    android:textSize="@dimen/_11sdp"
   />
