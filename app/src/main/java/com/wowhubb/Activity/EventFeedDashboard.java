@@ -76,7 +76,7 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
     ImageView profileedit_iv;
     SharedPreferences.Editor editor;
     String token, personalimage, firstname, lastname, email, str_email, str_name, str_lname, personalself;
-    TextView profilenametv, profileemailtv, logouttv, eventcreate_tv, interest_tv, profile_tv, settings_tv, serviceprovider_tv, notificationtv;
+    TextView profilenametv, profileemailtv, logouttv, group_tv, interest_tv, profile_tv, settings_tv, eventhubb_tv, notificationtv;
     ImageView profile_iv;
     com.android.volley.toolbox.ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     Toolbar toolbar, searchtollbar;
@@ -166,8 +166,8 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         notificationtv = findViewById(R.id.notification_tv);
         // searchpeople_et = findViewById(R.id.searchpeople_et);
         logouttv = findViewById(R.id.logout_tv);
-        eventcreate_tv = findViewById(R.id.eventcreate_tv);
-        // serviceprovider_tv = findViewById(R.id.serviceprovider_tv);
+        group_tv = findViewById(R.id.group_tv);
+        eventhubb_tv = findViewById(R.id.eventhubb_tv);
         // feeds_tv = findViewById(R.id.eventfeed_tv);
         interest_tv = findViewById(R.id.interest_tv);
         profile_tv = findViewById(R.id.profile_tv);
@@ -211,23 +211,26 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
             }
         });
 
-
-       /* serviceprovider_tv.setOnClickListener(new View.OnClickListener() {
+        group_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(EventFeedDashboard.this, EventServiceProviderActivity.class);
-                intent.putExtra("navdashboard", "true");
+                Intent intent = new Intent(EventFeedDashboard.this, CreateGroup.class);
+                // intent.putExtra("navdashboard", "true");
                 startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
         });
-        feeds_tv.setOnClickListener(new View.OnClickListener() {
+
+        eventhubb_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                Intent intent = new Intent(EventFeedDashboard.this, MyEventFeedsActivity.class);
+                // intent.putExtra("navdashboard", "true");
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
-        });*/
+        });
+
 
         profile_tv.setOnClickListener(new View.OnClickListener() {
             @Override

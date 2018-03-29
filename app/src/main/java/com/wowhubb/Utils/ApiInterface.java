@@ -2,6 +2,7 @@ package com.wowhubb.Utils;
 
 
 import com.wowhubb.FeedsData.Feeds;
+import com.wowhubb.MyFeedsData.MyFeeds;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -15,34 +16,20 @@ import retrofit2.http.POST;
 
 public interface ApiInterface {
 
-@FormUrlEncoded
+    @FormUrlEncoded
     @POST("androidfeed")
     Call<Feeds> checkLogin(
-        @Header("Content-Type") String contenttype,
-        @Header("token") String token,
-        @Field("page") int pageIndex);
+            @Header("Content-Type") String contenttype,
+            @Header("token") String token,
+            @Field("page") int pageIndex);
 
 
-    //Ramya ji if header is constant ,, use this
-
-    /*@Headers({
-            "Content-Type: application/x-www-form-urlencoded",
-            "Accept: application/x-www-form-urlencoded",
-    })
     @FormUrlEncoded
-    @POST("recceeList")
-    Call<TestInfo> testRequest2(@Field("userid") String userid);*/
-
-
-    // if header is dynamic,,, use this
-
-
-/*
-    @POST("recceeList")
-    Call<ResponseBody> testRequest1(@Body TestModel body,
-                                          @Header("Content-Type") String contenttype,
-                                          @Header("X-CSRF-TOKEN") String accept);
-*/
+    @POST("myfeeds")
+    Call<MyFeeds> checkFeeds(
+            @Header("Content-Type") String contenttype,
+            @Header("token") String token,
+    @Field("page") int pageIndex);
 
 
 }

@@ -136,7 +136,6 @@ public class MyNetworksTabFragment extends Fragment {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     try {
-                        // av_loader.setVisibility(View.GONE);
                         JSONArray feedArray = jo.getJSONArray("message");
 
                         for (int i = 0; i < feedArray.length(); i++) {

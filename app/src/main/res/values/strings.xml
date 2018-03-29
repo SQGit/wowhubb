@@ -76,10 +76,10 @@
     <string name="EventHistory"><u>Event History</u></string>
     <string name="Date">Date</string>
     <string name="guestsize">Guest Size</string>
-    <string name="searchevent_land"><![CDATA[Search & Book \nyour Event Venue]]></string>
-    <string name="nearbyevents">Search for Nearby \n       Events</string>
-    <string name="searchevent_providers">Search for Event \nService Providers</string>
-    <string name="createevents_land">Create an \n Event</string>
+    <string name="searchevent_land"><![CDATA[Search & Book your Event Venue]]></string>
+    <string name="nearbyevents">Search for Nearby Events</string>
+    <string name="searchevent_providers">Search for Event Service Providers</string>
+    <string name="createevents_land">Create an Event</string>
     <string name="personal">Personal Profile</string>
     <string name="addmore">+ Add More</string>
     <string name="Ok">Ok</string>
@@ -213,5 +213,5 @@
     <string name="shareyourthoughts">Share Your Thoughts</string>
     <string name="whatsonyourmind">Whats on your mind..</string>
     <string name="quickevents">Quick Event</string>
-
+    <string name="wow">!Wowtag is a catch word or phrase that uniquely identifies your events on the wowhubb network, !Wowtag can be used to advertise and promote your event to your audience to make it more effective create and attach a 20 to 60 seconds invite video to your wowtag title or event catch word.</string>
 </resources>

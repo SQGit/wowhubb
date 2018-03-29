@@ -298,7 +298,6 @@
                 android:textSize="@dimen/_10sdp" />
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -558,19 +557,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:background="#f5f5f5"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/sendinvite_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_7sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:textColor="@drawable/selector_text"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:drawableLeft="@drawable/send_invite"
+                    android:text="Send Invite"/>
 
                 <TextView
                     android:id="@+id/viewmore_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/_13sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:padding="@dimen/_7sdp"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:drawableLeft="@drawable/view_details"
                     android:textColor="@drawable/selector_text"
                     android:text="View More Details"/>
+
 
 
             </LinearLayout>

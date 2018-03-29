@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/_5sdp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+            <CheckBox
+                android:id="@+id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Wow group"
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_14sdp" />
+
+            <TextView
+                android:id="@+id/createdname_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:text="created by "
+                android:textColor="@color/textcolr"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/members_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:text="30 Group Members"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_11sdp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

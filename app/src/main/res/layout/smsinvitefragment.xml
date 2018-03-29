@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:TagsEditText="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:paddingLeft="@dimen/_5sdp">
+
+        <mabbas007.tagsedittext.TagsEditText
+            android:id="@+id/tagsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:cursorVisible="true"
+            android:hint="Phone Number"
+            android:inputType="number"
+            TagsEditText:allowSpaceInTag="true"
+            TagsEditText:tagsBackground="@drawable/emailinvite_btn"
+            TagsEditText:tagsCloseImagePadding="@dimen/defaultTagsCloseImagePadding"
+            TagsEditText:tagsCloseImageRight="@drawable/tag_close"
+            TagsEditText:tagsTextColor="@color/textcolr"
+            android:digits="1234567890"
+            android:maxLength="11"
+            TagsEditText:tagsTextSize="@dimen/defaultTagsTextSize" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/sendinvite_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:background="@drawable/btnbg_curve"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_7sdp"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:paddingTop="@dimen/_7sdp"
+        android:text="Send SMS"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13sdp"
+        android:visibility="visible" />
+
+
+</LinearLayout>

@@ -8,28 +8,45 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wowhubb.EventServiceProvider.EventServiceProviderActivity;
+import com.wowhubb.EventServiceProvider.Activity.EventServiceProviderActivity;
 import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.Nearbyeventsmodule.NearbyCategoryActivity;
 import com.wowhubb.R;
+import com.wowhubb.Utils.Config;
+import com.wowhubb.Utils.HttpUtils;
+import com.wowhubb.wowtag.Activity.WowtagRsvp;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static android.graphics.Color.RED;
 import static android.graphics.Color.WHITE;
@@ -44,32 +61,56 @@ public class LandingPageActivity extends Activity {
 
     public static Dialog create_dialog;
     TextView viewfeed;
-    LinearLayout createevents_lv, admin_lv, create_lv, nearby_lv, searchproviders_lv;
+    LinearLayout createevents_lv, admin_lv, searchevents_lv, nearby_lv, searchproviders_lv;
     TextView tv_snack;
     Snackbar snackbar;
     Bundle extras;
-    String fabstatus;
+    String fabstatus, token, selected_name, selected_id;
+    TextInputLayout til_wowtag;
+    AutoCompleteTextView autoCompleteTextView1;
+    SharedPreferences.Editor editor;
+    Map<String, String> wowtag_hash = new HashMap<>();
+    Set<String> keys;
+    ArrayList<String> list = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landingpage);
+        setContentView(R.layout.activity_landing);
 
-        Typeface lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
+        Typeface segoeui = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/segoeui.ttf");
         final View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(LandingPageActivity.this, v1);
 
         viewfeed = findViewById(R.id.vieweventfeed);
         createevents_lv = findViewById(R.id.createevents_lv);
-        create_lv = findViewById(R.id.create_lv);
-        nearby_lv = findViewById(R.id.member_lv);
+        searchevents_lv = findViewById(R.id.searchevents_lv);
+        nearby_lv = findViewById(R.id.nearby_lv);
         searchproviders_lv = findViewById(R.id.searchproviders_lv);
+        //til_wowtag = findViewById(R.id.til_wowtag);
+        autoCompleteTextView1 = findViewById(R.id.autoCompleteTextView1);
+
+        til_wowtag = findViewById(R.id.til_wowtag);
+
+        til_wowtag.setTypeface(segoeui);
 
         create_dialog = new BottomSheetDialog(LandingPageActivity.this);
         create_dialog.setContentView(R.layout.dialog_createevent);
         create_dialog.setCancelable(true);
         View v = create_dialog.getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(LandingPageActivity.this, v);
+        //til_wowtag.setTypeface(lato);
+
+
+        //token get from Login Activity:
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = sharedPreferences.edit();
+        token = sharedPreferences.getString("token", "");
+
+        new callWowtag().execute();
+
 
         Log.e("tag", "FABBBB STATUSS1111111----" + extras);
         extras = getIntent().getExtras();
@@ -83,14 +124,13 @@ public class LandingPageActivity extends Activity {
         }
 
 
-
         //-----------------------------------------SNACKBAR----------------------------------------//
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.underdev, Snackbar.LENGTH_LONG);
         snackbar.setActionTextColor(RED);
         View sbView = snackbar.getView();
-        tv_snack = (android.widget.TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        tv_snack = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         tv_snack.setTextColor(WHITE);
-        tv_snack.setTypeface(lato);
+        tv_snack.setTypeface(segoeui);
         viewfeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,6 +152,24 @@ public class LandingPageActivity extends Activity {
         final ImageView generaliv = create_dialog.findViewById(R.id.generaleventiv);
         final ImageView quickhintiv = create_dialog.findViewById(R.id.quickhint_icon);
         final ImageView generalhintiv = create_dialog.findViewById(R.id.generalhint_icon);
+
+
+        autoCompleteTextView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selected_name = autoCompleteTextView1.getText().toString();
+                selected_id = wowtag_hash.get(selected_name);
+                Log.e("tag", "name-------->" + selected_name);
+                Log.e("tag", "id--------->" + selected_id);
+
+                Intent rsvp = new Intent(getApplicationContext(), WowtagRsvp.class);
+                rsvp.putExtra("wowtag_id", selected_id);
+                rsvp.putExtra("wowtag_name", selected_name);
+                startActivity(rsvp);
+                finish();
+
+            }
+        });
 
 
         quickhintiv.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +349,7 @@ public class LandingPageActivity extends Activity {
         });
 
 
-        create_lv.setOnClickListener(new View.OnClickListener() {
+        searchevents_lv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -303,12 +361,12 @@ public class LandingPageActivity extends Activity {
         nearby_lv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LandingPageActivity.this, NearbyCategoryActivity.class));
+                // startActivity(new Intent(LandingPageActivity.this, NearbyCategoryActivity.class));
+                snackbar.show();
             }
         });
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -341,7 +399,6 @@ public class LandingPageActivity extends Activity {
 
     }
 
-
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(LandingPageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(LandingPageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -354,7 +411,7 @@ public class LandingPageActivity extends Activity {
 
             return true;
         } else {
-            ActivityCompat.requestPermissions(LandingPageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS}, 1);
+            ActivityCompat.requestPermissions(LandingPageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS}, 1);
 
             return false;
 
@@ -386,6 +443,88 @@ public class LandingPageActivity extends Activity {
                 }
 
                 break;
+        }
+    }
+
+    //describe wowtag names:
+    private class callWowtag extends AsyncTask<String, String, String> {
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1(Config.WEB_URL_GET_WOWTAGLIST, json, token);
+            } catch (Exception e) {
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonstr) {
+            super.onPostExecute(jsonstr);
+
+            if (jsonstr.equals("")) {
+                Toast.makeText(getApplicationContext(), "Check Network Connection", Toast.LENGTH_LONG).show();
+            } else {
+
+                try {
+
+                    JSONObject jo = new JSONObject(jsonstr);
+                    String status = jo.getString("success");
+
+                    if (status.equals("true")) {
+                        JSONArray event_service = jo.getJSONArray("message");
+                        if (event_service != null) {
+                            wowtag_hash.clear();
+                            for (int i1 = 0; i1 < event_service.length(); i1++) {
+                                Log.e("tag", "LENGTH" + event_service.length());
+
+                                JSONObject jsonObject = event_service.getJSONObject(i1);
+                                /*String userid=jsonObject.getString("_id");
+                                String title=jsonObject.getString("eventtitle");*/
+                                wowtag_hash.put(jsonObject.getString("eventtitle"), jsonObject.getString("_id"));
+
+
+                            }
+
+                            keys = wowtag_hash.keySet();
+                            Log.e("tag", "print_Keys" + keys);
+                            list = new ArrayList<>();
+                            list.addAll(keys);
+                            Log.e("tag", "print_List" + list);
+
+
+                            adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.select_dialog_item, list);
+                            Log.e("tag", "Adapter" + adapter);
+                            autoCompleteTextView1.setThreshold(1);//will start working from first character
+                            autoCompleteTextView1.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                            autoCompleteTextView1.setTextColor(getResources().getColor(R.color.brown));
+                            autoCompleteTextView1.setHintTextColor(Color.parseColor("#382F2F"));
+                            autoCompleteTextView1.setDropDownBackgroundResource(R.color.black_87);
+
+                        } else {
+
+
+                            //Toast.makeText(getActivity(),"No Wowtag Id Found..",Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

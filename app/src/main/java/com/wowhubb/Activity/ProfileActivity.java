@@ -223,13 +223,16 @@ public class ProfileActivity extends Activity {
         }
 
         if (str_wowtag != null) {
-            String sa = str_wowtag.substring(0, 1);
-            if (sa.equals("!")) {
-                wowtag.setText(str_wowtag);
-                wowtag2.setText(str_wowtag);
-            } else {
-                wowtag.setText("!" + str_wowtag);
-                wowtag2.setText("!" + str_wowtag);
+
+            if (str_wowtag.length()>0) {
+                String sa = str_wowtag.substring(0, 1);
+                if (sa.equals("!")) {
+                    wowtag.setText(str_wowtag);
+                    wowtag2.setText(str_wowtag);
+                } else {
+                    wowtag.setText("!" + str_wowtag);
+                    wowtag2.setText("!" + str_wowtag);
+                }
             }
         }
 

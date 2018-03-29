@@ -21,6 +21,8 @@ allprojects {
         maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
         google()
         jcenter()
+
+
     }
 }
 task wrapper(type: Wrapper) {

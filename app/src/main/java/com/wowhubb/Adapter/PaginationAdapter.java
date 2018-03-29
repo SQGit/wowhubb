@@ -32,9 +32,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
-import com.wowhubb.Activity.ViewFeedActivityDetails;
+import com.wowhubb.Activity.EventInviteActivity;
 import com.wowhubb.Activity.ViewMoreDetailspage;
-import com.wowhubb.Activity.ViewProgramSchedule;
 import com.wowhubb.FeedsData.Doc;
 import com.wowhubb.FeedsData.Eventvenue;
 import com.wowhubb.FeedsData.Userid;
@@ -74,6 +73,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     RecyclerView commentslistview;
     Dialog comments_dialog, menu_dialog;
     Userid userid;
+    Activity activity;
     private ArrayList<FeedItem> feedList = new ArrayList<>();
     private List<Doc> docs;
     private Context context;
@@ -84,6 +84,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public PaginationAdapter(Context context) {
         this.context = context;
         this.docs = docs;
+
         docs = new ArrayList<>();
     }
 
@@ -470,13 +471,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     quickVH.profilePic.setImageResource(R.drawable.profile_img);
                 }
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(quickVH.cover);
 
                 //-------------------------EVENT USERNAME-----------------------------------------//
                 if (doc.getUserid() != null) {
@@ -484,8 +478,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (userid.getFirstname() != null) {
                         quickVH.name.setText(userid.getFirstname());
                     }
-
                 }
+
                 if (doc.getEventtimezone() != null) {
                     quickVH.address_tv.setText(doc.getEventtimezone());
                 }
@@ -511,6 +505,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         quickVH.timestamp.setText(userid.getDesignation());
                     }
                 }
+
 
                 if (doc.getWowtagvideo() != null && !doc.getWowtagvideo().equals("null")) {
                     quickVH.frameLayout.setVisibility(View.VISIBLE);
@@ -541,7 +536,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         } else {
                             PrivateVH.video3plus.setVisibility(View.INVISIBLE);
                         }
-dialog.show();
+                        dialog.show();
 
                     }
                 });
@@ -558,6 +553,26 @@ dialog.show();
                     quickVH.viewcomments.setText(doc.getCommentcount() + " Comments");
                     quickVH.viewcomments.setVisibility(View.VISIBLE);
                 }
+
+                if (doc.getUserid() != null) {
+                    userid = docs.get(position).getUserid();
+                    Log.e("tag", "UID------>" + userId);
+                    Log.e("tag", "userid------>" + userid.getId());
+
+                    String Uid = userid.getId();
+                    if (userId.equals(Uid)) {
+                        quickVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        quickVH.sendinvite_tv.setVisibility(View.GONE);
+                    }
+                }
+                quickVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, EventInviteActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
 
 
                 quickVH.wowsome_tv.setOnClickListener(new View.OnClickListener() {
@@ -588,9 +603,7 @@ dialog.show();
                         Doc doc = docs.get(position);
                         String eventId = doc.getId();
                         commentslistview = (RecyclerView) comments_dialog.findViewById(R.id.recyclerViewBeneficiary);
-
                         new getAllComments(eventId).execute();
-
                         send_btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -604,7 +617,6 @@ dialog.show();
                         });
 
                         FontsOverride.overrideFonts(comments_dialog.getContext(), v1);
-
                         close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -668,8 +680,7 @@ dialog.show();
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null)
-                        {
+                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
                             dialog.show();
                             quickVH.video3plus.setVisibility(View.VISIBLE);
                             videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
@@ -831,6 +842,25 @@ dialog.show();
                             }
                         });
 
+                    }
+                });
+                if (doc.getUserid() != null) {
+                    userid = docs.get(position).getUserid();
+                    Log.e("tag", "UID------>" + userId);
+                    Log.e("tag", "userid------>" + userid.getId());
+
+                    String Uid = userid.getId();
+                    if (userId.equals(Uid)) {
+                        privateVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        privateVH.sendinvite_tv.setVisibility(View.GONE);
+                    }
+                }
+                privateVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, EventInviteActivity.class);
+                        context.startActivity(intent);
                     }
                 });
 
@@ -1025,10 +1055,10 @@ dialog.show();
                     public void onClick(View view) {
                         Doc doc = docs.get(position);
                         List<Eventvenue> eventvenues = docs.get(position).getEventvenue();
-                        userid = docs.get(position).getUserid();
-                        //userid.getPersonalimage()
+                        Userid userid = docs.get(position).getUserid();
                         Log.e("tag", "eventvenue---" + eventvenues);
-                        Intent intent = new Intent(context, ViewFeedActivityDetails.class);
+                        Intent intent = new Intent(context, ViewMoreDetailspage.class);
+
                         Bundle bundle = new Bundle();
                         if (doc.getEventvenue() != null) {
                             if (eventvenues.size() > 0) {
@@ -1057,11 +1087,10 @@ dialog.show();
                         }
 
                         if (doc.getEventname() != null) {
-
                             bundle.putString("eventname", doc.getEventname());
                         }
-                        if (doc.getEventdescription() != null) {
 
+                        if (doc.getEventdescription() != null) {
                             bundle.putString("description", doc.getEventdescription());
                         }
                         if (doc.getGiftregistryurl() != null) {
@@ -1073,35 +1102,54 @@ dialog.show();
 
                         }
                         if (doc.getEventstartdate() != null) {
-
                             bundle.putString("eventstartdate", doc.getEventstartdate());
                         }
                         if (doc.getEventenddate() != null) {
-
                             bundle.putString("eventenddate", doc.getEventenddate());
                         }
+
+                        bundle.putInt("eventdayscount", doc.getEventdayscount());
                         if (doc.getEventtype() != null) {
                             bundle.putString("eventtype", doc.getEventtype());
                         }
-                        bundle.putInt("eventdayscount", doc.getEventdayscount());
+
+                        if (doc.getEventspeakername1() != null) {
+                            bundle.putString("eventspeakername1", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventspeakername2() != null) {
+                            bundle.putString("eventspeakername2", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventguesttype1() != null) {
+                            bundle.putString("eventguesttype1", doc.getEventguesttype1());
+                        }
+                        if (doc.getEventguesttype2() != null) {
+                            bundle.putString("eventguesttype2", doc.getEventguesttype2());
+                        }
+                        if (doc.getEventspeakeractivities1() != null) {
+                            bundle.putString("eventspeakeractivities1", doc.getEventspeakeractivities1());
+                        }
+                        if (doc.getEventspeakeractivities2() != null) {
+                            bundle.putString("eventspeakeractivities2", doc.getEventspeakeractivities2());
+                        }
+                        if (doc.getEventspeakerlink1() != null) {
+                            bundle.putString("eventspeakerlink1", doc.getEventspeakerlink1());
+                        }
+                        if (doc.getEventspeakerlink2() != null) {
+                            bundle.putString("eventspeakerlink2", doc.getEventspeakerlink2());
+                        }
 
 
                         if (doc.getProgramschedule() != null) {
                             intent.putParcelableArrayListExtra("program", (ArrayList<? extends Parcelable>) docs.get(position).getProgramschedule());
                         }
-
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-
                         ((Activity) context).overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-
 
                     }
                 });
-
 
                 break;
 
@@ -1154,6 +1202,25 @@ dialog.show();
                     }
                 }
 
+                if (doc.getUserid() != null) {
+                    userid = docs.get(position).getUserid();
+                    Log.e("tag", "UID------>" + userId);
+                    Log.e("tag", "userid------>" + userid.getId());
+
+                    String Uid = userid.getId();
+                    if (userId.equals(Uid)) {
+                        prfessionalVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        prfessionalVH.sendinvite_tv.setVisibility(View.GONE);
+                    }
+                }
+                prfessionalVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, EventInviteActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
 
                 //-------------------------COVER IMAGE---------------------------------------------//
 
@@ -1444,9 +1511,9 @@ dialog.show();
                         Doc doc = docs.get(position);
                         List<Eventvenue> eventvenues = docs.get(position).getEventvenue();
                         Userid userid = docs.get(position).getUserid();
-                        //userid.getPersonalimage()
                         Log.e("tag", "eventvenue---" + eventvenues);
-                        Intent intent = new Intent(context, ViewFeedActivityDetails.class);
+                        Intent intent = new Intent(context, ViewMoreDetailspage.class);
+
                         Bundle bundle = new Bundle();
                         if (doc.getEventvenue() != null) {
                             if (eventvenues.size() > 0) {
@@ -1457,6 +1524,7 @@ dialog.show();
                                 }
                             }
                         }
+
                         if (doc.getWowtagvideo() != null) {
                             bundle.putString("wowtagvideo", doc.getWowtagvideo());
                         }
@@ -1474,27 +1542,24 @@ dialog.show();
                         }
 
                         if (doc.getEventname() != null) {
-
                             bundle.putString("eventname", doc.getEventname());
                         }
-                        if (doc.getEventdescription() != null) {
 
+                        if (doc.getEventdescription() != null) {
                             bundle.putString("description", doc.getEventdescription());
                         }
-                        /*if (doc.getGiftregistryurl() != null) {
+                        if (doc.getGiftregistryurl() != null) {
 
                             bundle.putString("gifturl", doc.getGiftregistryurl());
                         }
                         if (doc.getDonationsurl() != null) {
                             bundle.putString("donationurl", doc.getDonationsurl());
 
-                        }*/
+                        }
                         if (doc.getEventstartdate() != null) {
-
                             bundle.putString("eventstartdate", doc.getEventstartdate());
                         }
                         if (doc.getEventenddate() != null) {
-
                             bundle.putString("eventenddate", doc.getEventenddate());
                         }
 
@@ -1503,21 +1568,43 @@ dialog.show();
                             bundle.putString("eventtype", doc.getEventtype());
                         }
 
+                        if (doc.getEventspeakername1() != null) {
+                            bundle.putString("eventspeakername1", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventspeakername2() != null) {
+                            bundle.putString("eventspeakername2", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventguesttype1() != null) {
+                            bundle.putString("eventguesttype1", doc.getEventguesttype1());
+                        }
+                        if (doc.getEventguesttype2() != null) {
+                            bundle.putString("eventguesttype2", doc.getEventguesttype2());
+                        }
+                        if (doc.getEventspeakeractivities1() != null) {
+                            bundle.putString("eventspeakeractivities1", doc.getEventspeakeractivities1());
+                        }
+                        if (doc.getEventspeakeractivities2() != null) {
+                            bundle.putString("eventspeakeractivities2", doc.getEventspeakeractivities2());
+                        }
+                        if (doc.getEventspeakerlink1() != null) {
+                            bundle.putString("eventspeakerlink1", doc.getEventspeakerlink1());
+                        }
+                        if (doc.getEventspeakerlink2() != null) {
+                            bundle.putString("eventspeakerlink2", doc.getEventspeakerlink2());
+                        }
+
+
                         if (doc.getProgramschedule() != null) {
                             intent.putParcelableArrayListExtra("program", (ArrayList<? extends Parcelable>) docs.get(position).getProgramschedule());
                         }
-
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         context.startActivity(intent);
-
                         ((Activity) context).overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-
 
                     }
                 });
-
                 break;
 
 
@@ -1553,6 +1640,25 @@ dialog.show();
 
                 }
 
+                if (doc.getUserid() != null) {
+                    userid = docs.get(position).getUserid();
+                    Log.e("tag", "UID------>" + userId);
+                    Log.e("tag", "userid------>" + userid.getId());
+
+                    String Uid = userid.getId();
+                    if (userId.equals(Uid)) {
+                        socialVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        socialVH.sendinvite_tv.setVisibility(View.GONE);
+                    }
+                }
+                socialVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, EventInviteActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
 
                 //-------------------------DESCRIPTION---------------------------------------------//
 
@@ -1866,9 +1972,9 @@ dialog.show();
                         Doc doc = docs.get(position);
                         List<Eventvenue> eventvenues = docs.get(position).getEventvenue();
                         Userid userid = docs.get(position).getUserid();
-                        //userid.getPersonalimage()
                         Log.e("tag", "eventvenue---" + eventvenues);
-                        Intent intent = new Intent(context, ViewFeedActivityDetails.class);
+                        Intent intent = new Intent(context, ViewMoreDetailspage.class);
+
                         Bundle bundle = new Bundle();
                         if (doc.getEventvenue() != null) {
                             if (eventvenues.size() > 0) {
@@ -1879,6 +1985,7 @@ dialog.show();
                                 }
                             }
                         }
+
                         if (doc.getWowtagvideo() != null) {
                             bundle.putString("wowtagvideo", doc.getWowtagvideo());
                         }
@@ -1896,11 +2003,10 @@ dialog.show();
                         }
 
                         if (doc.getEventname() != null) {
-
                             bundle.putString("eventname", doc.getEventname());
                         }
-                        if (doc.getEventdescription() != null) {
 
+                        if (doc.getEventdescription() != null) {
                             bundle.putString("description", doc.getEventdescription());
                         }
                         if (doc.getGiftregistryurl() != null) {
@@ -1912,11 +2018,9 @@ dialog.show();
 
                         }
                         if (doc.getEventstartdate() != null) {
-
                             bundle.putString("eventstartdate", doc.getEventstartdate());
                         }
                         if (doc.getEventenddate() != null) {
-
                             bundle.putString("eventenddate", doc.getEventenddate());
                         }
 
@@ -1925,17 +2029,40 @@ dialog.show();
                             bundle.putString("eventtype", doc.getEventtype());
                         }
 
+                        if (doc.getEventspeakername1() != null) {
+                            bundle.putString("eventspeakername1", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventspeakername2() != null) {
+                            bundle.putString("eventspeakername2", doc.getEventspeakername1());
+                        }
+                        if (doc.getEventguesttype1() != null) {
+                            bundle.putString("eventguesttype1", doc.getEventguesttype1());
+                        }
+                        if (doc.getEventguesttype2() != null) {
+                            bundle.putString("eventguesttype2", doc.getEventguesttype2());
+                        }
+                        if (doc.getEventspeakeractivities1() != null) {
+                            bundle.putString("eventspeakeractivities1", doc.getEventspeakeractivities1());
+                        }
+                        if (doc.getEventspeakeractivities2() != null) {
+                            bundle.putString("eventspeakeractivities2", doc.getEventspeakeractivities2());
+                        }
+                        if (doc.getEventspeakerlink1() != null) {
+                            bundle.putString("eventspeakerlink1", doc.getEventspeakerlink1());
+                        }
+                        if (doc.getEventspeakerlink2() != null) {
+                            bundle.putString("eventspeakerlink2", doc.getEventspeakerlink2());
+                        }
+
+
                         if (doc.getProgramschedule() != null) {
                             intent.putParcelableArrayListExtra("program", (ArrayList<? extends Parcelable>) docs.get(position).getProgramschedule());
                         }
-
                         intent.putExtras(bundle);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         context.startActivity(intent);
-
                         ((Activity) context).overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-
 
                     }
                 });
@@ -1967,6 +2094,25 @@ dialog.show();
 
 
                 }
+                if (doc.getUserid() != null) {
+                    userid = docs.get(position).getUserid();
+                    Log.e("tag", "UID------>" + userId);
+                    Log.e("tag", "userid------>" + userid.getId());
+
+                    String Uid = userid.getId();
+                    if (userId.equals(Uid)) {
+                        businessVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                    } else {
+                        businessVH.sendinvite_tv.setVisibility(View.GONE);
+                    }
+                }
+                businessVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, EventInviteActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
 
                 //-------------------------DESCRIPTION---------------------------------------------//
 
@@ -2336,37 +2482,29 @@ dialog.show();
                             bundle.putString("eventtype", doc.getEventtype());
                         }
 
-                        if (doc.getEventspeakername1()!=null)
-                        {
-                            bundle.putString("eventspeakername1",doc.getEventspeakername1());
+                        if (doc.getEventspeakername1() != null) {
+                            bundle.putString("eventspeakername1", doc.getEventspeakername1());
                         }
-                        if (doc.getEventspeakername2()!=null)
-                        {
-                            bundle.putString("eventspeakername2",doc.getEventspeakername1());
+                        if (doc.getEventspeakername2() != null) {
+                            bundle.putString("eventspeakername2", doc.getEventspeakername1());
                         }
-                        if (doc.getEventguesttype1()!=null)
-                        {
-                            bundle.putString("eventguesttype1",doc.getEventguesttype1());
+                        if (doc.getEventguesttype1() != null) {
+                            bundle.putString("eventguesttype1", doc.getEventguesttype1());
                         }
-                        if (doc.getEventguesttype2()!=null)
-                        {
-                            bundle.putString("eventguesttype2",doc.getEventguesttype2());
+                        if (doc.getEventguesttype2() != null) {
+                            bundle.putString("eventguesttype2", doc.getEventguesttype2());
                         }
-                        if (doc.getEventspeakeractivities1()!=null)
-                        {
-                            bundle.putString("eventspeakeractivities1",doc.getEventspeakeractivities1());
+                        if (doc.getEventspeakeractivities1() != null) {
+                            bundle.putString("eventspeakeractivities1", doc.getEventspeakeractivities1());
                         }
-                        if (doc.getEventspeakeractivities2()!=null)
-                        {
-                            bundle.putString("eventspeakeractivities2",doc.getEventspeakeractivities2());
+                        if (doc.getEventspeakeractivities2() != null) {
+                            bundle.putString("eventspeakeractivities2", doc.getEventspeakeractivities2());
                         }
-                        if (doc.getEventspeakerlink1()!=null)
-                        {
-                            bundle.putString("eventspeakerlink1",doc.getEventspeakerlink1());
+                        if (doc.getEventspeakerlink1() != null) {
+                            bundle.putString("eventspeakerlink1", doc.getEventspeakerlink1());
                         }
-                        if (doc.getEventspeakerlink2()!=null)
-                        {
-                            bundle.putString("eventspeakerlink2",doc.getEventspeakerlink2());
+                        if (doc.getEventspeakerlink2() != null) {
+                            bundle.putString("eventspeakerlink2", doc.getEventspeakerlink2());
                         }
 
 
@@ -2478,13 +2616,22 @@ dialog.show();
     public void removeLoadingFooter() {
         isLoadingAdded = false;
 
-        int position = docs.size() - 1;
-        Doc item = getItem(position);
 
-        if (item != null) {
-            docs.remove(position);
-            notifyItemRemoved(position);
+        try {
+            int position = docs.size() - 1;
+
+            if (position > 0) {
+                Doc item = getItem(position);
+                if (item != null) {
+                    docs.remove(position);
+                    notifyItemRemoved(position);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+
         }
+
+
     }
 
     public Doc getItem(int position) {
@@ -2495,7 +2642,7 @@ dialog.show();
 
         private static ImageView video3plus;
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus;
@@ -2522,6 +2669,7 @@ dialog.show();
             viewwowsome = itemView.findViewById(R.id.viewwow_tv);
             viewcomments = itemView.findViewById(R.id.viewcomments_tv);
             viewshare = itemView.findViewById(R.id.viewshare_tv);
+            sendinvite_tv = itemView.findViewById(R.id.sendinvite_tv);
 
 
             month_tv = itemView.findViewById(R.id.month_tv);
@@ -2596,9 +2744,9 @@ dialog.show();
 
         private static ImageView video3plus;
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView eventtopic_tv,timestamp, eventname_tv, name, desc, share, comments, menu_tv, month_tv, date_tv, time_tv, link_tv, address_tv;
+        private TextView sendinvite_tv, eventtopic_tv, timestamp, eventname_tv, name, desc, share, comments, menu_tv, month_tv, date_tv, time_tv, link_tv, address_tv;
         private ImageView profilePic;
-        private ImageView wowtagvideo,cover;
+        private ImageView wowtagvideo;
         private ImageView video1plus;
         private FrameLayout frameLayout;
         private LinearLayout runttime_lv;
@@ -2624,15 +2772,13 @@ dialog.show();
             viewshare = itemView.findViewById(R.id.viewshare_tv);
             address_tv = itemView.findViewById(R.id.address_tv);
             eventtopic_tv = itemView.findViewById(R.id.eventtopic_tv);
-
+            sendinvite_tv = itemView.findViewById(R.id.sendinvite_tv);
             month_tv = itemView.findViewById(R.id.month_tv);
             date_tv = itemView.findViewById(R.id.date_tv);
             time_tv = itemView.findViewById(R.id.time_tv);
             runttime_lv = itemView.findViewById(R.id.runtimelv);
             video3plus = itemView.findViewById(R.id.video1plus_iv);
-            cover = (ImageView) itemView.findViewById(R.id.coveriv);
             frameLayout = itemView.findViewById(R.id.framevideo1);
-
             wowtagvideo = itemView.findViewById(R.id.video0_iv);
 
 
@@ -2642,7 +2788,7 @@ dialog.show();
     protected class ProfessionalVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;
@@ -2659,6 +2805,7 @@ dialog.show();
             desc = (TextView) itemView.findViewById(R.id.desc_tv);
             profilePic = (ImageView) itemView.findViewById(R.id.imageview_profile);
             feedImageView = (ImageView) itemView.findViewById(R.id.feedImage1);
+            sendinvite_tv = itemView.findViewById(R.id.sendinvite_tv);
 
             wowsome_tv = itemView.findViewById(R.id.wowsome_tv);
             eventcategory_tv = itemView.findViewById(R.id.eventcategory_tv);
@@ -2694,7 +2841,7 @@ dialog.show();
     protected class SocialVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;
@@ -2711,6 +2858,7 @@ dialog.show();
             desc = (TextView) itemView.findViewById(R.id.desc_tv);
             profilePic = (ImageView) itemView.findViewById(R.id.imageview_profile);
             feedImageView = (ImageView) itemView.findViewById(R.id.feedImage1);
+            sendinvite_tv = itemView.findViewById(R.id.sendinvite_tv);
 
             wowsome_tv = itemView.findViewById(R.id.wowsome_tv);
             eventcategory_tv = itemView.findViewById(R.id.eventcategory_tv);
@@ -2746,7 +2894,7 @@ dialog.show();
     protected class BusinessVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;
@@ -2763,6 +2911,7 @@ dialog.show();
             desc = (TextView) itemView.findViewById(R.id.desc_tv);
             profilePic = (ImageView) itemView.findViewById(R.id.imageview_profile);
             feedImageView = (ImageView) itemView.findViewById(R.id.feedImage1);
+            sendinvite_tv = itemView.findViewById(R.id.sendinvite_tv);
 
             wowsome_tv = itemView.findViewById(R.id.wowsome_tv);
             eventcategory_tv = itemView.findViewById(R.id.eventcategory_tv);
@@ -2793,7 +2942,6 @@ dialog.show();
 
         }
     }
-
 
     protected class LoadingVH extends RecyclerView.ViewHolder {
 
@@ -3130,5 +3278,6 @@ dialog.show();
 
 
     }
+
 
 }

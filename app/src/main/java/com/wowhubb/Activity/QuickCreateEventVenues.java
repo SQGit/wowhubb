@@ -1,7 +1,9 @@
 package com.wowhubb.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,22 +17,24 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.suke.widget.SwitchButton;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
-import com.wowhubb.Adapter.CustomAdapter;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Groups.Group;
 import com.wowhubb.R;
 import com.wowhubb.Utils.HttpUtils;
 import com.wowhubb.Utils.Utils;
@@ -51,6 +55,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Salman on 01-03-2018.
@@ -62,25 +68,49 @@ public class QuickCreateEventVenues extends Activity {
     public static TextInputLayout til_eventname, til_name, til_phone, til_email, til_msg;
     public static String str_start, str_end, selectedVideoFilePath1;
     public static String str_eventtopic, str_category, str_eventday, str_desc, str_city, str_coverpage, str_eventname, str_wowtag, str_startdate, str_enddate, str_runfrom, str_runto;
-    LinearLayout previouslv;
-    CheckBox onlineevent_cb, selectedgroup_cb, invitedguest_cb, inviteonly_cb;
+    LinearLayout previouslv, eventvenue_lv;
+    CheckBox onlineevent_cb, specific_group, invitedguest_cb, inviteonly_cb;
     Typeface lato;
     SharedPreferences sharedPrefces;
     SharedPreferences.Editor edit;
-    String token, eventId;
-    Dialog loader_dialog;
+    String token, eventId, str_email, str_phone, onlinestatus;
+    Dialog loader_dialog, dialog;
     EditText telepasscode_et, webinarlink_et, telephone_et, eventvenue_et, address_et, city_et, state_et, zipcode_et, phone_et, email_et;
-    TextView publishtv;
+    TextView publishtv, grouppublishtv;
+    ListView listview;
+    String[] ListViewItems = new String[]{
+            "ListView ITEM-1",
+            "ListView ITEM-2",
+            "ListView ITEM-3",
+            "ListView ITEM-4",
+            "ListView ITEM-5",
+            "ListView ITEM-6",
+            "ListView ITEM-7",
+            "ListView ITEM-8",
+            "ListView ITEM-9",
+            "ListView ITEM-10"
+
+    };
+
+    SparseBooleanArray sparseBooleanArray;
+    private List<Group> groups;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_quickvenue);
+        groups = new ArrayList<>();
+
         final View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(QuickCreateEventVenues.this, v1);
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(QuickCreateEventVenues.this);
         edit = sharedPrefces.edit();
         token = sharedPrefces.getString("token", "");
+        str_email = sharedPrefces.getString("str_email", "");
+        str_phone = sharedPrefces.getString("str_phone", "");
+        onlinestatus = sharedPrefces.getString("onlinestatus", "");
+
+
         str_eventtopic = sharedPrefces.getString("str_eventtopic", "");
         str_category = sharedPrefces.getString("str_category", "");
         str_eventday = sharedPrefces.getString("str_eventday", "");
@@ -105,7 +135,8 @@ public class QuickCreateEventVenues extends Activity {
         til_phone = (TextInputLayout) findViewById(R.id.til_phone);
         til_email = (TextInputLayout) findViewById(R.id.til_email);
         til_msg = (TextInputLayout) findViewById(R.id.til_msg);
-
+        eventvenue_lv = findViewById(R.id.eventvenue_lv);
+        specific_group = findViewById(R.id.specific_group_cb);
         publishtv = findViewById(R.id.publishtv);
         eventvenue_et = findViewById(R.id.eventvenue_et);
         address_et = findViewById(R.id.address_et);
@@ -116,38 +147,50 @@ public class QuickCreateEventVenues extends Activity {
                 findViewById(R.id.switch_button);
         com.suke.widget.SwitchButton switchButton1 = (com.suke.widget.SwitchButton)
                 findViewById(R.id.switch_button1);
+
+        if (str_email != null) {
+            email_et.setText(str_email);
+        }
+        if (str_phone != null) {
+            phone_et.setText(str_phone);
+        }
+        if (onlinestatus != null) {
+            if (onlinestatus.equals("true")) {
+                eventvenue_lv.setVisibility(View.GONE);
+            } else {
+                eventvenue_lv.setVisibility(View.VISIBLE);
+
+            }
+        }
+
         phone_et.setEnabled(false);
         email_et.setEnabled(false);
+
         switchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO do your job
                 if (isChecked) {
                     phone_et.setEnabled(true);
-                    // email.setEnabled(true);
                 } else {
                     phone_et.setEnabled(false);
-                    // email.setEnabled(false);
+
                 }
-
-
             }
         });
+
         switchButton1.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO do your job
                 if (isChecked) {
                     email_et.setEnabled(true);
-                    // email.setEnabled(true);
                 } else {
                     email_et.setEnabled(false);
-                    // email.setEnabled(false);
                 }
-
-
             }
         });
+
         til_eventname.setTypeface(lato);
         till_address.setTypeface(lato);
         till_city.setTypeface(lato);
@@ -164,6 +207,40 @@ public class QuickCreateEventVenues extends Activity {
         loader_dialog.setCancelable(false);
         loader_dialog.setContentView(R.layout.test_loader);
 
+        dialog = new Dialog(QuickCreateEventVenues.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_wowhubb_networklist);
+
+
+        ImageView closeiv = dialog.findViewById(R.id.closeiv);
+        grouppublishtv = (TextView) dialog.findViewById(R.id.publish_tv);
+        closeiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+
+        View view1 = dialog.getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(dialog.getContext(), view1);
+
+        listview = (ListView) dialog.findViewById(R.id.listView);
+        new fetchGroup().execute();
+
+        specific_group.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    dialog.show();
+                } else {
+                    dialog.dismiss();
+                }
+            }
+        });
+
         previouslv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,40 +248,78 @@ public class QuickCreateEventVenues extends Activity {
             }
         });
 
+        grouppublishtv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+
+
+            }
+        });
         publishtv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if (!eventvenue_et.getText().toString().trim().equalsIgnoreCase(""))
-                {
-                    til_eventname.setError(null);
-                    if (!eventvenue_et.getText().toString().trim().equalsIgnoreCase(""))
-                    {
+            public void onClick(View view) {
+
+                Log.e("tag", "onlinestatus------" + onlinestatus);
+
+                if (!onlinestatus.equals("true")) {
+
+                    if (!eventvenue_et.getText().toString().trim().equalsIgnoreCase("")) {
                         til_eventname.setError(null);
 
-                        if (!eventvenue_et.getText().toString().trim().equalsIgnoreCase(""))
-                        {
-                            til_eventname.setError(null);
+                        if (!address_et.getText().toString().trim().equalsIgnoreCase("")) {
+                            till_address.setError(null);
+                            if (!city_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                till_city.setError(null);
+                                if (!state_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                    till_state.setError(null);
+                                    if (!zipcode_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                        til_zipcode.setError(null);
+
+                                        new quickDetails().execute();
+
+                                    } else {
+                                        SpannableString s = new SpannableString("Enter Zipcode");
+                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        til_zipcode.setError(s);
+                                        zipcode_et.setFocusable(true);
+                                        zipcode_et.requestFocus();
+
+                                    }
 
 
+                                } else {
+                                    SpannableString s = new SpannableString("Enter State");
+                                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    till_state.setError(s);
+                                    state_et.setFocusable(true);
+                                    state_et.requestFocus();
 
-                        }
+                                }
 
-                        else
-                        {
-                            SpannableString s = new SpannableString("Enter Venue Name");
+
+                            } else {
+                                SpannableString s = new SpannableString("Enter City");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                till_city.setError(s);
+                                city_et.setFocusable(true);
+                                city_et.requestFocus();
+
+                            }
+
+
+                        } else {
+                            SpannableString s = new SpannableString("Enter Address");
                             s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            til_eventname.setError(s);
-                            eventvenue_et.setFocusable(true);
-                            eventvenue_et.requestFocus();
+                            till_address.setError(s);
+                            address_et.setFocusable(true);
+                            address_et.requestFocus();
 
                         }
 
 
-                    }
-
-                    else
-                    {
+                    } else {
                         SpannableString s = new SpannableString("Enter Venue Name");
                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         til_eventname.setError(s);
@@ -212,25 +327,12 @@ public class QuickCreateEventVenues extends Activity {
                         eventvenue_et.requestFocus();
 
                     }
-
-
-
+                } else {
+                    new quickDetails().execute();
                 }
 
-                else
-                {
-                    SpannableString s = new SpannableString("Enter Venue Name");
-                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    til_eventname.setError(s);
-                    eventvenue_et.setFocusable(true);
-                    eventvenue_et.requestFocus();
-
-                }
-
-                new quickDetails().execute();
             }
         });
-
 
     }
 
@@ -265,9 +367,7 @@ public class QuickCreateEventVenues extends Activity {
                 httppost.setHeader("eventstartdate", "");
                 Log.e("tag", "ds33---------------------->:" + str_wowtag);
                 httppost.setHeader("eventenddate", "");
-                Log.e("tag", "ds444----------------------->:" + selectedVideoFilePath1);
                 httppost.setHeader("eventtimezone", str_city);
-                Log.e("tag", "ds55555555----------------------->:" + selectedVideoFilePath1);
                 httppost.setHeader("runtimefrom", "");
                 httppost.setHeader("eventdescription", str_desc);
                 httppost.setHeader("runtimeto", "");
@@ -278,11 +378,7 @@ public class QuickCreateEventVenues extends Activity {
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
                 if (!str_wowtag.equals("")) {
-
                     entity.addPart("wowtagvideo", new FileBody(new File(str_wowtag), "video/mp4"));
-                }
-                if (!str_coverpage.equals("")) {
-                    entity.addPart("coverpage", new FileBody(new File(str_coverpage), "image/jpeg"));
                 }
 
                 httppost.setEntity(entity);
@@ -348,6 +444,7 @@ public class QuickCreateEventVenues extends Activity {
                             if (Utils.Operations.isOnline(QuickCreateEventVenues.this)) {
                                 new eventvenue().execute();
                             } else {
+
                             }
 
 
@@ -433,6 +530,8 @@ public class QuickCreateEventVenues extends Activity {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
+                        edit.remove("video1");
+                        edit.commit();
                         Toast.makeText(QuickCreateEventVenues.this, "Quick Event Created Successfully", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(QuickCreateEventVenues.this, EventFeedDashboard.class));
                         overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
@@ -525,6 +624,154 @@ public class QuickCreateEventVenues extends Activity {
 
     }
 
+    public class fetchGroup extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loader_dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+
+            try {
+                JSONObject jsonObject = new JSONObject();
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/group/fetchgroups", json, token);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "tag" + s);
+            loader_dialog.dismiss();
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    String status = jo.getString("success");
+                    if (status.equals("true")) {
+                        try {
+                            // av_loader.setVisibility(View.GONE);
+                            JSONArray feedArray = jo.getJSONArray("groups");
+
+                            for (int i = 0; i < feedArray.length(); i++) {
+                                JSONObject feedObj = (JSONObject) feedArray.get(i);
+                                Group item = new Group();
+                                item.setId(feedObj.getString("_id"));
+                                item.setGroupname(feedObj.getString("groupname"));
+                                JSONArray users = feedObj.getJSONArray("users");
+                                item.setGroupcount("" + users.length());
+
+                                JSONObject adminobj = feedObj.getJSONObject("adminid");
+                                {
+                                    item.setFirstname(adminobj.getString("firstname"));
+                                }
+
+
+                                groups.add(item);
+
+                                Log.e("tag", "basda-----" + groups.toString());
+                            }
+
+                            groupAdapter adapter = new groupAdapter(QuickCreateEventVenues.this, groups);
+                            listview.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("tag", "nt" + e.toString());
+                }
+            } else {
+
+            }
+
+        }
+
+    }
+
+    class groupAdapter extends BaseAdapter {
+        SharedPreferences.Editor editor;
+        String token, userId;
+        Dialog dialog;
+        private Activity activity;
+        private LayoutInflater inflater;
+        private List<Group> feedItems;
+
+        public groupAdapter(Activity activity, List<Group> feedItems) {
+            this.activity = activity;
+            this.feedItems = feedItems;
+        }
+
+        @Override
+        public int getCount() {
+            return feedItems.size();
+        }
+
+        @Override
+        public Object getItem(int location) {
+            return feedItems.get(location);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @SuppressLint("ResourceAsColor")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ViewHolder viewHolder;
+
+            if (inflater == null)
+                inflater = (LayoutInflater) activity
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.dialog_viewgroup, null);
+                viewHolder = new ViewHolder();
+                viewHolder.position = position;
+                FontsOverride.overrideFonts(activity, convertView);
+                viewHolder.name = (CheckBox) convertView.findViewById(R.id.text1);
+                viewHolder.memberscount = (TextView) convertView.findViewById(R.id.members_tv);
+                viewHolder.createdname_tv = convertView.findViewById(R.id.createdname_tv);
+                convertView.setTag(viewHolder);
+
+
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            Group item = groups.get(position);
+            viewHolder.name.setText(item.getGroupname());
+            Log.e("tag", "Gropupname" + item.getGroupname());
+            viewHolder.memberscount.setText(item.getGroupcount() + " Members");
+
+            viewHolder.createdname_tv.setText("Created by " + item.getFirstname());
+            viewHolder.name.setChecked(false);
+
+            return convertView;
+        }
+
+        class ViewHolder {
+            TextView memberscount, createdname_tv;
+            int position;
+            CheckBox name;
+
+
+        }
+
+
+    }
 
 }
 

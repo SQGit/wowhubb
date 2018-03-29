@@ -30,5 +30,7 @@
     <color name="red">#ef4135</color>
     <color name="yellow">#E5F231</color>
     <color name="tabcolor">#F2F2F2</color>
-
+    <color name="customColor">#333333</color>
+    <color name="blackOlive">#39393F</color>
+    <color name="orangeval">#d3d6db</color>
 </resources>

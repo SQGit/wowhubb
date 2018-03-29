@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
-import com.wowhubb.EventServiceProvider.EventServiceProviderModel;
+import com.wowhubb.Activity.LandingPageActivity;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.GetFilePathFromDevice;
 import com.wowhubb.R;
@@ -60,9 +60,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static com.wowhubb.Activity.ProfileActivity.getFilePathFromURI;
@@ -153,7 +151,8 @@ public class PaticularWowtagActivity extends Activity {
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent back = new Intent(getApplicationContext(), LandingPageActivity.class);
+                startActivity(back);
                 finish();
             }
         });
@@ -161,7 +160,11 @@ public class PaticularWowtagActivity extends Activity {
         wowtag_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new editWowtagVideoAsync().execute();
+                if (selectedVideoFilePath1 != null) {
+                    new editWowtagVideoAsync().execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Select or Capture New Video", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -179,7 +182,6 @@ public class PaticularWowtagActivity extends Activity {
             @Override
             public void onClick(View view) {
                 flag = true;
-
                 wow_videoview.setVisibility(View.GONE);
                 no_video.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext()).load(R.drawable.capture_video)
@@ -219,7 +221,6 @@ public class PaticularWowtagActivity extends Activity {
                     lnr_gallery.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             dialog.dismiss();
                             lnr_gallery.setBackgroundResource(R.drawable.btnbg);
                             txt_fromgallery.setTextColor(Color.parseColor("#FFFFFF"));
@@ -234,8 +235,6 @@ public class PaticularWowtagActivity extends Activity {
                                 startActivityForResult(Intent.createChooser(intent, "Select Video"), INTENT_REQUEST_GET_VIDEO1);
                                 Toast.makeText(getApplicationContext(), "Please choose less than 2 mb video", Toast.LENGTH_LONG).show();
                             }
-
-
                         }
                     });
 
@@ -297,7 +296,6 @@ public class PaticularWowtagActivity extends Activity {
         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getApplicationContext(), selectedMediaUri);
         no_video.setVisibility(View.VISIBLE);
         no_video.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-
         return selectedMediaUri;
 
 
@@ -361,12 +359,7 @@ public class PaticularWowtagActivity extends Activity {
                 selectedCoverFilePath = GetFilePathFromDevice.getPath(getApplicationContext(), selectedMediaUri);
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedMediaUri);
-                    // Log.d(TAG, String.valueOf(bitmap));
-                    // cover_iv.setImageBitmap(bitmap);
-                    //  coverplus.setVisibility(View.GONE);
-                    /*edit.putString("coverpage", selectedCoverFilePath);
-                    edit.commit();*/
-                    // video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -376,7 +369,6 @@ public class PaticularWowtagActivity extends Activity {
                     try {
                         Uri selectedMediaUri = data.getData();
                         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getApplicationContext(), selectedMediaUri);
-                        Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
                         no_video.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
                     } catch (NullPointerException e) {
 
@@ -394,19 +386,13 @@ public class PaticularWowtagActivity extends Activity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     Uri selectedMediaUri = videoUri;
                     selectedVideoFilePath1 = getFilePathFromURI(getApplicationContext(), selectedMediaUri);
-                    Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
                     no_video.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                   /* video1plus.setImageDrawable(getApplicationContext().getDrawable(R.drawable.video_icon));
-                    edit.putString("video1", selectedVideoFilePath1);
-                    edit.commit();*/
+
                 } else {
                     Uri selectedMediaUri = data.getData();
                     selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getApplicationContext(), selectedMediaUri);
-                    Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
                     no_video.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    /*video1plus.setImageDrawable(getApplicationContext().getDrawable(R.drawable.video_icon));
-                    edit.putString("video1", selectedVideoFilePath1);
-                    edit.commit();*/
+
                 }
             } else {
                 Uri selectedMediaUri = data.getData();
@@ -419,7 +405,6 @@ public class PaticularWowtagActivity extends Activity {
                     }
 
                 } else if (selectedMediaUri.toString().contains("video")) {
-                    Log.d("tag", "567231546" + selectedMediaUri);
                     String selectedVideoFilePath = GetFilePathFromDevice.getPath(getApplicationContext(), selectedMediaUri);
                 }
 
@@ -444,6 +429,13 @@ public class PaticularWowtagActivity extends Activity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent back = new Intent(getApplicationContext(), LandingPageActivity.class);
+        startActivity(back);
+        finish();
+    }
 
     //Describe Asynctask for Particular WOWTAG List:
     private class callParticularWowtag extends AsyncTask<String, String, String> {
@@ -484,34 +476,19 @@ public class PaticularWowtagActivity extends Activity {
                     if (status.equals("true")) {
 
                         JSONObject jsonObject = jo.getJSONObject("message");
-                        Log.e("tag", "wowtag0" + jsonObject);
                         wowtag_name.setText(jsonObject.getString("eventname"));
-                        Log.e("tag", "wowtag1" + jsonObject.getString("eventname"));
-
-
                         String e_start_date = jsonObject.getString("eventstartdate");
-                        Log.e("tag", "wowtag2" + jsonObject.getString("eventstartdate"));
                         String e_end_date = jsonObject.getString("eventenddate");
-                        Log.e("tag", "wowtag3" + jsonObject.getString("eventenddate"));
-
                         wowtag_description_cont.setText(jsonObject.getString("eventdescription"));
-                        Log.e("tag", "wowtag4" + jsonObject.getString("eventdescription"));
-
                         wowtag_video = jsonObject.getString("wowtagvideo");
-                        Log.e("tag", "wowtag5" + jsonObject.getString("wowtagvideo"));
-
                         String wowtag_runtimefrom = jsonObject.getString("runtimefrom");
                         String wowtag_runtimeto = jsonObject.getString("runtimeto");
 
                         wowtag_runtime.setText("Wowtag Runtime From " + wowtag_runtimefrom + " to " + wowtag_runtimeto);
 
-
-                        //wow_videoview.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" +wowtag_video));
                         if (wowtag_video == null) {
                             no_video.setVisibility(View.VISIBLE);
                             wow_videoview.setVisibility(View.GONE);
-                            Log.e("tag", "wowtag deleted");
-
                             Glide.with(getApplicationContext()).load(R.drawable.no_video)
                                     .into(no_video);
 
@@ -519,8 +496,6 @@ public class PaticularWowtagActivity extends Activity {
                         if (wowtag_video.equals("null")) {
                             no_video.setVisibility(View.VISIBLE);
                             wow_videoview.setVisibility(View.GONE);
-                            Log.e("tag", "wowtag deleted");
-
 
                             Glide.with(getApplicationContext()).load(R.drawable.no_video)
                                     .into(no_video);
@@ -529,8 +504,6 @@ public class PaticularWowtagActivity extends Activity {
                             no_video.setVisibility(View.GONE);
                             wow_videoview.setVisibility(View.VISIBLE);
                             wow_videoview.setVideoPath("http://104.197.80.225:3010/wow/media/event/" + wowtag_video);
-                            Log.e("tag", "Print Video Path" + "http://104.197.80.225:3010/wow/media/event/" + wowtag_video);
-
                         }
 
                         try {
@@ -595,7 +568,7 @@ public class PaticularWowtagActivity extends Activity {
         protected void onPostExecute(String jsonstr) {
             //av_loader.setVisibility(View.GONE);
             super.onPostExecute(jsonstr);
-            List<EventServiceProviderModel> data = new ArrayList<>();
+
             if (jsonstr.equals("")) {
                 Toast.makeText(getApplicationContext(), "Check Network Connection", Toast.LENGTH_LONG).show();
             } else {
@@ -659,7 +632,6 @@ public class PaticularWowtagActivity extends Activity {
                 HttpEntity r_entity = null;
 
 
-                Log.e("tag", "strt111" + selectedVideoFilePath1);
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 if (!selectedVideoFilePath1.equals("")) {
                     entity.addPart("wowtagvideo", new FileBody(new File(selectedVideoFilePath1), "image/jpeg"));
@@ -679,7 +651,6 @@ public class PaticularWowtagActivity extends Activity {
                     }
 
                     int statusCode = response.getStatusLine().getStatusCode();
-                    Log.e("tag", response.getStatusLine().toString());
                     if (statusCode == 200) {
                         responseString = EntityUtils.toString(r_entity);
 
@@ -719,10 +690,6 @@ public class PaticularWowtagActivity extends Activity {
                     e.printStackTrace();
                 }
             }
-
-
         }
-
     }
-
 }

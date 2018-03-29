@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_40sdp"
+            android:gravity="center"
+            android:text="Publish to Specific Group"
+            android:textColor="@color/textcolr"
+            android:textSize="@dimen/_15sdp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:gravity="right"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/closeiv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/close_round" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lv1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_330sdp"
+        android:layout_below="@+id/ll"
+        >
+
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:choiceMode="multipleChoice" />
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/bottom_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/lv1"
+        android:gravity="center">
+    <TextView
+        android:id="@+id/publish_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/btnbg_curve"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_5sdp"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:text="Publish"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13sdp"
+        android:visibility="visible" />
+    </RelativeLayout>
+</RelativeLayout>

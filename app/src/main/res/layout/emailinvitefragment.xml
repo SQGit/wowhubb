@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <com.doodle.android.chips.ChipsView
+        android:id="@+id/cv_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        app:cv_vertical_spacing="2dp"
+        app:cv_bg_color_indelible="#99dde1e4"
+        app:cv_text_color_indelible="#888"
+        app:cv_text_hint=" Email"
+        app:cv_bg_color="@color/grey"
+        app:cv_icon_placeholder_tint="#06f"
+        app:cv_chips_margin="1dp"
+
+        >
+
+    </com.doodle.android.chips.ChipsView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_height="1dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:background="@color/colorPrimary"></View>
+
+    <TextView
+        android:id="@+id/sendemail_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:background="@drawable/btnbg_curve"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_7sdp"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:paddingTop="@dimen/_7sdp"
+        android:text="Send Email"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13sdp"
+        android:visibility="visible" />
+
+
+    <TextView
+        android:id="@+id/selectgroup_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select from Group"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:padding="@dimen/_10sdp"
+        android:textColor="@drawable/selector_text"
+        android:textSize="@dimen/_12sdp"
+        android:layout_gravity="center"/>
+</LinearLayout>

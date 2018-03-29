@@ -31,10 +31,12 @@ public class Config {
     //Near By Events:
     public static final String WEB_URL_GET_NEAR_BY_EVENTS="http://104.197.80.225:3010/wow/event/getnearbyeventslist";
     //WowtagVideos
-    public static final String WEB_URL_GET_WOWTAG="http://104.197.80.225:3010/wow/event/myfeeds";
-    public static final String WEB_URL_GET_WOWTAGLIST="http://104.197.80.225:3010/wow/event/geteventtitle";
+    public static final String WEB_URL_GET_WOWTAGLIST="http://104.197.80.225:3010/wow/event/geteventtitles";
+    public static final String WEB_URL_PARTICULARLIST="http://104.197.80.225:3010/wow/event/myeventtitles";
     public static final String WEB_URL_GET_PARTICULAR_WOWTAGLIST="http://104.197.80.225:3010/wow/event/getparticulareventtitle";
     public static final String WEB_URL_GET_PARTICULAR_WOWTAGLIST_DELETE="http://104.197.80.225:3010/wow/event/deletewowtagvideo";
+    public static final String WEB_URL_FRTCH_WOWTAGID="http://104.197.80.225:3010/wow/event/fetchparticularevent";
+
 
 
     public static boolean isStringNullOrWhiteSpace(String value) {

@@ -18,15 +18,19 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/txt_enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_16sdp"
                 android:textColor="@color/headercolor"
                 android:text="Enter your " />
+
+
             <TextView
+                android:id="@+id/txt_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_16sdp"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="Wowtag Code"/>
 
@@ -35,13 +39,16 @@
 
 
         <TextView
+          android:id="@+id/txt3"
             android:layout_width="wrap_content"
             android:textSize="@dimen/_12sdp"
             android:textColor="@color/headercolor"
             android:layout_height="wrap_content"
             android:text="To earn redeemable points" />
-
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,19 +91,27 @@
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/til_spinwowtag"
+                    android:id="@+id/til_wowtag"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_10sdp">
+                    android:layout_height="wrap_content">
 
-                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-                        android:id="@+id/wowtagid_spn"
-                        android:layout_width="match_parent"
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteTextView"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Select Wowtag Title"
-                        android:background="@android:drawable/btn_default"
-                        android:textSize="@dimen/_13sdp"
-                        app:met_textColorHint="@color/view" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/textView1"
+                        android:hint="Enter your Wowtag"
+                        android:singleLine="true"
+
+                        android:imeOptions="actionDone"
+                        android:layout_marginTop="17dp"
+                        android:ems="10"
+                        android:text="">
+                        <requestFocus />
+                    </AutoCompleteTextView>
+
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
@@ -115,10 +130,6 @@
                     android:src="@drawable/search_icon" />
             </LinearLayout>
         </LinearLayout>
-
-
-
-
     </LinearLayout>
 
     <TextView
@@ -127,10 +138,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/_35sdp"
-        android:background="@drawable/btnbg"
+        android:background="@drawable/curve_btnbg"
         android:paddingBottom="@dimen/_5sdp"
-        android:paddingLeft="@dimen/_15sdp"
-        android:paddingRight="@dimen/_15sdp"
+        android:paddingLeft="@dimen/_25sdp"
+        android:paddingRight="@dimen/_25sdp"
         android:paddingTop="@dimen/_5sdp"
         android:text="Search"
         android:textSize="@dimen/_14sdp"

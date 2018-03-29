@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import com.wowhubb.EventServiceProvider.EventProviderCategotyActivity;
-import com.wowhubb.EventServiceProvider.EventServiceProviderModel;
+
+import com.wowhubb.EventServiceProvider.Model.EventServiceProviderModel;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
 import com.wowhubb.Utils.HttpUtils;
@@ -223,11 +223,11 @@ public class NearbyEventsCategoryAdapter extends RecyclerView.Adapter<NearbyEven
                             }
 
 
-                            Intent intent=new Intent(context, EventProviderCategotyActivity.class);
+                          /*  Intent intent=new Intent(context, EventProviderCategotyActivity.class);
                             intent.putStringArrayListExtra("category_list",category_list);
                             intent.putExtra("provider",cat_name);
                             context.startActivity(intent);
-
+*/
 
 
                         } else {

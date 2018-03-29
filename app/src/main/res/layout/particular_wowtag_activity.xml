@@ -137,7 +137,6 @@
                         android:layout_weight="2">
 
                         <Switch
-                            android:id="@+id/simpleSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/black_30"
@@ -265,8 +264,8 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/_12sdp"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:text="@string/edit_wowtag"/>
+                        android:layout_marginLeft="@dimen/_35sdp"
+                        android:text="Edit"/>
 
 
                     <TextView

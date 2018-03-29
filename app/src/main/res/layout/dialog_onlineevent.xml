@@ -77,11 +77,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.@"
                     android:hint="Webinar Link / URL"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
-                    android:maxLength="10"
                     android:maxLines="1"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_5sdp"
@@ -165,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:hint="Teleconference Passscode"
+                    android:hint="Teleconference Passcode"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
                     android:maxLines="1"
@@ -176,6 +175,7 @@
                     android:textColorHint="@color/textcolr"
                     android:textSize="@dimen/_13sdp" />
             </android.support.design.widget.TextInputLayout>
+
         </LinearLayout>
 
         <TextView

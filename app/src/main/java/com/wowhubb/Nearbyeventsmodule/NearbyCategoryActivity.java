@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.wang.avi.AVLoadingIndicatorView;
-import com.wowhubb.EventServiceProvider.EventServiceProviderModel;
+import com.wowhubb.EventServiceProvider.Model.EventServiceProviderModel;
 import com.wowhubb.EventServiceProvider.MyDividerItemDecoration;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;

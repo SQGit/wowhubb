@@ -559,7 +559,7 @@
                                             android:paddingLeft="@dimen/_1sdp">
 
                                             <EditText
-                                                android:id="@+id/eventtimeto_et"
+                                                android:id="@+id/eventendtime"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginBottom="@dimen/_4sdp"

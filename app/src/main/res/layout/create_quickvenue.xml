@@ -6,30 +6,7 @@
     android:background="@drawable/bg_white"
     android:orientation="vertical"
     android:paddingBottom="@dimen/_10sdp">
-    <LinearLayout
-        android:id="@+id/venuelv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:background="@color/graybg"
 
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawableLeft="@drawable/ic_action_sym"
-            android:drawablePadding="-12dp"
-            android:gravity="start|center"
-            android:paddingBottom="@dimen/_3sdp"
-            android:paddingLeft="-10dp"
-            android:paddingTop="@dimen/_2sdp"
-            android:text="Event Venue"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/_13sdp" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll"
@@ -38,7 +15,6 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/_5sdp"
         android:gravity="right|center"
-        android:layout_below="@+id/venuelv"
 
         android:orientation="horizontal">
 
@@ -73,9 +49,39 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10sdp"
             android:orientation="vertical"
-
             android:paddingBottom="@dimen/_10sdp">
 
+            <LinearLayout
+                android:id="@+id/eventvenue_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/venuelv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@color/graybg"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:drawableLeft="@drawable/ic_action_sym"
+                    android:drawablePadding="-12dp"
+                    android:gravity="start|center"
+                    android:paddingBottom="@dimen/_3sdp"
+                    android:paddingLeft="-10dp"
+                    android:paddingTop="@dimen/_2sdp"
+                    android:text="Event Venue"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/_13sdp" />
+
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_eventvenue"
@@ -277,7 +283,7 @@
 
 
             </LinearLayout>
-
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -458,7 +464,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@color/graybg"
                 android:orientation="vertical">
 
@@ -474,7 +480,7 @@
                         android:id="@+id/specific_group_cb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Only Selected Group can view Event"
+                        android:text="Publish to Selected Group"
                         android:textColor="@color/textcolr" />
                 </LinearLayout>
 
@@ -511,7 +517,7 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Invite Only Event"
+                        android:text="Invited Only Event"
                         android:textColor="@color/textcolr" />
                 </LinearLayout>
             </LinearLayout>

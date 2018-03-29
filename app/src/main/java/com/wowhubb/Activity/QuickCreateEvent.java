@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -88,16 +87,15 @@ public class QuickCreateEvent extends Activity {
     private static final int INTENT_REQUEST_GET_VIDEO11 = 13;
     private static final int INTENT_REQUEST_GET_GALERYVIDEO1 = 14;
     public static MaterialBetterSpinner event_spn;
-
     public static EditText eventname_et, eventdate_et, eventdateto_et, eventtopic_et, eventaddcategory_et, eventdesc_et;
     public static String date, str_category, str_eventday, strDateFormat1, strDateFormat2;
-    public static TextInputLayout til_eventtimeto,til_eventtime,til_event_spn,til_desc, til_spincategory, til_spindays, eventdate_til, eventtopic_til, eventaddcategory_til, eventtimezone_til, eventdateto_til;
-    public static String str_start, str_end, selectedVideoFilePath1;
+    public static TextInputLayout til_eventtimeto, til_eventtime, til_event_spn, til_desc, til_spincategory, til_spindays, eventdate_til, eventtopic_til, eventaddcategory_til, eventtimezone_til, eventdateto_til;
+    public static String selectedVideoFilePath1;
     public static AutoCompleteTextView eventtimezone_et;
     public static Calendar selectedCal, selectedCalto, wowtagfrom, wowtagto;
     public static FrameLayout framestart, frameend;
     public static ScrollView scrollView;
-    public static EditText runfromtime_tv, runtotime_tv,telepasscode_et, webinarlink_et, telephone_et;
+    public static EditText runfromtime_tv, runtotime_tv, telepasscode_et, webinarlink_et, telephone_et;
     public static TextInputLayout til_from, til_to, til_eventtile;
     public EventData eventData;
     String token;
@@ -105,14 +103,13 @@ public class QuickCreateEvent extends Activity {
     LinearLayout layout_eventdate, layout_eventdateto, nextlv;
     LinearLayout fromlv, tolv, layout_fromtime, layout_totime, layout_runfromdate, layout_runtodate, backiv;
     TextView txt_fromgallery, txt_takevideo;
-    EditText fromtime_tv, totime_tv;
+    EditText eventstarttime, eventendtime, fromtime_tv, totime_tv;
     Typeface lato;
     TextView helpfultips_tv, publishtv;
     SharedPreferences sharedPrefces;
     SharedPreferences.Editor edit;
-    Dialog dialog, cdialog, ctimedialog, loader_dialog,comments_dialog;
+    Dialog dialog, cdialog, ctimedialog, loader_dialog, comments_dialog;
     String[] SPINNERLIST = {"Anniversary", "Baby Shower", "Birthday Party", "Holiday Party", "Wedding", "Baby Naming", "Graduation Party", "Team Outing", "Photo/File Shoot Event", "Bridal Shower Event", "Meeting", "Others", "Group Meetings"};
-
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List expandableListTitle;
@@ -129,7 +126,6 @@ public class QuickCreateEvent extends Activity {
         }
     };
     String[] EVENTLIST = {"Webinar", "Teleconference", "Podcast"};
-    DatePicker.OnDateChangedListener dateChangedListener;
 
     private Uri fileUri, videoUri;
 
@@ -223,6 +219,8 @@ public class QuickCreateEvent extends Activity {
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(QuickCreateEvent.this);
         edit = sharedPrefces.edit();
         token = sharedPrefces.getString("token", "");
+        edit.putString("onlinestatus", "false");
+        edit.commit();
 
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(QuickCreateEvent.this, v1);
@@ -246,13 +244,14 @@ public class QuickCreateEvent extends Activity {
         totime_tv = findViewById(R.id.eventdateto_et);
         fromlv = (LinearLayout) findViewById(R.id.fromlv);
         tolv = (LinearLayout) findViewById(R.id.tolv);
-
+        eventstarttime = findViewById(R.id.eventstarttime);
+        eventendtime = findViewById(R.id.eventendtime);
         runfromtime_tv = findViewById(R.id.runfromtv);
         runtotime_tv = findViewById(R.id.runtotv);
         til_from = findViewById(R.id.til_from);
         til_to = findViewById(R.id.til_to);
         til_eventtime = findViewById(R.id.til_eventtime);
-        til_eventtimeto=findViewById(R.id.til_eventtimeto);
+        til_eventtimeto = findViewById(R.id.til_eventtimeto);
         layout_runfromdate = findViewById(R.id.layout_runfromdate);
         layout_runtodate = findViewById(R.id.runlayout_todate);
         framevideo1 = findViewById(R.id.framevideo1);
@@ -281,6 +280,8 @@ public class QuickCreateEvent extends Activity {
         til_desc.setTypeface(lato);
         til_eventtime.setTypeface(lato);
         til_eventtimeto.setTypeface(lato);
+        til_from.setTypeface(lato);
+        til_to.setTypeface(lato);
         eventaddcategory_til.setTypeface(lato);
         eventtimezone_til.setTypeface(lato);
         til_spincategory.setTypeface(lato);
@@ -315,6 +316,7 @@ public class QuickCreateEvent extends Activity {
                 return true;
             }
         });
+
 
         onlineevent_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -463,83 +465,83 @@ public class QuickCreateEvent extends Activity {
                     eventtopic_til.setError(null);
                     if (str_category != null) {
 
-                            if (!eventdesc_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                til_desc.setError(null);
-                                if (!eventtimezone_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                    eventtimezone_til.setError(null);
-                                    if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                        eventdate_til.setError(null);
-                                        if (!eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                            eventname_et.setError(null);
-                                            if (selectedVideoFilePath1 != null) {
-                                                if (!runfromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                                                    til_from.setError(null);
-                                                    if (!runtotime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                                                        til_to.setError(null);
-                                                        Log.e("tag", "hgchgxc");
-                                                        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                                        SharedPreferences.Editor edit = sharedPrefces.edit();
-                                                        edit.putString("str_eventtopic", eventtopic_et.getText().toString().trim());
-                                                        edit.putString("str_category", str_category);
-                                                        edit.putString("str_eventday", str_eventday);
-                                                        edit.putString("str_desc", eventdesc_et.getText().toString().trim());
-                                                        edit.putString("str_city", eventtimezone_et.getText().toString().trim());
-                                                        edit.putString("str_eventname", eventname_et.getText().toString().trim());
-                                                        edit.putString("str_wowtag", selectedVideoFilePath1);
-                                                        edit.putString("str_startdate", "");
-                                                        edit.putString("str_enddate", "");
-                                                        edit.putString("str_runfrom", "");
-                                                        edit.putString("str_runto", "");
-                                                        edit.commit();
-                                                        startActivity(new Intent(QuickCreateEvent.this, QuickCreateEventVenues.class));
-                                                        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-
-                                                    } else {
-                                                        SpannableString s = new SpannableString("Select End Date");
-                                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                        til_to.setError(s);
-                                                    }
+                        if (!eventdesc_et.getText().toString().trim().equalsIgnoreCase("")) {
+                            til_desc.setError(null);
+                            if (!eventtimezone_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                eventtimezone_til.setError(null);
+                                if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                    eventdate_til.setError(null);
+                                    if (!eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                        eventname_et.setError(null);
+                                        if (selectedVideoFilePath1 != null) {
+                                            if (!runfromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                                til_from.setError(null);
+                                                if (!runtotime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                                    til_to.setError(null);
+                                                    Log.e("tag", "hgchgxc");
+                                                    SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                    SharedPreferences.Editor edit = sharedPrefces.edit();
+                                                    edit.putString("str_eventtopic", eventtopic_et.getText().toString().trim());
+                                                    edit.putString("str_category", str_category);
+                                                    edit.putString("str_eventday", str_eventday);
+                                                    edit.putString("str_desc", eventdesc_et.getText().toString().trim());
+                                                    edit.putString("str_city", eventtimezone_et.getText().toString().trim());
+                                                    edit.putString("str_eventname", eventname_et.getText().toString().trim());
+                                                    edit.putString("str_wowtag", selectedVideoFilePath1);
+                                                    edit.putString("str_startdate", "");
+                                                    edit.putString("str_enddate", "");
+                                                    edit.putString("str_runfrom", "");
+                                                    edit.putString("str_runto", "");
+                                                    edit.commit();
+                                                    startActivity(new Intent(QuickCreateEvent.this, QuickCreateEventVenues.class));
+                                                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
 
                                                 } else {
-                                                    SpannableString s = new SpannableString("Select Start Date");
+                                                    SpannableString s = new SpannableString("Select End Date");
                                                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                    til_from.setError(s);
+                                                    til_to.setError(s);
                                                 }
+
                                             } else {
-                                                SpannableString s = new SpannableString("Select Wowtag Video");
+                                                SpannableString s = new SpannableString("Select Start Date");
                                                 s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                                                til_from.setError(s);
                                             }
                                         } else {
-                                            SpannableString s = new SpannableString("Enter Event Title");
+                                            SpannableString s = new SpannableString("Select Wowtag Video");
                                             s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            eventname_et.setError(s);
-                                            eventname_et.requestFocus();
+                                            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                                         }
-
-
                                     } else {
-                                        SpannableString s = new SpannableString("Select Event Start Date");
+                                        SpannableString s = new SpannableString("Enter Event Title");
                                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        eventdate_til.setError(s);
-
-
+                                        eventname_et.setError(s);
+                                        eventname_et.requestFocus();
                                     }
 
-                                } else {
 
-                                    SpannableString s = new SpannableString("Enter Event City");
+                                } else {
+                                    SpannableString s = new SpannableString("Select Event Start Date");
                                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    eventtimezone_til.setError(s);
-                                    eventtimezone_et.requestFocus();
+                                    eventdate_til.setError(s);
+
+
                                 }
+
                             } else {
 
-                                SpannableString s = new SpannableString("Enter Event Description");
+                                SpannableString s = new SpannableString("Enter Event City");
                                 s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                til_desc.setError(s);
-                                eventdesc_et.requestFocus();
+                                eventtimezone_til.setError(s);
+                                eventtimezone_et.requestFocus();
                             }
+                        } else {
+
+                            SpannableString s = new SpannableString("Enter Event Description");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            til_desc.setError(s);
+                            eventdesc_et.requestFocus();
+                        }
 
                     } else {
                         SpannableString s = new SpannableString("Select Event Category");
@@ -563,8 +565,7 @@ public class QuickCreateEvent extends Activity {
 
         layout_fromtime.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
                 ctimedialog = new Dialog(QuickCreateEvent.this);
                 ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -662,10 +663,10 @@ public class QuickCreateEvent extends Activity {
                         }
 
                         ctimedialog.dismiss();
-                          populateSetTime(hour, min);
+                        populateSetTimeTo(hour, min);
                     }
                 });
-                 ctimedialog.show();
+                ctimedialog.show();
             }
         });
 
@@ -673,43 +674,43 @@ public class QuickCreateEvent extends Activity {
             @Override
             public void onClick(View view) {
 
-                    eventdate_til.setError("");
-                    cdialog = new Dialog(QuickCreateEvent.this);
-                    cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    cdialog.setContentView(R.layout.dialog_customcalendar);
-                    View v1 = cdialog.getWindow().getDecorView().getRootView();
-                    dp = cdialog.findViewById(R.id.datePicker);
-                    TextView ok = cdialog.findViewById(R.id.oktv);
-                    TextView cancel = cdialog.findViewById(R.id.canceltv);
-                    FontsOverride.overrideFonts(cdialog.getContext(), v1);
-                    dp.setMinDate(System.currentTimeMillis() - 1000);
-                    cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            Window view1 = ((Dialog) cdialog).getWindow();
-                        }
-                    });
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            cdialog.dismiss();
-                        }
-                    });
+                eventdate_til.setError("");
+                cdialog = new Dialog(QuickCreateEvent.this);
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.setContentView(R.layout.dialog_customcalendar);
+                View v1 = cdialog.getWindow().getDecorView().getRootView();
+                dp = cdialog.findViewById(R.id.datePicker);
+                TextView ok = cdialog.findViewById(R.id.oktv);
+                TextView cancel = cdialog.findViewById(R.id.canceltv);
+                FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                dp.setMinDate(System.currentTimeMillis() - 1000);
+                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Window view1 = ((Dialog) cdialog).getWindow();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cdialog.dismiss();
+                    }
+                });
 
-                    ok.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            int day = dp.getDayOfMonth();
-                            int month = dp.getMonth();
-                            int year = dp.getYear();
-                            wowtagfrom = Calendar.getInstance();
-                            selectedCal.set(year, month, day);
-                            wowtagfrom.set(year, month, day);
-                            Log.e("tag", "values---------------------->>>>>>>" + day + month + year);
-                            populateSetDate(year, month + 1, day);
-                            cdialog.dismiss();
-                        }
-                    });
-                    cdialog.show();
+                ok.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        int day = dp.getDayOfMonth();
+                        int month = dp.getMonth();
+                        int year = dp.getYear();
+                        wowtagfrom = Calendar.getInstance();
+                        selectedCal.set(year, month, day);
+                        wowtagfrom.set(year, month, day);
+                        Log.e("tag", "values---------------------->>>>>>>" + day + month + year);
+                        populateSetDate(year, month + 1, day);
+                        cdialog.dismiss();
+                    }
+                });
+                cdialog.show();
 
             }
         });
@@ -719,54 +720,43 @@ public class QuickCreateEvent extends Activity {
             @Override
             public void onClick(View view) {
 
-                    eventdate_til.setError("");
+                eventdateto_til.setError("");
+                cdialog = new Dialog(QuickCreateEvent.this);
+                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                cdialog.setContentView(R.layout.dialog_customcalendar);
+                View v1 = cdialog.getWindow().getDecorView().getRootView();
+                dp = cdialog.findViewById(R.id.datePicker);
+                TextView ok = cdialog.findViewById(R.id.oktv);
+                TextView cancel = cdialog.findViewById(R.id.canceltv);
+                FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                dp.setMinDate(System.currentTimeMillis() - 1000);
+                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Window view1 = ((Dialog) cdialog).getWindow();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cdialog.dismiss();
+                    }
+                });
 
-                    ctimedialog = new Dialog(QuickCreateEvent.this);
-                    ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    ctimedialog.setContentView(R.layout.dialog_customtime);
-                    View v1 = ctimedialog.getWindow().getDecorView().getRootView();
-
-                    final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
-                    TextView ok = ctimedialog.findViewById(R.id.oktv);
-                    TextView cancel = ctimedialog.findViewById(R.id.canceltv);
-
-                    //   dp.setOnDateChangedListener(dateChangedListener);
-                    FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
-
-                    ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                        @Override
-                        public void onShow(DialogInterface dialogInterface) {
-                            Window view1 = ((Dialog) ctimedialog).getWindow();
-
-                        }
-                    });
-
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ctimedialog.dismiss();
-                        }
-                    });
-
-
-                    ok.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            int hour = 0;
-                            int min = 0;
-                            int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-                            if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                                hour = dp.getHour();
-                                min = dp.getMinute();
-                            } else {
-                                hour = dp.getCurrentHour();
-                                min = dp.getCurrentMinute();
-                            }
-
-                            ctimedialog.dismiss();
-                            populateSetTimeTo(hour, min);
-                        }
-                    });
-                    ctimedialog.show();
+                ok.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        int day = dp.getDayOfMonth();
+                        int month = dp.getMonth();
+                        int year = dp.getYear();
+                        wowtagto = Calendar.getInstance();
+                        selectedCal.set(year, month, day);
+                        wowtagto.set(year, month, day);
+                        Log.e("tag", "values---------------------->>>>>>>" + day + month + year);
+                        populateSetDateTo(year, month + 1, day);
+                        cdialog.dismiss();
+                    }
+                });
+                cdialog.show();
 
 
             }
@@ -827,12 +817,13 @@ public class QuickCreateEvent extends Activity {
                 dialog.show();
             }
         });
+
+
         framevideo1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 dialog = new Dialog(QuickCreateEvent.this);
-                // Include dialog.xml file
                 dialog.setContentView(R.layout.dialog_takevideo);
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
@@ -845,8 +836,6 @@ public class QuickCreateEvent extends Activity {
                 //img_take_gallery = (ImageView) dialog.findViewById(R.id.img_take_gallery);
                 txt_takevideo = (TextView) dialog.findViewById(R.id.txt_takevideo);
                 //img_take_video = (ImageView) dialog.findViewById(R.id.img_take_video);
-
-
                 ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
                 final LinearLayout lnr_video = (LinearLayout) dialog.findViewById(R.id.lnr_video);
                 final LinearLayout lnr_gallery = (LinearLayout) dialog.findViewById(R.id.lnr_gallery);
@@ -854,8 +843,6 @@ public class QuickCreateEvent extends Activity {
 
                 txt_fromgallery.setTextColor(Color.parseColor("#3c3c3c"));
                 txt_takevideo.setTextColor(Color.parseColor("#3c3c3c"));
-
-
                 txt_fromgallery.setText("From Gallery");
                 txt_takevideo.setText("Take Video   ");
 
@@ -863,7 +850,6 @@ public class QuickCreateEvent extends Activity {
                 lnr_video.setBackgroundResource(R.drawable.btn_bg_white);
                 txt_takevideo.setTypeface(lato);
                 txt_fromgallery.setTypeface(lato);
-
 
                 lnr_gallery.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1106,9 +1092,9 @@ public class QuickCreateEvent extends Activity {
         materialDesignSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 FontsOverride.overrideFonts(QuickCreateEvent.this, view);
                 str_category = adapterView.getItemAtPosition(i).toString();
-
                 if (str_category.equals("Others")) {
                     eventaddcategory_til.setVisibility(View.VISIBLE);
                     edit.putString("str_category", "others");
@@ -1118,13 +1104,8 @@ public class QuickCreateEvent extends Activity {
                     edit.putString("str_category", str_category);
                     edit.commit();
                 }
-
             }
         });
-
-
-        FontsOverride.overrideFonts(QuickCreateEvent.this, view1);
-
 
     }
 
@@ -1159,91 +1140,11 @@ public class QuickCreateEvent extends Activity {
             spf = new SimpleDateFormat("MMM/dd/yyyy");
             strDateFormatTo = spf.format(newDate);
             eventdate_et.setText(strDateFormatTo);
-            Log.e("tag", "date------------>" + strDateFormatTo);
-
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void populateSetTime(int hourOfDay, int minute) {
-        strDateFormat1 = eventdate_et.getText().toString();
-        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
-        Date newDate = null;
-
-        String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
-        String runtimeFrom = strDateFormat1 + " " + strDateFormat;
-        Log.e("tag", "RUNTIME---------->" + runtimeFrom);
-        strDateFormat = strDateFormat + " a";
-        try {
-            newDate = spf.parse(strDateFormat1);
-            spf = new SimpleDateFormat("MMM/dd/yyyy");
-            strDateFormat1 = spf.format(newDate);
-            System.out.println(strDateFormat1);
-            Log.e("tag", "dvhdsvjvj" + strDateFormat1);
+            eventdateto_et.setText("");
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
-        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
-        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
-
-        try {
-            Date dt = parseFormat.parse(strDateFormat);
-            System.out.println(outputFormat.format(dt));
-            eventdate_et.setText(strDateFormat1 + " " + outputFormat.format(dt));
-            str_start = outputFormat.format(dt);
-            str_end = outputFormat.format(dt);
-            strdayscounrt = sharedPrefces.getInt("str_eventday", 0);
-            if (strdayscounrt == 1) {
-                selectedCal.add(Calendar.DATE, 1);
-                SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
-                date = spfdate.format(selectedCal.getTime());
-                Log.e("tag", "vvvvvvvvvvvvvvvvv-------" + selectedCal.get(Calendar.MONTH) + selectedCal.get(Calendar.DATE) + selectedCal.get(Calendar.YEAR));
-                Log.e("tag", "date-------" + date);
-                eventdateto_et.setText("");
-                eventdateto_et.setText(date + " " + str_start);
-                wowtagto = Calendar.getInstance();
-                int month = selectedCal.get(Calendar.MONTH);
-                int day = selectedCal.get(Calendar.DATE);
-                int year = selectedCal.get(Calendar.YEAR);
-                wowtagto.set(year, month, day);
-            } else if (strdayscounrt == 2) {
-                selectedCal.add(Calendar.DATE, 2);
-                SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
-                date = spfdate.format(selectedCal.getTime());
-                Log.e("tag", "vvvvvvvvvvvvvvvvv-------" + selectedCal);
-                eventdateto_et.setText("");
-                eventdateto_et.setText(date + " " + str_start);
-                wowtagto = Calendar.getInstance();
-                int month = selectedCal.get(Calendar.MONTH);
-                int day = selectedCal.get(Calendar.DATE);
-                int year = selectedCal.get(Calendar.YEAR);
-                wowtagto.set(year, month, day);
-            } else if (strdayscounrt == 3) {
-                selectedCal.add(Calendar.DATE, 3);
-                SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
-                date = spfdate.format(selectedCal.getTime());
-
-                eventdateto_et.setText("");
-                eventdateto_et.setText(date + " " + str_start);
-                wowtagto = Calendar.getInstance();
-                int month = selectedCal.get(Calendar.MONTH);
-                int day = selectedCal.get(Calendar.DATE);
-                int year = selectedCal.get(Calendar.YEAR);
-                wowtagto.set(year, month, day);
-            } else {
-                eventdateto_et.setText("");
-            }
-
-        } catch (ParseException exc) {
-            exc.printStackTrace();
-        }
-
-
     }
 
     private void populateSetDateTo(int year, int month, int day) {
@@ -1256,86 +1157,20 @@ public class QuickCreateEvent extends Activity {
             spf = new SimpleDateFormat("MMM/dd/yyyy");
             strDateFormatTo = spf.format(newDate);
             eventdateto_et.setText(strDateFormatTo);
-            Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
-
-            try {
-                runfromtime_tv.setText("");
-                runtotime_tv.setText("");
-            } catch (NullPointerException e) {
-
-            }
-
-            ctimedialog = new Dialog(QuickCreateEvent.this);
-            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            ctimedialog.setContentView(R.layout.dialog_customtime);
-            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
-
-            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
-            TextView ok = ctimedialog.findViewById(R.id.oktv);
-            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
-
-            //   dp.setOnDateChangedListener(dateChangedListener);
-            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
-
-            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    Window view1 = ((Dialog) ctimedialog).getWindow();
-
-                }
-            });
-
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ctimedialog.dismiss();
-                }
-            });
+            Log.e("tag", "date------------>" + strDateFormatTo);
 
 
-            ok.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    int hour = 0;
-                    int min = 0;
-                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        hour = dp.getHour();
-                        min = dp.getMinute();
-                    } else {
-                        hour = dp.getCurrentHour();
-                        min = dp.getCurrentMinute();
-                    }
-
-                    ctimedialog.dismiss();
-                    populateSetTimeTo(hour, min);
-                }
-            });
-            ctimedialog.show();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void populateSetTimeTo(int hourOfDay, int minute) {
-        strDateFormat2 = eventdateto_et.getText().toString();
+    private void populateSetTime(int hourOfDay, int minute) {
+        //  strDateFormat1 = eventdate_et.getText().toString();
         SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
         Date newDate = null;
 
         String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
-        String runtimeFrom = strDateFormat2 + " " + strDateFormat;
-        Log.e("tag", "RUNTIME---------->" + runtimeFrom);
-        strDateFormat = strDateFormat + " a";
-
-        try {
-            newDate = spf.parse(strDateFormat2);
-            spf = new SimpleDateFormat("MMM/dd/yyyy");
-            strDateFormat2 = spf.format(newDate);
-            System.out.println(strDateFormat2);
-            Log.e("tag", "dvhdsvjvj" + strDateFormat2);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
@@ -1344,9 +1179,37 @@ public class QuickCreateEvent extends Activity {
         try {
             Date dt = parseFormat.parse(strDateFormat);
             System.out.println(outputFormat.format(dt));
-            eventdateto_et.setText("");
-            eventdateto_et.setText(date + " " + outputFormat.format(dt));
-            str_end = outputFormat.format(dt);
+            eventstarttime.setText("");
+            eventstarttime.setText(outputFormat.format(dt));
+
+
+        } catch (ParseException exc) {
+            exc.printStackTrace();
+        }
+
+
+    }
+
+    private void populateSetTimeTo(int hourOfDay, int minute) {
+
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+        Date newDate = null;
+
+        String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
+
+        strDateFormat = strDateFormat + " a";
+
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+
+        try {
+            Date dt = parseFormat.parse(strDateFormat);
+            System.out.println(outputFormat.format(dt));
+            eventendtime.setText("");
+            eventendtime.setText(outputFormat.format(dt));
+
+
         } catch (ParseException exc) {
             exc.printStackTrace();
         }
