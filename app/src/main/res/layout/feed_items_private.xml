@@ -124,11 +124,10 @@
             <LinearLayout
                 android:id="@+id/runtimelv"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/_55sdp"
                 android:layout_gravity="center"
                 android:layout_weight="1.1"
                 android:gravity="center"
-
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -168,6 +167,7 @@
                         android:singleLine="true"
                         android:text="09:00AM - 12:00PM"
                         android:textColor="@color/textcolr"
+                        android:layout_marginBottom="@dimen/_4sdp"
                         android:textSize="@dimen/_9sdp" />
                 </LinearLayout>
 
@@ -213,7 +213,22 @@
                     android:scaleType="fitCenter"
                     android:layout_height="@dimen/_150sdp"
                     android:background="@color/gray" />
-
+                <TextView
+                    android:id="@+id/rsvptv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:background="@drawable/btnbg_curve"
+                    android:gravity="bottom"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingRight="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:text="RSVP"
+                    android:textSize="@dimen/_10sdp"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
 
             </FrameLayout>
 
@@ -433,6 +448,16 @@
                         android:visibility="invisible"
                         android:textSize="@dimen/_10sdp" />
 
+                    <TextView
+                        android:id="@+id/rsvp_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:gravity="left"
+                        android:text="RSVP"
+                        android:textColor="@color/colorPrimary"
+                        android:visibility="invisible"
+                        android:textSize="@dimen/_10sdp" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

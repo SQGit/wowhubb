@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,7 +51,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
     Typeface latoheading, lato;
     TextView head_tv, resendotp;
     ImageView submit, backiv;
-    String loginstatus, str_otp, str_phone, type,otp,token;
+    String loginstatus, str_otp, str_phone, type,otp,token,str_password;
     AVLoadingIndicatorView av_loader;
     private EditText mPinFirstDigitEditText;
     private EditText mPinSecondDigitEditText;
@@ -96,7 +98,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         setContentView(R.layout.activity_login_otp);
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+        /*if (extras != null) {
             type = extras.getString("type");
             value = extras.getString("value");
             password = extras.getString("password");
@@ -110,7 +112,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
             }
 
            // return;
-        }
+        }*/
 
         init();
         setPINListeners();
@@ -132,7 +134,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
         loginstatus = sharedPreferences.getString("loginstatus", "");
         str_phone = sharedPreferences.getString("str_phone", "");
         str_email = sharedPreferences.getString("str_email", "");
-
+        str_password = sharedPreferences.getString("str_password", "");
 
         //-------------------------SNACKBAR FOR NO NETWORK-----------------------------------------//
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
@@ -199,13 +201,13 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
 
                 str_otp = firstpin+secondpin+thirdpin+fourthpin;
 
-                Log.e("tag","pin------"+value+str_email);
+                Log.e("tag","pin------"+value+str_password);
 
-                Log.e("tag","loginstatus------"+type);
-                if(type.equals("phone"))
+                Log.e("tag","loginstatus------"+loginstatus);
+                if(loginstatus.equals("phone"))
                 {
                     if (str_otp.length() > 0) {
-                        new verifyotp(str_otp,value,type).execute();
+                        new verifyotp(str_otp,str_password,loginstatus).execute();
                     } else {
                         Toast.makeText(getApplicationContext(), "Enter OTP", Toast.LENGTH_LONG).show();
 
@@ -215,7 +217,7 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                 else
                 {
                     if (str_otp.length() > 0) {
-                        new verifyotp(str_otp,value,type).execute();
+                        new verifyotp(str_otp,str_password,loginstatus).execute();
                     } else {
                         Toast.makeText(getApplicationContext(), "Enter OTP", Toast.LENGTH_LONG).show();
 
@@ -259,10 +261,10 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
 
 
                 if (otptype.equals("email")) {
-                    jsonObject.accumulate("email", value);
-                    jsonObject.accumulate("password", password);
+                    jsonObject.accumulate("email", str_email);
+                    jsonObject.accumulate("password", value);
                 } else {
-                    jsonObject.accumulate("phone", value);
+                    jsonObject.accumulate("phone", str_phone);
                     jsonObject.accumulate("password", password);
                 }
 
@@ -309,11 +311,11 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
                             edit.commit();
 
                             if (firsttime.equals("false")) {
-                                startActivity(new Intent(RegisterOtpActivity.this, LandingPageActivity.class));
+                                startActivity(new Intent(RegisterOtpActivity.this, LoginActivity.class));
                                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                                 finish();
                             } else {
-                                startActivity(new Intent(RegisterOtpActivity.this, InterestActivity.class));
+                                startActivity(new Intent(RegisterOtpActivity.this, LoginActivity.class));
                                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                                 finish();
                             }
@@ -702,5 +704,9 @@ public class RegisterOtpActivity extends Activity implements View.OnFocusChangeL
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
+
+
+
+
 }
 

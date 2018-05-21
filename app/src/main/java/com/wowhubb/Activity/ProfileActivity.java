@@ -982,7 +982,11 @@ public class ProfileActivity extends Activity {
 
 
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
 
 }

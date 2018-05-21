@@ -8,7 +8,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,9 +20,9 @@ allprojects {
         maven { url 'https://dl.bintray.com/drummer-aidan/maven' }
         google()
         jcenter()
+        maven { url 'https://github.com/leonardocardoso/mvn-repo/raw/master/maven-deploy'}
 
-
-    }
+        }
 }
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14'

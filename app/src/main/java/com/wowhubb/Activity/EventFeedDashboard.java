@@ -28,7 +28,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,8 +42,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v7.widget.SearchView;
 
 import com.bumptech.glide.Glide;
+import android.support.v4.view.MenuItemCompat;
+import com.wowhubb.FeedsData.Doc;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.Fragment.EventFeeds;
 import com.wowhubb.Fragment.EventServiceFragment;
@@ -62,12 +64,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import Contacts.Contact;
+
 
 /**
  * Created by Ramya on 07-08-2017.
  */
 
-public class EventFeedDashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class EventFeedDashboard extends AppCompatActivity {
 
     Typeface lato;
     ImageView backiv, btn_menu;
@@ -86,7 +90,9 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
     Snackbar snackbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    List<Doc> search_result_arraylist;
 
+    private String keyword;
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -181,7 +187,6 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         toggle.syncState();
 
 
-        navigationView.setNavigationItemSelectedListener(this);
 
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,7 +210,6 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EventFeedDashboard.this, SettingsNotificationsActivity.class);
-                // intent.putExtra("navdashboard", "true");
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -215,7 +219,6 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EventFeedDashboard.this, CreateGroup.class);
-                // intent.putExtra("navdashboard", "true");
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -225,7 +228,6 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EventFeedDashboard.this, MyEventFeedsActivity.class);
-                // intent.putExtra("navdashboard", "true");
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -272,9 +274,10 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 Intent setIntent = new Intent(Intent.ACTION_MAIN);
                                 setIntent.addCategory(Intent.CATEGORY_HOME);
-                                setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(setIntent);
 
                                 SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -297,35 +300,73 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        // doneItem = menu.findItem(R.id.action_done);
+
+        /*SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        /*//*** setOnQueryTextFocusChangeListener ***
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchQuery) {
+
+                return true;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do something when collapsed
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });*/
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-
+        switch (id)
+        {
             case android.R.id.home:
-                // this.finish();
-
                 Intent intent = new Intent(EventFeedDashboard.this, LandingPageActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
 
-            case R.id.action_search:
-                // setSearchtollbar();
-                return true;
-            // break;
+         case R.id.action_search:
+                return false;
 
             case R.id.action_nav:
                 hideSoftKeyboard(EventFeedDashboard.this);
                 drawer.openDrawer(Gravity.RIGHT);
                 return true;
+
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
+
         }
 
 
@@ -362,17 +403,6 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.wowtag_tab, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
-      /*  TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.customtab_title, null);
-        tabfour.setText("   Hubb");
-        tabfour.setMinimumWidth(0);
-        tabfour.setSingleLine();
-        tabfour.setTypeface(lato);
-        tabfour.setTextSize(12);
-        tabfour.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        tabThree.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
-        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.eventhubb_tab, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabfour);*/
-
         TextView tabfive = (TextView) LayoutInflater.from(this).inflate(R.layout.customtab_title, null);
         tabfive.setText("  Services");
         tabfive.setMinimumWidth(0);
@@ -391,68 +421,11 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         adapter.addFrag(new EventFeeds(), "Event Feed");
         adapter.addFrag(new MyNetworkFragment(), "My Network");
         adapter.addFrag(new WowFragment(), "Wowtag");
-        // adapter.addFrag(new EventHubbFragment(), "Event Hubb");
         adapter.addFrag(new EventServiceFragment(), "Services");
         viewPager.setAdapter(adapter);
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
-    }
-
-    public void setSearchtollbar() {
-        Log.e("tag", "setSearchtollbar: NULL1111111");
-        searchtollbar = (Toolbar) findViewById(R.id.searchtoolbar);
-        if (searchtollbar != null) {
-            searchtollbar.inflateMenu(R.menu.menu_search);
-            search_menu = searchtollbar.getMenu();
-
-            searchtollbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        circleReveal(R.id.searchtoolbar, 1, true, false);
-                    else
-                        searchtollbar.setVisibility(View.GONE);
-                    searchtollbar.setBackgroundColor(getResources().getColor(R.color.white));
-                }
-            });
-
-
-            item_search = search_menu.findItem(R.id.action_filter_search);
-
-            MenuItemCompat.setOnActionExpandListener(item_search, new MenuItemCompat.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionCollapse(MenuItem item) {
-                    // Do something when collapsed
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        circleReveal(R.id.searchtoolbar, 1, true, false);
-                    } else
-                        searchtollbar.setVisibility(View.GONE);
-                    searchtollbar.setBackgroundColor(getResources().getColor(R.color.white));
-                    return true;
-                }
-
-                @Override
-                public boolean onMenuItemActionExpand(MenuItem item) {
-                    startActivity(new Intent(EventFeedDashboard.this, LandingPageActivity.class));
-
-                    // Do something when expanded
-                    return true;
-                }
-            });
-
-            initSearchView();
-
-
-        } else {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.RESULT_HIDDEN);
-            Log.e("tag", "setSearchtollbar: NULL");
-        }
-    }
 
     //------------------------------ASYN TASK FOR PROFILE GET PROFILE-----------------------------//
 
@@ -560,6 +533,8 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         finish();
     }
 
+
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -653,6 +628,39 @@ public class EventFeedDashboard extends AppCompatActivity implements NavigationV
         }
 
     }
+
+  /*  @Override
+    public boolean onQueryTextChange(String newText) {
+
+        Log.e("tag","val------------->>>>"+newText);
+        Log.e("tag","val------------->>>>"+EventFeeds.results);
+        final List<Doc> filteredModelList = filter(EventFeeds.results, newText);
+        EventFeeds.adapter.setFilter(filteredModelList);
+        EventFeeds.rv.invalidate();
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return true;
+    }
+
+
+    private List<Doc> filter(List<Doc> models, String query) {
+        query = query.toLowerCase();
+        Log.e("tag","val------------->>>>"+models);
+
+        Log.e("tag","val------------->>>>"+query);
+        final List<Doc> filteredModelList = new ArrayList<>();
+        for (Doc model : models) {
+            final String text = model.getEventname();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
+    }*/
 
 
 }

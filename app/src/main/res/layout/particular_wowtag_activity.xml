@@ -63,8 +63,6 @@
             android:layout_weight="0.5">
 
         </LinearLayout>
-
-
     </LinearLayout>
 
 
@@ -136,12 +134,12 @@
                         android:gravity="center"
                         android:layout_weight="2">
 
-                        <Switch
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/black_30"
-                            android:layout_centerHorizontal="true"
-                            />
+                        <!-- <Switch
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:backgroundTint="@color/black_30"
+                             android:layout_centerHorizontal="true"
+                             />-->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -243,9 +241,17 @@
                             android:singleLine="true"
                             android:textColor="@color/textcolr"
                             android:textSize="@dimen/_10sdp"
-                            android:text="No Data"
-                            />
+                            android:text="No Data"/>
 
+
+                        <TextView
+                            android:id="@+id/wowtag_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/textcolr"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="bold"
+                            android:text="No Data"/>
                     </LinearLayout>
 
 
@@ -255,7 +261,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginTop="-10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -266,16 +272,6 @@
                         android:textSize="@dimen/_12sdp"
                         android:layout_marginLeft="@dimen/_35sdp"
                         android:text="Edit"/>
-
-
-                    <TextView
-                        android:id="@+id/wowtag_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textcolr"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:textSize="@dimen/_11sdp"
-                        android:text="No Data"/>
 
 
                     <TextView
@@ -348,7 +344,7 @@
                             android:id="@+id/wow_shares"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="100 Shares"
+                            android:text=" 0 Shares"
                             android:textColor="@color/textcolr"
                             android:textSize="@dimen/_10sdp"
                             android:drawableLeft="@drawable/shares_icon"/>
@@ -365,7 +361,7 @@
                             android:id="@+id/wow_attending"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1000 Attending"
+                            android:text=" 0 Attending"
                             android:textColor="@color/textcolr"
                             android:textSize="@dimen/_10sdp"
                             android:drawableLeft="@drawable/users_icon"/>
@@ -386,7 +382,7 @@
                             android:id="@+id/wow_views"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1000 Views"
+                            android:text=" 0 Views"
                             android:textColor="@color/textcolr"
                             android:textSize="@dimen/_10sdp"
                             android:drawableLeft="@drawable/views_icon"/>
@@ -451,12 +447,12 @@
                             android:background="@drawable/round_rd"
                             android:orientation="vertical">
 
-                             <ImageView
-                                 android:id="@+id/del_img"
-                                 android:layout_width="wrap_content"
-                                 android:layout_height="wrap_content"
-                                 android:layout_gravity="center"
-                                 android:background="@drawable/delete_white"/>
+                            <ImageView
+                                android:id="@+id/del_img"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/delete_white"/>
                         </LinearLayout>
 
 

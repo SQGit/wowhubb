@@ -1,9 +1,5 @@
+
 package com.wowhubb.FeedsData;
-
-/**
- * Created by Salman on 08-02-2018.
- */
-
 
 import java.util.List;
 
@@ -16,26 +12,37 @@ public class Doc {
     private int eventdayscount;
     private String eventcategory;
     private String eventname;
-    private String eventtimezone;
+    private String tickettype;
+    private String ticketprice;
+    private String eventdescription;
     private String eventstartdate;
     private String eventenddate;
-    private String eventdescription;
+    private String eventticketurl;
     private String coverpage;
+    private String coverpageurl;
+    private String organisationlogo;
+    private String organisationlogourl;
     private String createdAt;
     private String urllink;
-    private String thoughtsimage;
-    private String thoughtsvideo;
     private String thoughtstext;
-    private List<Comment> comments = null;
-    private List<Object> rsvp = null;
-    private List<Wowsome> wowsome = null;
+    private String thoughtsimage;
+    private String thoughtsimageurl;
+    private String thoughtsvideo;
+    private String thoughtsvideourl;
+    private String thoughtsvideothumb;
+    private List<Object> comments = null;
+    private List<Rsvp> rsvp = null;
+    private List<Object> wowsome = null;
     private Audeinceengagementurl audeinceengagementurl;
+    private List<String> keywordsearch = null;
     private List<Programschedule> programschedule = null;
     private List<Object> eventfaqs = null;
+    private List<Eventtour> eventtour = null;
     private List<Eventvenue> eventvenue = null;
     private List<Object> physicalsalesstorelocation = null;
     private Integer v;
-
+    private String wowtagvideothumb;
+    private String wowtagvideourl;
     private String wowtagvideo;
     private String runtimeto;
     private String runtimefrom;
@@ -52,11 +59,41 @@ public class Doc {
     private Object inviteonlyevent;
     private Object onlineevent;
     private Object eventvenueguestshare;
-    private Object eventvenueaddressvisibility;
+    private String eventvenueaddressvisibility;
+    private String eventhighlights2thumb;
+    private String eventhighlights2url;
+
+    private String eventhighlights1thumb;
+    private String eventhighlights1url;
+
     private String eventhighlightsvideo2;
     private String eventhighlightsvideo1;
     private String eventhighlights2;
     private String eventhighlights1;
+
+
+    private String eventcontactmessage;
+    private String eventcontactemail;
+    private String eventcontactphone;
+    private String eventcontactname;
+    private Object organisationname;
+    private String numberofcitiestour;
+    private Object inviteonlyeventtour;
+    private Object onlineeventtour;
+    private Object eventtourguestshare;
+    private Object eventtouraddressvisibility;
+    private String engagementformaction;
+    private String engagementformtype;
+    private Audienceengagementform audienceengagementform;
+    private Integer wowsomecount;
+    private Integer commentcount;
+    private String eventtimezone;
+    private Object eventnolinks;
+    private String donationsurl;
+    private String giftregistryurl;
+    private String otherurl;
+    private String registerrsvp;
+    private String privateevent;
     private String eventspeakeractivities2;
     private String eventspeakeractivities1;
     private String eventspeakerlink2;
@@ -65,54 +102,40 @@ public class Doc {
     private String eventspeakername1;
     private String eventguesttype2;
     private String eventguesttype1;
-    private String eventnolinks;
-    private String donationsurl;
-    private String giftregistryurl;
-    private String otherurl;
-    private String registerrsvp;
-    private Object privateevent;
-    private String eventcontactmessage;
-    private String eventcontactemail;
-    private String eventcontactphone;
-    private String eventcontactname;
-    private Integer wowsomecount;
-    private Integer commentcount;
-    //private String keywordsearch;
-    private String organisationname;
-    private String engagementformaction;
-    private String engagementformtype;
-    private Audienceengagementform audienceengagementform;
 
-    public String getThoughtstext() {
-        return thoughtstext;
+
+
+    public String getThoughtsimageurl() {
+        return thoughtsimageurl;
     }
 
-    public void setThoughtstext(String thoughtstext) {
-        this.thoughtstext = thoughtstext;
+    public void setThoughtsimageurl(String thoughtsimageurl) {
+        this.thoughtsimageurl = thoughtsimageurl;
+    }
+
+
+    public String getThoughtsvideourl() {
+        return thoughtsvideourl;
+    }
+
+    public void setThoughtsvideourl(String thoughtsvideourl) {
+        this.thoughtsvideourl = thoughtsvideourl;
+    }
+
+    public String getThoughtsvideothumb() {
+        return thoughtsvideothumb;
+    }
+
+    public void setThoughtsvideothumb(String thoughtsvideothumb) {
+        this.thoughtsvideothumb = thoughtsvideothumb;
     }
 
     public String getId() {
         return _id;
     }
 
-    public void setId(String id) {
-        this._id = id;
-    }
-
-    public String getThoughtsimage() {
-        return thoughtsimage;
-    }
-
-    public void setThoughtsimage(String thoughtsimage) {
-        this.thoughtsimage = thoughtsimage;
-    }
-
-    public String getThoughtsvideo() {
-        return thoughtsvideo;
-    }
-
-    public void setThoughtsvideo(String thoughtsvideo) {
-        this.thoughtsvideo = thoughtsvideo;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public Userid getUserid() {
@@ -135,16 +158,8 @@ public class Doc {
         return eventtypeint;
     }
 
-    public void setEventtypeint(int eventtypeint) {
+    public void setEventtypeint(Integer eventtypeint) {
         this.eventtypeint = eventtypeint;
-    }
-
-    public int getEventdayscount() {
-        return eventdayscount;
-    }
-
-    public void setEventdayscount(int eventdayscount) {
-        this.eventdayscount = eventdayscount;
     }
 
     public String getEventcategory() {
@@ -163,12 +178,28 @@ public class Doc {
         this.eventname = eventname;
     }
 
-    public String getEventtimezone() {
-        return eventtimezone;
+    public String getTickettype() {
+        return tickettype;
     }
 
-    public void setEventtimezone(String eventtimezone) {
-        this.eventtimezone = eventtimezone;
+    public void setTickettype(String tickettype) {
+        this.tickettype = tickettype;
+    }
+
+    public String getTicketprice() {
+        return ticketprice;
+    }
+
+    public void setTicketprice(String ticketprice) {
+        this.ticketprice = ticketprice;
+    }
+
+    public String getEventdescription() {
+        return eventdescription;
+    }
+
+    public void setEventdescription(String eventdescription) {
+        this.eventdescription = eventdescription;
     }
 
     public String getEventstartdate() {
@@ -187,12 +218,12 @@ public class Doc {
         this.eventenddate = eventenddate;
     }
 
-    public String getEventdescription() {
-        return eventdescription;
+    public String getEventticketurl() {
+        return eventticketurl;
     }
 
-    public void setEventdescription(String eventdescription) {
-        this.eventdescription = eventdescription;
+    public void setEventticketurl(String eventticketurl) {
+        this.eventticketurl = eventticketurl;
     }
 
     public String getCoverpage() {
@@ -203,6 +234,30 @@ public class Doc {
         this.coverpage = coverpage;
     }
 
+    public String getCoverpageurl() {
+        return coverpageurl;
+    }
+
+    public void setCoverpageurl(String coverpageurl) {
+        this.coverpageurl = coverpageurl;
+    }
+
+    public String getOrganisationlogo() {
+        return organisationlogo;
+    }
+
+    public void setOrganisationlogo(String organisationlogo) {
+        this.organisationlogo = organisationlogo;
+    }
+
+    public String getOrganisationlogourl() {
+        return organisationlogourl;
+    }
+
+    public void setOrganisationlogourl(String organisationlogourl) {
+        this.organisationlogourl = organisationlogourl;
+    }
+
     public String getCreatedAt() {
         return createdAt;
     }
@@ -211,27 +266,27 @@ public class Doc {
         this.createdAt = createdAt;
     }
 
-    public List<Comment> getComments() {
+    public List<Object> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(List<Object> comments) {
         this.comments = comments;
     }
 
-    public List<Object> getRsvp() {
+    public List<Rsvp> getRsvp() {
         return rsvp;
     }
 
-    public void setRsvp(List<Object> rsvp) {
+    public void setRsvp(List<Rsvp> rsvp) {
         this.rsvp = rsvp;
     }
 
-    public List<Wowsome> getWowsome() {
+    public List<Object> getWowsome() {
         return wowsome;
     }
 
-    public void setWowsome(List<Wowsome> wowsome) {
+    public void setWowsome(List<Object> wowsome) {
         this.wowsome = wowsome;
     }
 
@@ -241,6 +296,14 @@ public class Doc {
 
     public void setAudeinceengagementurl(Audeinceengagementurl audeinceengagementurl) {
         this.audeinceengagementurl = audeinceengagementurl;
+    }
+
+    public List<String> getKeywordsearch() {
+        return keywordsearch;
+    }
+
+    public void setKeywordsearch(List<String> keywordsearch) {
+        this.keywordsearch = keywordsearch;
     }
 
     public List<Programschedule> getProgramschedule() {
@@ -257,6 +320,14 @@ public class Doc {
 
     public void setEventfaqs(List<Object> eventfaqs) {
         this.eventfaqs = eventfaqs;
+    }
+
+    public List<Eventtour> getEventtour() {
+        return eventtour;
+    }
+
+    public void setEventtour(List<Eventtour> eventtour) {
+        this.eventtour = eventtour;
     }
 
     public List<Eventvenue> getEventvenue() {
@@ -281,6 +352,22 @@ public class Doc {
 
     public void setV(Integer v) {
         this.v = v;
+    }
+
+    public String getWowtagvideothumb() {
+        return wowtagvideothumb;
+    }
+
+    public void setWowtagvideothumb(String wowtagvideothumb) {
+        this.wowtagvideothumb = wowtagvideothumb;
+    }
+
+    public String getWowtagvideourl() {
+        return wowtagvideourl;
+    }
+
+    public void setWowtagvideourl(String wowtagvideourl) {
+        this.wowtagvideourl = wowtagvideourl;
     }
 
     public String getWowtagvideo() {
@@ -411,28 +498,28 @@ public class Doc {
         this.eventvenueguestshare = eventvenueguestshare;
     }
 
-    public Object getEventvenueaddressvisibility() {
+    public String getEventvenueaddressvisibility() {
         return eventvenueaddressvisibility;
     }
 
-    public void setEventvenueaddressvisibility(Object eventvenueaddressvisibility) {
+    public void setEventvenueaddressvisibility(String eventvenueaddressvisibility) {
         this.eventvenueaddressvisibility = eventvenueaddressvisibility;
     }
 
-    public String getEventhighlightsvideo2() {
-        return eventhighlightsvideo2;
+    public String getEventhighlights2thumb() {
+        return eventhighlights2thumb;
     }
 
-    public void setEventhighlightsvideo2(String eventhighlightsvideo2) {
-        this.eventhighlightsvideo2 = eventhighlightsvideo2;
+    public void setEventhighlights2thumb(String eventhighlights2thumb) {
+        this.eventhighlights2thumb = eventhighlights2thumb;
     }
 
-    public String getEventhighlightsvideo1() {
-        return eventhighlightsvideo1;
+    public String getEventhighlights2url() {
+        return eventhighlights2url;
     }
 
-    public void setEventhighlightsvideo1(String eventhighlightsvideo1) {
-        this.eventhighlightsvideo1 = eventhighlightsvideo1;
+    public void setEventhighlights2url(String eventhighlights2url) {
+        this.eventhighlights2url = eventhighlights2url;
     }
 
     public String getEventhighlights2() {
@@ -441,6 +528,22 @@ public class Doc {
 
     public void setEventhighlights2(String eventhighlights2) {
         this.eventhighlights2 = eventhighlights2;
+    }
+
+    public String getEventhighlights1thumb() {
+        return eventhighlights1thumb;
+    }
+
+    public void setEventhighlights1thumb(String eventhighlights1thumb) {
+        this.eventhighlights1thumb = eventhighlights1thumb;
+    }
+
+    public String getEventhighlights1url() {
+        return eventhighlights1url;
+    }
+
+    public void setEventhighlights1url(String eventhighlights1url) {
+        this.eventhighlights1url = eventhighlights1url;
     }
 
     public String getEventhighlights1() {
@@ -479,13 +582,16 @@ public class Doc {
         return eventspeakerlink1;
     }
 
+
+
     public void setEventspeakerlink1(String eventspeakerlink1) {
         this.eventspeakerlink1 = eventspeakerlink1;
     }
 
-    public Object getEventspeakername2() {
+    public String getEventspeakername2() {
         return eventspeakername2;
     }
+
 
     public void setEventspeakername2(String eventspeakername2) {
         this.eventspeakername2 = eventspeakername2;
@@ -511,15 +617,148 @@ public class Doc {
         return eventguesttype1;
     }
 
-    public void setEventguesttype1(String eventguesttype1) {
-        this.eventguesttype1 = eventguesttype1;
+
+    public String getEventcontactmessage() {
+        return eventcontactmessage;
     }
 
-    public String getEventnolinks() {
+    public void setEventcontactmessage(String eventcontactmessage) {
+        this.eventcontactmessage = eventcontactmessage;
+    }
+
+    public String getEventcontactemail() {
+        return eventcontactemail;
+    }
+
+    public void setEventcontactemail(String eventcontactemail) {
+        this.eventcontactemail = eventcontactemail;
+    }
+
+    public String getEventcontactphone() {
+        return eventcontactphone;
+    }
+
+    public void setEventcontactphone(String eventcontactphone) {
+        this.eventcontactphone = eventcontactphone;
+    }
+
+    public String getEventcontactname() {
+        return eventcontactname;
+    }
+
+    public void setEventcontactname(String eventcontactname) {
+        this.eventcontactname = eventcontactname;
+    }
+
+    public Object getOrganisationname() {
+        return organisationname;
+    }
+
+    public void setOrganisationname(Object organisationname) {
+        this.organisationname = organisationname;
+    }
+
+    public String getNumberofcitiestour() {
+        return numberofcitiestour;
+    }
+
+    public void setNumberofcitiestour(String numberofcitiestour) {
+        this.numberofcitiestour = numberofcitiestour;
+    }
+
+    public Object getInviteonlyeventtour() {
+        return inviteonlyeventtour;
+    }
+
+    public void setInviteonlyeventtour(Object inviteonlyeventtour) {
+        this.inviteonlyeventtour = inviteonlyeventtour;
+    }
+
+    public Object getOnlineeventtour() {
+        return onlineeventtour;
+    }
+
+    public void setOnlineeventtour(Object onlineeventtour) {
+        this.onlineeventtour = onlineeventtour;
+    }
+
+    public Object getEventtourguestshare() {
+        return eventtourguestshare;
+    }
+
+    public void setEventtourguestshare(Object eventtourguestshare) {
+        this.eventtourguestshare = eventtourguestshare;
+    }
+
+    public Object getEventtouraddressvisibility() {
+        return eventtouraddressvisibility;
+    }
+
+    public void setEventtouraddressvisibility(Object eventtouraddressvisibility) {
+        this.eventtouraddressvisibility = eventtouraddressvisibility;
+    }
+
+    public String getEngagementformaction() {
+        return engagementformaction;
+    }
+
+    public void setEngagementformaction(String engagementformaction) {
+        this.engagementformaction = engagementformaction;
+    }
+
+    public String getEngagementformtype() {
+        return engagementformtype;
+    }
+
+    public void setEngagementformtype(String engagementformtype) {
+        this.engagementformtype = engagementformtype;
+    }
+
+    public Audienceengagementform getAudienceengagementform() {
+        return audienceengagementform;
+    }
+
+    public void setAudienceengagementform(Audienceengagementform audienceengagementform) {
+        this.audienceengagementform = audienceengagementform;
+    }
+
+    public Integer getWowsomecount() {
+        return wowsomecount;
+    }
+
+    public void setWowsomecount(Integer wowsomecount) {
+        this.wowsomecount = wowsomecount;
+    }
+
+    public Integer getCommentcount() {
+        return commentcount;
+    }
+
+    public void setCommentcount(Integer commentcount) {
+        this.commentcount = commentcount;
+    }
+
+    public int getEventdayscount() {
+        return eventdayscount;
+    }
+
+    public void setEventdayscount(Integer eventdayscount) {
+        this.eventdayscount = eventdayscount;
+    }
+
+    public String getEventtimezone() {
+        return eventtimezone;
+    }
+
+    public void setEventtimezone(String eventtimezone) {
+        this.eventtimezone = eventtimezone;
+    }
+
+    public Object getEventnolinks() {
         return eventnolinks;
     }
 
-    public void setEventnolinks(String eventnolinks) {
+    public void setEventnolinks(Object eventnolinks) {
         this.eventnolinks = eventnolinks;
     }
 
@@ -555,102 +794,13 @@ public class Doc {
         this.registerrsvp = registerrsvp;
     }
 
-    public Object getPrivateevent() {
+    public String getPrivateevent() {
         return privateevent;
     }
 
-    public void setPrivateevent(Object privateevent) {
+    public void setPrivateevent(String privateevent) {
         this.privateevent = privateevent;
     }
-
-    public String getEventcontactmessage() {
-        return eventcontactmessage;
-    }
-
-    public void setEventcontactmessage(String eventcontactmessage) {
-        this.eventcontactmessage = eventcontactmessage;
-    }
-
-    public String getEventcontactemail() {
-        return eventcontactemail;
-    }
-
-    public void setEventcontactemail(String eventcontactemail) {
-        this.eventcontactemail = eventcontactemail;
-    }
-
-    public String getEventcontactphone() {
-        return eventcontactphone;
-    }
-
-    public void setEventcontactphone(String eventcontactphone) {
-        this.eventcontactphone = eventcontactphone;
-    }
-
-    public String getEventcontactname() {
-        return eventcontactname;
-    }
-
-    public void setEventcontactname(String eventcontactname) {
-        this.eventcontactname = eventcontactname;
-    }
-
-    public Integer getWowsomecount() {
-        return wowsomecount;
-    }
-
-    public void setWowsomecount(Integer wowsomecount) {
-        this.wowsomecount = wowsomecount;
-    }
-
-    public Integer getCommentcount() {
-        return commentcount;
-    }
-
-    public void setCommentcount(Integer commentcount) {
-        this.commentcount = commentcount;
-    }
-
-   /* public String getKeywordsearch() {
-        return keywordsearch;
-    }
-
-    public void setKeywordsearch(String keywordsearch) {
-        this.keywordsearch = keywordsearch;
-    }*/
-
-    public String getOrganisationname() {
-        return organisationname;
-    }
-
-    public void setOrganisationname(String organisationname) {
-        this.organisationname = organisationname;
-    }
-
-    public String getEngagementformaction() {
-        return engagementformaction;
-    }
-
-    public void setEngagementformaction(String engagementformaction) {
-        this.engagementformaction = engagementformaction;
-    }
-
-    public String getEngagementformtype() {
-        return engagementformtype;
-    }
-
-    public void setEngagementformtype(String engagementformtype) {
-        this.engagementformtype = engagementformtype;
-    }
-
-    public Audienceengagementform getAudienceengagementform() {
-        return audienceengagementform;
-    }
-
-    public void setAudienceengagementform(Audienceengagementform audienceengagementform) {
-        this.audienceengagementform = audienceengagementform;
-    }
-
     public String getUrllink() {
         return urllink;
     }
@@ -658,4 +808,50 @@ public class Doc {
     public void setUrllink(String urllink) {
         this.urllink = urllink;
     }
+
+    public String getThoughtstext() {
+        return thoughtstext;
+    }
+
+    public void setThoughtstext(String thoughtstext) {
+        this.thoughtstext = thoughtstext;
+    }
+
+
+
+    public String getThoughtsimage() {
+        return thoughtsimage;
+    }
+
+    public void setThoughtsimage(String thoughtsimage) {
+        this.thoughtsimage = thoughtsimage;
+    }
+
+    public String getThoughtsvideo() {
+        return thoughtsvideo;
+    }
+
+    public void setThoughtsvideo(String thoughtsvideo) {
+        this.thoughtsvideo = thoughtsvideo;
+    }
+    public String getEventhighlightsvideo2() {
+        return eventhighlightsvideo2;
+    }
+
+    public void setEventhighlightsvideo2(String eventhighlightsvideo2) {
+        this.eventhighlightsvideo2 = eventhighlightsvideo2;
+    }
+
+    public String getEventhighlightsvideo1() {
+        return eventhighlightsvideo1;
+    }
+
+    public void setEventhighlightsvideo1(String eventhighlightsvideo1) {
+        this.eventhighlightsvideo1 = eventhighlightsvideo1;
+    }
+
+    public void setEventguesttype1(String eventguesttype1) {
+        this.eventguesttype1 = eventguesttype1;
+    }
+
 }

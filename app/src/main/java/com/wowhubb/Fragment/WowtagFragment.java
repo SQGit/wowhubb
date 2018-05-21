@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +29,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,12 +48,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.wowhubb.Activity.CreateEventActivity;
+import com.wowhubb.Activity.QuickCreateEvent;
 import com.wowhubb.Adapter.ExpandableListAdapter;
 import com.wowhubb.Adapter.ExpandableListDataPump;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.GetFilePathFromDevice;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
+import com.wowhubb.Utils.Utils;
 import com.wowhubb.data.EventData;
 
 import org.apache.commons.io.IOUtils;
@@ -96,7 +101,7 @@ public class WowtagFragment extends Fragment {
     Dialog dialog, cdialog, ctimedialog;
     SharedPreferences sharedPrefces;
     TextView txt_fromgallery, txt_takevideo;
-    String strDateFormat1;
+    String strDateFormat1,runtimefrom,runtimeto;
     File videoMediaFile;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
@@ -348,7 +353,7 @@ public class WowtagFragment extends Fragment {
 
 
                 txt_fromgallery.setText("From Gallery");
-                txt_takevideo.setText("Take Video   ");
+                txt_takevideo.setText("Take Video ");
 
                 lnr_gallery.setBackgroundResource(R.drawable.btn_bg_white);
                 lnr_video.setBackgroundResource(R.drawable.btn_bg_white);
@@ -372,7 +377,7 @@ public class WowtagFragment extends Fragment {
                             intent.setType("video/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(Intent.createChooser(intent, "Select Video"), INTENT_REQUEST_GET_VIDEO1);
-                            Toast.makeText(getActivity(), "Please choose less than 2 mb video", Toast.LENGTH_LONG).show();
+                          //  Toast.makeText(getActivity(), "Please choose less than 2 mb video", Toast.LENGTH_LONG).show();
                         }
 
 
@@ -392,6 +397,7 @@ public class WowtagFragment extends Fragment {
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); // set the image file
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.putExtra("android.intent.extra.durationLimit", 120);
                                 startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO11);
                                 dialog.dismiss();
                             }
@@ -408,6 +414,7 @@ public class WowtagFragment extends Fragment {
                                 fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+                                intent.putExtra("android.intent.extra.durationLimit", 120);
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 // start the video capture Intent
                                 startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO1);
@@ -591,10 +598,58 @@ public class WowtagFragment extends Fragment {
                         Uri selectedMediaUri = data.getData();
                         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
                         Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                        edit.putString("video1", selectedVideoFilePath1);
-                        edit.commit();
+                       /// video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                       // video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+
+                        MediaPlayer mp = new MediaPlayer();
+                        int duration = 0;
+                        try {
+                            mp.setDataSource(selectedVideoFilePath1);
+                            mp.prepare();
+                            duration = mp.getDuration();
+                        } catch (IOException e) {
+                            Log.e(Utils.class.getName(), e.getMessage());
+                        } finally {
+                            mp.release();
+                        }
+                        Log.e("tag", "duration------------->" + duration);
+                        Log.e("tag", "duration------------->" + duration/1000);
+
+                        if((duration/1000) > 30){
+                            video0_iv.setImageBitmap(null);
+                            video0_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+                            video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.plus_icon));
+                            SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            // til_eventdays.setError(s);
+                            Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+
+
+                        }else{
+                            try {
+                                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                                edit.putString("video1", selectedVideoFilePath1);
+                                edit.commit();
+
+
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
                     } catch (NullPointerException e) {
 
                     }
@@ -603,10 +658,42 @@ public class WowtagFragment extends Fragment {
                         Uri selectedMediaUri = data.getData();
                         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
                         Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                        edit.putString("video1", selectedVideoFilePath1);
-                        edit.commit();
+                        MediaPlayer mp = new MediaPlayer();
+                        int duration = 0;
+                        try {
+                            mp.setDataSource(selectedVideoFilePath1);
+                            mp.prepare();
+                            duration = mp.getDuration();
+                        } catch (IOException e) {
+                            Log.e(Utils.class.getName(), e.getMessage());
+                        } finally {
+                            mp.release();
+                        }
+                        Log.e("tag", "duration------------->" + duration);
+                        Log.e("tag", "duration------------->" + duration/1000);
+
+                        if((duration/1000) > 30){
+                            video0_iv.setImageBitmap(null);
+                            video0_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+                            video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.plus_icon));
+                            SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            // til_eventdays.setError(s);
+                            Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+
+
+                        }else{
+                            try {
+                                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                                edit.putString("video1", selectedVideoFilePath1);
+                                edit.commit();
+
+
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     } catch (NullPointerException e) {
 
                     }
@@ -618,10 +705,42 @@ public class WowtagFragment extends Fragment {
                         Uri selectedMediaUri = videoUri;
                         selectedVideoFilePath1 = getFilePathFromURI(getActivity(), selectedMediaUri);
                         Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                        edit.putString("video1", selectedVideoFilePath1);
-                        edit.commit();
+                        MediaPlayer mp = new MediaPlayer();
+                        int duration = 0;
+                        try {
+                            mp.setDataSource(selectedVideoFilePath1);
+                            mp.prepare();
+                            duration = mp.getDuration();
+                        } catch (IOException e) {
+                            Log.e(Utils.class.getName(), e.getMessage());
+                        } finally {
+                            mp.release();
+                        }
+                        Log.e("tag", "duration------------->" + duration);
+                        Log.e("tag", "duration------------->" + duration/1000);
+
+                        if((duration/1000) > 30){
+                            video0_iv.setImageBitmap(null);
+                            video0_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+                            video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.plus_icon));
+                            SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            // til_eventdays.setError(s);
+                            Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+
+
+                        }else{
+                            try {
+                                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                                edit.putString("video1", selectedVideoFilePath1);
+                                edit.apply();
+
+
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     } catch (NullPointerException e) {
 
                     }
@@ -630,10 +749,42 @@ public class WowtagFragment extends Fragment {
                         Uri selectedMediaUri = data.getData();
                         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
                         Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                        edit.putString("video1", selectedVideoFilePath1);
-                        edit.commit();
+                        MediaPlayer mp = new MediaPlayer();
+                        int duration = 0;
+                        try {
+                            mp.setDataSource(selectedVideoFilePath1);
+                            mp.prepare();
+                            duration = mp.getDuration();
+                        } catch (IOException e) {
+                            Log.e(Utils.class.getName(), e.getMessage());
+                        } finally {
+                            mp.release();
+                        }
+                        Log.e("tag", "duration------------->" + duration);
+                        Log.e("tag", "duration------------->" + duration/1000);
+
+                        if((duration/1000) > 30){
+                            video0_iv.setImageBitmap(null);
+                            video0_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+                            video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.plus_icon));
+                            SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            // til_eventdays.setError(s);
+                            Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+
+
+                        }else{
+                            try {
+                                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                                edit.putString("video1", selectedVideoFilePath1);
+                                edit.commit();
+
+
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     } catch (NullPointerException e) {
 
                     }
@@ -695,11 +846,40 @@ public class WowtagFragment extends Fragment {
 
         Log.e("tag", "r7e7t8e7t---------->>" + selectedMediaUri);
         selectedVideoFilePath1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-        Log.e("tag", "11111111111--------->>" + selectedVideoFilePath1);
-        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-        video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-        edit.putString("video1", selectedVideoFilePath1);
-        edit.commit();
+        MediaPlayer mp = new MediaPlayer();
+        int duration = 0;
+        try {
+            mp.setDataSource(selectedVideoFilePath1);
+            mp.prepare();
+            duration = mp.getDuration();
+        } catch (IOException e) {
+            Log.e(Utils.class.getName(), e.getMessage());
+        } finally {
+            mp.release();
+        }
+        Log.e("tag", "duration------------->" + duration);
+        Log.e("tag", "duration------------->" + duration/1000);
+
+        if((duration/1000) > 120){
+            video0_iv.setImageBitmap(null);
+            video0_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+            video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.plus_icon));
+
+            SpannableString s = new SpannableString("Upload minimum 2 min Video");
+            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            // til_eventdays.setError(s);
+            Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        }else{
+            try {
+                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                video1plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+                edit.putString("video1", selectedVideoFilePath1);
+                edit.commit();
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
         return selectedMediaUri;
     }
 
@@ -782,7 +962,12 @@ public class WowtagFragment extends Fragment {
             totime_tv.setText("");
             fromtime_tv.setText(strDateFormatTo);
             Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
-
+            SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+            newDate = spf.parse(strDateFormatTo);
+            runtimefrom = spf1.format(newDate);
+            Log.e("tag", "new run frommmm------>" + runtimefrom);
+            edit.putString("runtimefrom", runtimefrom);
+            edit.commit();
            /* ctimedialog = new Dialog(getActivity());
             ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             ctimedialog.setContentView(R.layout.dialog_customtime);
@@ -900,7 +1085,12 @@ public class WowtagFragment extends Fragment {
             strDateFormatTo = spf.format(newDate);
             totime_tv.setText(strDateFormatTo);
             Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
-
+            SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+            newDate = spf.parse(strDateFormatTo);
+            runtimeto = spf1.format(newDate);
+            Log.e("tag", "new runnn to------>" + runtimeto);
+            edit.putString("runtimeto", runtimeto);
+            edit.commit();
           /*  ctimedialog = new Dialog(getActivity());
             ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             ctimedialog.setContentView(R.layout.dialog_customtime);

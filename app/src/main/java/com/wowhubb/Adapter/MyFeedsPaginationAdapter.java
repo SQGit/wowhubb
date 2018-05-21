@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -22,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -31,14 +28,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.gson.Gson;
 import com.wowhubb.Activity.EventInviteActivity;
-import com.wowhubb.Activity.ViewFeedActivityDetails;
-import com.wowhubb.Activity.ViewMoreDetailspage;
-
-
-
-
+import com.wowhubb.Activity.ViewRsvp;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.MyFeedsData.Eventvenue;
 import com.wowhubb.MyFeedsData.Message;
@@ -76,21 +68,22 @@ public class MyFeedsPaginationAdapter extends RecyclerView.Adapter<RecyclerView.
     CommentsRecyclerAdapter recyclerAdapter;
     RecyclerView commentslistview;
     Dialog comments_dialog, menu_dialog;
-
+    Activity activity;
+    SharedPreferences sharedPrefces;
+    SharedPreferences.Editor edit;
     private ArrayList<FeedItem> feedList = new ArrayList<>();
     private List<Message> docs;
     private Context context;
     private boolean isLoadingAdded = false;
     private ArrayList<FeedItem> feedItems = new ArrayList<>();
     private int i = 0;
-Activity activity;
+
     public MyFeedsPaginationAdapter(Context context) {
         this.context = context;
         this.docs = docs;
 
         docs = new ArrayList<>();
     }
-
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath)
             throws Throwable {
@@ -199,7 +192,6 @@ Activity activity;
                 final QuickVH quickVH = (QuickVH) holder;
 
 
-
                 if (doc.getEventtimezone() != null) {
                     quickVH.address_tv.setText(doc.getEventtimezone());
                 }
@@ -218,11 +210,7 @@ Activity activity;
                 }
 
 
-
-
-
-
-                if (doc.getWowtagvideo() != null && !doc.getWowtagvideo().equals("null")) {
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
                     quickVH.frameLayout.setVisibility(View.VISIBLE);
                 }
 
@@ -243,16 +231,20 @@ Activity activity;
 
                 quickVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
-                        Log.e("tag","11111111111");
+                    public void onClick(View view) {
+                        Log.e("tag", "11111111111");
                         final Message msg = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
-                        Log.e("tag","11111111111"+msg.getId());
+                        Log.e("tag", "11111111111" + msg.getId());
                         Bundle bundle = new Bundle();
-                        bundle.putString("eventId",msg.getId());
+                        bundle.putString("eventId", msg.getId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", msg.getId());
+                        edit.putString("feedstatus", "myevents");
+                        edit.commit();
                     }
                 });
 
@@ -281,7 +273,19 @@ Activity activity;
 
                     }
                 });
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(quickVH.wowtagvideo);
+                }
 
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
+                    quickVH.frameLayout.setVisibility(View.VISIBLE);
+                }
 
                 break;
 
@@ -309,25 +313,16 @@ Activity activity;
                     // privateVH.eventaddress_tv.setText(docs.get(position).getEventvenue().toString());
                 }
 
-
+                privateVH.rsvptv.setVisibility(View.VISIBLE);
                 //-------------------------COVER IMAGE---------------------------------------------//
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(privateVH.feedImageView);
-
-
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(privateVH.highlight1_iv);
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -374,19 +369,88 @@ Activity activity;
 
                 privateVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
 
                         final Message msg = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
-                        Log.e("tag","11111111111"+msg.getId());
+                        Log.e("tag", "11111111111" + msg.getId());
                         Bundle bundle = new Bundle();
-                        bundle.putString("eventId",msg.getId());
+                        bundle.putString("eventId", msg.getId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", msg.getId());
+                        edit.putString("feedstatus", "myevents");
+                        edit.commit();
                     }
                 });
                 privateVH.viewmore_tv.setVisibility(View.GONE);
+
+                privateVH.rsvptv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Message msg = docs.get(position);
+                        Log.e("tag", "111111RSVPPPPPPP----------->" + msg.getRsvp());
+                        Intent intent = new Intent(context, ViewRsvp.class);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(msg.getRsvp());
+                        editor.putString("rsvp", json);
+                        editor.apply();
+                        context.startActivity(intent);
+                    }
+                });
+
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.wowtagvideo);
+                }
+
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
+                    privateVH.frameLayout.setVisibility(View.VISIBLE);
+                }
+                if (doc.getEventhighlights1thumb() != null && !doc.getEventhighlights1thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.highlight1_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.highlight1_iv);
+                }
+                if (doc.getEventhighlights2thumb() != null && !doc.getEventhighlights2thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.highlight2_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.highlight2_iv);
+                }
 
 
                 break;
@@ -415,16 +479,20 @@ Activity activity;
                 }
                 prfessionalVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
 
                         final Message msg = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
-                        Log.e("tag","11111111111"+msg.getId());
+                        Log.e("tag", "11111111111" + msg.getId());
                         Bundle bundle = new Bundle();
-                        bundle.putString("eventId",msg.getId());
+                        bundle.putString("eventId", msg.getId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", msg.getId());
+                        edit.putString("feedstatus", "myevents");
+                        edit.commit();
                     }
                 });
 
@@ -433,20 +501,11 @@ Activity activity;
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(prfessionalVH.feedImageView);
-
-
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(prfessionalVH.highlight1_iv);
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -491,6 +550,8 @@ Activity activity;
                         }
                     }
                 }
+
+
                 prfessionalVH.menu_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -517,6 +578,54 @@ Activity activity;
 
 
                 prfessionalVH.viewmore_tv.setVisibility(View.GONE);
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.wowtagvideo);
+                }
+
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
+                    prfessionalVH.frameLayout.setVisibility(View.VISIBLE);
+                }
+
+                if (doc.getEventhighlights1thumb() != null && !doc.getEventhighlights1thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.highlight1_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.highlight1_iv);
+                }
+                if (doc.getEventhighlights2thumb() != null && !doc.getEventhighlights2thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.highlight2_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.highlight2_iv);
+                }
 
                 break;
 
@@ -530,7 +639,6 @@ Activity activity;
                 if (doc.getWowsomecount() != null) {
 
                     //  privateVH.wowsome_tv.
-
 
                 }
 
@@ -549,41 +657,33 @@ Activity activity;
                 }
                 socialVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
 
                         final Message msg = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
-                        Log.e("tag","11111111111"+msg.getId());
+                        Log.e("tag", "11111111111" + msg.getId());
                         Bundle bundle = new Bundle();
-                        bundle.putString("eventId",msg.getId());
+                        bundle.putString("eventId", msg.getId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", msg.getId());
+                        edit.putString("feedstatus", "myevents");
+                        edit.commit();
                     }
                 });
-
-
-
 
 
                 //-------------------------COVER IMAGE---------------------------------------------//
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(socialVH.feedImageView);
-
-
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(socialVH.highlight1_iv);
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -630,10 +730,55 @@ Activity activity;
                 }
 
 
-
                 socialVH.viewmore_tv.setVisibility(View.GONE);
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.wowtagvideo);
+                }
 
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
+                    socialVH.frameLayout.setVisibility(View.VISIBLE);
+                }
 
+                if (doc.getEventhighlights1thumb() != null && !doc.getEventhighlights1thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.highlight1_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.highlight1_iv);
+                }
+                if (doc.getEventhighlights2thumb() != null && !doc.getEventhighlights2thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.highlight2_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.highlight2_iv);
+                }
 
                 break;
 
@@ -662,16 +807,20 @@ Activity activity;
 
                 businessVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
 
                         final Message msg = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
-                        Log.e("tag","11111111111"+msg.getId());
+                        Log.e("tag", "11111111111" + msg.getId());
                         Bundle bundle = new Bundle();
-                        bundle.putString("eventId",msg.getId());
+                        bundle.putString("eventId", msg.getId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", msg.getId());
+                        edit.putString("feedstatus", "myevents");
+                        edit.commit();
                     }
                 });
 
@@ -680,7 +829,7 @@ Activity activity;
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
@@ -753,9 +902,54 @@ Activity activity;
                     }
                 });
 
-businessVH.viewmore_tv.setVisibility(View.GONE);
+                businessVH.viewmore_tv.setVisibility(View.GONE);
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.wowtagvideo);
+                }
 
-
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
+                    businessVH.frameLayout.setVisibility(View.VISIBLE);
+                }
+                if (doc.getEventhighlights1thumb() != null && !doc.getEventhighlights1thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.highlight1_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights1url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.highlight1_iv);
+                }
+                if (doc.getEventhighlights2thumb() != null && !doc.getEventhighlights2thumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2thumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.highlight2_iv);
+                } else {
+                    Glide
+                            .with(context)
+                            .load(doc.getEventhighlights2url())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.highlight2_iv);
+                }
                 break;
 
 
@@ -830,10 +1024,6 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
     }
 
 
-
-
-
-
     public boolean isEmpty() {
         return getItemCount() == 0;
     }
@@ -844,7 +1034,6 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
     }
 
 
-
     public Message getItem(int position) {
         return docs.get(position);
     }
@@ -853,7 +1042,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
 
         private static ImageView video3plus;
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv,timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView rsvptv, sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus;
@@ -897,7 +1086,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
             video1plus = itemView.findViewById(R.id.video1plus_iv);
             video3plus = itemView.findViewById(R.id.video3plus_iv);
             wowtagvideo = itemView.findViewById(R.id.video0_iv);
-
+            rsvptv = itemView.findViewById(R.id.rsvp_tv);
 
         }
     }
@@ -953,7 +1142,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
 
         private static ImageView video3plus;
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv, eventtopic_tv, timestamp, eventname_tv, name, desc, share, comments, menu_tv, month_tv, date_tv, time_tv, link_tv, address_tv;
+        private TextView rsvptv, sendinvite_tv, eventtopic_tv, timestamp, eventname_tv, name, desc, share, comments, menu_tv, month_tv, date_tv, time_tv, link_tv, address_tv;
         private ImageView profilePic;
         private ImageView wowtagvideo;
         private ImageView video1plus;
@@ -997,7 +1186,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
     protected class ProfessionalVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv,timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView rsvptv, sendinvite_tv, timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;
@@ -1029,6 +1218,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
             date_tv = itemView.findViewById(R.id.date_tv);
             time_tv = itemView.findViewById(R.id.time_tv);
             runttime_lv = itemView.findViewById(R.id.runtimelv);
+            rsvptv = itemView.findViewById(R.id.rsvp_tv);
 
             eventtopic_tv = itemView.findViewById(R.id.eventtopic_tv);
             otherurl_tv = itemView.findViewById(R.id.otherurl_tv);
@@ -1049,7 +1239,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
     protected class SocialVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv,timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, comments, eventtopic_tv, menu_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;
@@ -1101,7 +1291,7 @@ businessVH.viewmore_tv.setVisibility(View.GONE);
     protected class BusinessVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv,timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus, video3plus;

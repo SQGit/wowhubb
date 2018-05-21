@@ -13,9 +13,7 @@
         android:orientation="vertical"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-
-       >
+        android:layout_marginTop="@dimen/_15sdp">
 
 
         <LinearLayout
@@ -33,7 +31,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/event_name"
+                    android:id="@+id/wowname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_action_name"
@@ -44,19 +42,67 @@
                     android:textSize="@dimen/_17sdp"
                     android:paddingLeft="-12dp"
                     android:text="Arts of the Soul Festival"
-                    android:textColor="@color/textcolr" />
+                    android:textColor="@color/textcolr"/>
 
 
-                <TextView
-                    android:id="@+id/event_category"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:singleLine="true"
-                    android:inputType="textCapSentences"
-                    android:textSize="@dimen/_12sdp"
-                    android:text="Arts, Culture and Films"
-                    android:textColor="@color/textcolr" />
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/event_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start|center"
+                            android:singleLine="true"
+                            android:inputType="textCapSentences"
+                            android:textSize="@dimen/_12sdp"
+                            android:text="DownTown Houston"
+                            android:textColor="@color/textcolr" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="@dimen/_7sdp"
+                        android:layout_weight="1">
+
+
+
+                        <TextView
+                            android:id="@+id/event_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:singleLine="true"
+                            android:background="@drawable/btnbg"
+                            android:textSize="@dimen/_9sdp"
+                            android:paddingTop="@dimen/_2sdp"
+                            android:paddingBottom="@dimen/_2sdp"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:paddingRight="@dimen/_5sdp"
+                            android:text="paid event"
+                            android:textColor="@color/white" />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
             </LinearLayout>
 
 
@@ -77,13 +123,13 @@
                     android:clickable="true">
 
 
-                <ImageView
-                    android:id="@+id/view_video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:background="@drawable/play_video"/>
+                    <ImageView
+                        android:id="@+id/view_video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:background="@drawable/play_video"/>
 
 
                 </FrameLayout>
@@ -115,11 +161,52 @@
                 android:orientation="vertical">
 
 
-                <ImageView
-                    android:id="@+id/img_show_events"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    />
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4">
+
+                        <ImageView
+                            android:id="@+id/img_show_events"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/ticket_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:gravity="center"
+                            android:background="#F5F5F5"
+                            android:textSize="@dimen/_14sdp"
+                            android:text="$500"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+
+
+
+
 
 
 
@@ -128,104 +215,175 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
                 android:layout_marginLeft="@dimen/_5sdp"
                 android:orientation="vertical">
 
 
 
                 <TextView
-                    android:id="@+id/event_address"
+                    android:id="@+id/event_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start|center"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:singleLine="false"
-                    android:textSize="@dimen/_11sdp"
-                    android:text="330, Southwest Drive, Houston, Tx 77457"
-                    android:textColor="@color/textcolr" />
-
-
-                <TextView
-                    android:id="@+id/event_opentime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:singleLine="false"
-                    android:textSize="@dimen/_11sdp"
-                    android:text="Opens@ 7:00 AM"
+                    android:textSize="@dimen/_14sdp"
+                    android:text="#Comedy Shows"
                     android:textColor="@color/textcolr" />
 
 
 
-                <TextView
-                    android:id="@+id/event_contact"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:singleLine="true"
-                    android:textSize="@dimen/_11sdp"
-                    android:text="713-555-5555"
-                    android:textColor="@color/textcolr" />
+                    android:weightSum="5"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:orientation="horizontal">
 
 
-                <TextView
-                    android:id="@+id/event_attendsize"
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_weight="0.5">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/map_icon"/>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4.5">
+
+                        <TextView
+                            android:id="@+id/event_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start|center"
+                            android:singleLine="false"
+                            android:textSize="@dimen/_11sdp"
+                            android:text="2345, Blue Street, Sugarland Texas 77869"
+                            android:textColor="@color/textcolr" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:singleLine="true"
-                    android:textSize="@dimen/_11sdp"
-                    android:text="100 Amending"
-                    android:textColor="@color/textcolr" />
+                    android:weightSum="5"
+                    android:orientation="horizontal">
 
 
 
-                <TextView
-                    android:id="@+id/visit_link"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:background="@drawable/time_icon"/>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4.5">
+
+                        <TextView
+                            android:id="@+id/event_date_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start|center"
+                            android:singleLine="false"
+                            android:textSize="@dimen/_11sdp"
+                            android:text="Sun, Jul 11 2018, 11:10AM"
+                            android:textColor="@color/textcolr" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start|center"
-                    android:singleLine="true"
-                    android:textSize="@dimen/_12sdp"
-                    android:text="@string/visit_page"
-                    android:textColor="@color/colorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:clickable="true"
-                    >
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
 
 
-                <ImageView
-                    android:id="@+id/img_share_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:background="@drawable/share_icon"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
 
 
-                </FrameLayout>
+                        <TextView
+                            android:id="@+id/visit_link"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_15sdp"
+                            android:singleLine="true"
+                            android:paddingTop="@dimen/_4sdp"
+                            android:textSize="@dimen/_11sdp"
+                            android:text="@string/visit_page"
+                            android:textColor="@color/black_87" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/img_share_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/share_icon"/>
 
 
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
             </LinearLayout>
 
 
         </LinearLayout>
+
+
+
+
+
+
     </LinearLayout>
 
 </LinearLayout>

@@ -1,9 +1,6 @@
 package com.wowhubb.Activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,23 +11,18 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.text.TextUtilsCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hbb20.CountryCodePicker;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
@@ -53,26 +45,23 @@ import java.util.Locale;
  * Created by Ramya on 18-07-2017.
  */
 
-public class RegisterBdayActivity extends Activity implements com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener{
+public class RegisterBdayActivity extends Activity implements com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
     String[] SPINNERLIST = {"Male", "Female"};
     Typeface latoheading, lato;
     TextView head_tv, bday_tv;
     ImageView bday_iv;
-    ImageView  backiv;
+    ImageView backiv;
     String str_wowtag, str_firstname, str_lastname, str_phone, str_email, str_password, str_gender, str_birthday, str_country;
     AVLoadingIndicatorView av_loader;
     LinearLayout bday_lv;
-    EditText email_et, mobileno_et;
-    TextInputLayout email_til, mobile_til;
+    EditText pwd_et;
     Snackbar snackbar;
     TextView tv_snack;
     TextView submit;
-    CountryCodePicker countryCodePicker;
+    SimpleDateFormat simpleDateFormat;
+    TextInputLayout til_spingender, pwd_til, bday_til;
     private int year, month, day;
     private Calendar calendar;
-    SimpleDateFormat simpleDateFormat;
-    TextInputLayout til_spingender;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,27 +81,26 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
         bday_iv = (ImageView) findViewById(R.id.bday_iv);
         submit = (TextView) findViewById(R.id.submit_iv);
         backiv = (ImageView) findViewById(R.id.backiv);
-        email_til = (TextInputLayout) findViewById(R.id.til_email);
-        mobile_til = (TextInputLayout) findViewById(R.id.til_mobile);
-        email_et = (EditText) findViewById(R.id.email_et);
-        mobileno_et = (EditText) findViewById(R.id.mobile_et);
-        til_spingender=findViewById(R.id.til_spingender);
-        countryCodePicker = findViewById(R.id.ccp);
+        pwd_til = (TextInputLayout) findViewById(R.id.til_pwd);
+        bday_til = (TextInputLayout) findViewById(R.id.til_bday);
+        pwd_et = (EditText) findViewById(R.id.pwd_et);
+        til_spingender = findViewById(R.id.til_spingender);
+
 
         head_tv.setTypeface(latoheading);
-        email_til.setTypeface(lato);
-        mobile_til.setTypeface(lato);
+
         til_spingender.setTypeface(lato);
-
-
+        pwd_til.setTypeface(lato);
 
         simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
         //--------------------------SNACKBAR-------------------------------------------------------//
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
         View sbView = snackbar.getView();
         tv_snack = (android.widget.TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         tv_snack.setTextColor(Color.WHITE);
         tv_snack.setTypeface(lato);
+
         if (!Utils.Operations.isOnline(RegisterBdayActivity.this)) {
             snackbar.show();
             tv_snack.setText(R.string.networkError);
@@ -123,11 +111,10 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         str_firstname = sharedPreferences.getString("fname_str", "");
         str_lastname = sharedPreferences.getString("lname_str", "");
-        str_password = sharedPreferences.getString("pwd_str", "");
+        str_wowtag = sharedPreferences.getString("wowtagid", "");
+        str_country = sharedPreferences.getString("str_country", "");
         str_phone = sharedPreferences.getString("str_phone", "");
         str_email = sharedPreferences.getString("str_email", "");
-        str_wowtag = sharedPreferences.getString("wowtagid", "");
-        //str_country= sharedPreferences.getString("str_country", "");
         Log.e("tag", "assss------>" + str_country);
 
         final MaterialBetterSpinner materialDesignSpinner = (MaterialBetterSpinner) findViewById(R.id.gender_spn);
@@ -189,6 +176,7 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
         materialDesignSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                materialDesignSpinner.setError(null);
                 materialDesignSpinner.setHintTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 FontsOverride.overrideFonts(RegisterBdayActivity.this, view);
                 str_gender = adapterView.getItemAtPosition(i).toString();
@@ -197,6 +185,7 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
         bday_lv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bday_til.setError(null);
                 showDate(1980, 0, 1, R.style.DatePickerSpinner);
             }
         });
@@ -205,8 +194,8 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
             @Override
             public void onClick(View v) {
 
-               // startActivity(new Intent(RegisterBdayActivity.this, RegisterAllDetailsActivity.class));
-               // overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                // startActivity(new Intent(RegisterBdayActivity.this, RegisterAllDetailsActivity.class));
+                // overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 finish();
             }
         });
@@ -215,20 +204,52 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
             public void onClick(View v) {
                 FontsOverride.hideSoftKeyboard(v);
                 str_birthday = bday_tv.getText().toString();
-                str_email = email_et.getText().toString();
-                str_phone = mobileno_et.getText().toString();
-                str_country = countryCodePicker.getSelectedCountryCodeWithPlus();
-                Log.e("tag", "fcvjchjfdh---------------------------" + str_country + str_phone);
-                Log.e("tag", "fcvjchjfdh---------------------------" + str_country);
+                str_password= pwd_et.getText().toString();
+                if (!pwd_et.getText().toString().trim().equalsIgnoreCase("")) {
+                    pwd_til.setError(null);
+                    if (pwd_et.getText().toString().trim().length() > 5) {
+                        pwd_til.setError(null);
 
-                if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
+                        if (!materialDesignSpinner.getText().toString().equals("")) {
+                            materialDesignSpinner.setError(null);
+                            if (!bday_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                bday_til.setError(null);
+                                new register_alldetails().execute();
+                            } else {
+                                bday_til.requestFocus();
+                                SpannableString s = new SpannableString("Select your Birthday");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                bday_til.setError(s);
+                            }
+                        } else {
+
+                            SpannableString s = new SpannableString("Select Gender");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            materialDesignSpinner.setError(s);
+                        }
+                    } else {
+                        pwd_til.requestFocus();
+                        SpannableString s = new SpannableString("Password should be 6 characters");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        pwd_til.setError(s);
+                    }
+                } else {
+                    pwd_til.requestFocus();
+                    SpannableString s = new SpannableString("Enter Password");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    pwd_til.setError(s);
+                }
+
+
+
+                /*if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
                     email_til.setError(null);
                     {
                         if (!mobileno_et.getText().toString().trim().equalsIgnoreCase("")) {
                             mobile_til.setError(null);
                             if (!materialDesignSpinner.getText().toString().equals("")) {
                                 materialDesignSpinner.setError(null);
-                                new register_alldetails().execute();
+
                             } else {
 
                                 SpannableString s = new SpannableString("Select Gender");
@@ -250,7 +271,7 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     email_til.setError(s);
 
-                }
+                }*/
 
 
             }
@@ -270,8 +291,6 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
     }
 
 
-
-
     @Override
     public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
@@ -279,9 +298,15 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
     }
 
 
-
-
     //------------------------------ASYNC TASK FOR REGISTER---------------------------------------//
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //  Intent intent = new Intent(RegisterBdayActivity.this, RegisterAllDetailsActivity.class);
+        // startActivity(intent);
+        finish();
+    }
 
     public class register_alldetails extends AsyncTask<String, Void, String> {
         @Override
@@ -299,9 +324,8 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
                 jsonObject.accumulate("lastname", str_lastname);
                 jsonObject.accumulate("phone", str_country + str_phone);
                 jsonObject.accumulate("email", str_email);
-                jsonObject.accumulate("wowtagid", "!"+str_wowtag);
+                jsonObject.accumulate("wowtagid", "!" + str_wowtag);
                 jsonObject.accumulate("password", str_password);
-                //jsonObject.accumulate("gender", str_gender);
                 jsonObject.accumulate("birthday", str_birthday);
 
                 json = jsonObject.toString();
@@ -321,21 +345,27 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
-                        email_til.setError(null);
+
                         String message = jo.getString("message");
+                        SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor edit = sharedPrefces.edit();
+                        edit.putString("str_phone", str_country + str_phone);
+                        edit.putString("str_email", str_email);
+                        edit.putString("str_password", str_password);
+                        edit.commit();
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(RegisterBdayActivity.this, LoginActivity.class));
+                        startActivity(new Intent(RegisterBdayActivity.this, RegisterCountryActivity.class));
                         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                         finish();
+
                     } else {
                         String msg = jo.getString("message");
                         String code = jo.getString("code");
                         if (code.equals("409")) {
 
-                            Toast.makeText(RegisterBdayActivity.this,msg,Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterBdayActivity.this, msg, Toast.LENGTH_LONG).show();
 
                         } else {
-                            email_til.setError(null);
                             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                         }
 
@@ -351,14 +381,6 @@ public class RegisterBdayActivity extends Activity implements com.tsongkha.spinn
 
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-      //  Intent intent = new Intent(RegisterBdayActivity.this, RegisterAllDetailsActivity.class);
-       // startActivity(intent);
-        finish();
     }
 
 

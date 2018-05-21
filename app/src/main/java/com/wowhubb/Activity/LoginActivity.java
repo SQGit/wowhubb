@@ -1,6 +1,7 @@
 package com.wowhubb.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -39,7 +41,7 @@ public class LoginActivity extends Activity {
     TextView head_tv, forgotpwd_tv;
     TextInputLayout phone_til, pwd_til;
     ImageView submit, backiv;
-    String str_pwd, phone_str, type;
+    String str_pwd, phone_str, type,locale,CountryZipCode;
     EditText phone, password;
     AVLoadingIndicatorView av_loader;
     TextView tv_snack;
@@ -53,6 +55,11 @@ public class LoginActivity extends Activity {
         av_loader = (AVLoadingIndicatorView) findViewById(R.id.avi);
 
         //------------------------------------FONT STYLE------------------------------------------//
+        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        locale = tm.getSimCountryIso().toUpperCase();
+
+
+        GetCountryZipCode();
 
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(LoginActivity.this, v1);
@@ -220,6 +227,7 @@ public class LoginActivity extends Activity {
                         edit.putString("loginstatus", type);
                         edit.putString("status", "true");
                         edit.putString("wowtagid", wowtagid);
+                        edit.putString("CountryZipCode", CountryZipCode);
 
                         if (user_details.has("personalimage")) {
                             String personalimage = user_details.getString("personalimage");
@@ -245,7 +253,7 @@ public class LoginActivity extends Activity {
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                             finish();
                         } else {
-                            startActivity(new Intent(LoginActivity.this, InterestActivity.class));
+                            startActivity(new Intent(LoginActivity.this, LandingPageActivity.class));
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                             SharedPreferences sharedPrefces1 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit1 = sharedPrefces1.edit();
@@ -353,7 +361,7 @@ public class LoginActivity extends Activity {
                         edit.putString("loginstatus", type);
                         edit.putString("status", "true");
                         edit.putString("wowtagid", wowtagid);
-
+                        edit.putString("CountryZipCode", CountryZipCode);
                         if (user_details.has("personalimage")) {
                             String personalimage = user_details.getString("personalimage");
                             edit.putString("profilepath", personalimage);
@@ -377,7 +385,7 @@ public class LoginActivity extends Activity {
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                             finish();
                         } else {
-                            startActivity(new Intent(LoginActivity.this, InterestActivity.class));
+                            startActivity(new Intent(LoginActivity.this, LandingPageActivity.class));
                             overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                             SharedPreferences sharedPrefces1 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit1 = sharedPrefces1.edit();
@@ -422,6 +430,31 @@ public class LoginActivity extends Activity {
         }
 
     }
+    private void GetCountryZipCode() {
+
+
+        String CountryID="";
+         CountryZipCode="";
+
+       /* TelephonyManager manager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID= manager.getSimCountryIso().toUpperCase();
+        Log.e("tag","aadhav1"+CountryID);*/
+
+        String[] rl=this.getResources().getStringArray(R.array.CountryCodes);
+        for(int i=0;i<rl.length;i++) {
+            String[] g = rl[i].split(",");
+            if (g[1].trim().equals(locale.trim())) {
+                CountryZipCode = g[0];
+                break;
+            }
+        }
+        Log.e("tag","aadhav2"+CountryZipCode);
+        //Toast.makeText(getApplicationContext(),"Checking Country"+"  "+locale+"  "+"Checking Country Code"+" "+ CountryZipCode,Toast.LENGTH_LONG).show();
+
+    }
+
+
 
 
 }

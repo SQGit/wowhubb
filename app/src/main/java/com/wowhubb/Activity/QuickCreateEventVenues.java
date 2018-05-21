@@ -29,8 +29,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.suke.widget.SwitchButton;
 import com.wowhubb.Fonts.FontsOverride;
@@ -68,30 +69,18 @@ public class QuickCreateEventVenues extends Activity {
     public static TextInputLayout til_eventname, til_name, til_phone, til_email, til_msg;
     public static String str_start, str_end, selectedVideoFilePath1;
     public static String str_eventtopic, str_category, str_eventday, str_desc, str_city, str_coverpage, str_eventname, str_wowtag, str_startdate, str_enddate, str_runfrom, str_runto;
+    public RadioGroup publishgroup_gp;
     LinearLayout previouslv, eventvenue_lv;
-    CheckBox onlineevent_cb, specific_group, invitedguest_cb, inviteonly_cb;
+    CheckBox registerrsvp_cb, inviteonlyevent_cb;
+    RadioButton sharenetwork_rb, specificgroup_rb, privateevent_rb;
     Typeface lato;
     SharedPreferences sharedPrefces;
     SharedPreferences.Editor edit;
-    String token, eventId, str_email, str_phone, onlinestatus;
-    Dialog loader_dialog, dialog;
+    String token, eventId, str_email, str_phone, onlinestatus, str_registerrsvp;
+    Dialog loader_dialog, dialog, askinvite_dialog;
     EditText telepasscode_et, webinarlink_et, telephone_et, eventvenue_et, address_et, city_et, state_et, zipcode_et, phone_et, email_et;
     TextView publishtv, grouppublishtv;
     ListView listview;
-    String[] ListViewItems = new String[]{
-            "ListView ITEM-1",
-            "ListView ITEM-2",
-            "ListView ITEM-3",
-            "ListView ITEM-4",
-            "ListView ITEM-5",
-            "ListView ITEM-6",
-            "ListView ITEM-7",
-            "ListView ITEM-8",
-            "ListView ITEM-9",
-            "ListView ITEM-10"
-
-    };
-
     SparseBooleanArray sparseBooleanArray;
     private List<Group> groups;
 
@@ -119,13 +108,16 @@ public class QuickCreateEventVenues extends Activity {
         str_coverpage = sharedPrefces.getString("coverpage", "");
         str_eventname = sharedPrefces.getString("str_eventname", "");
         str_wowtag = sharedPrefces.getString("str_wowtag", "");
+        str_enddate = sharedPrefces.getString("str_enddate", "");
+        str_startdate = sharedPrefces.getString("str_startdate", "");
 
         lato = Typeface.createFromAsset(getAssets(), "fonts/lato.ttf");
         phone_et = findViewById(R.id.phone_et);
         email_et = findViewById(R.id.email_et);
         previouslv = findViewById(R.id.previouslv);
         lato = Typeface.createFromAsset(getAssets(), "fonts/lato.ttf");
-
+        registerrsvp_cb = findViewById(R.id.registerrsvp_cb);
+        inviteonlyevent_cb = findViewById(R.id.invitedonly_event);
         til_eventname = (TextInputLayout) findViewById(R.id.til_eventvenue);
         till_address = (TextInputLayout) findViewById(R.id.til_address);
         till_city = (TextInputLayout) findViewById(R.id.til_city);
@@ -136,16 +128,18 @@ public class QuickCreateEventVenues extends Activity {
         til_email = (TextInputLayout) findViewById(R.id.til_email);
         til_msg = (TextInputLayout) findViewById(R.id.til_msg);
         eventvenue_lv = findViewById(R.id.eventvenue_lv);
-        specific_group = findViewById(R.id.specific_group_cb);
+        publishgroup_gp = findViewById(R.id.group_rb);
+
+
         publishtv = findViewById(R.id.publishtv);
         eventvenue_et = findViewById(R.id.eventvenue_et);
         address_et = findViewById(R.id.address_et);
         city_et = findViewById(R.id.city_et);
         state_et = findViewById(R.id.state_et);
         zipcode_et = findViewById(R.id.zipcode_et);
-        final com.suke.widget.SwitchButton switchButton = (com.suke.widget.SwitchButton)
+        final com.suke.widget.SwitchButton phone_sb = (com.suke.widget.SwitchButton)
                 findViewById(R.id.switch_button);
-        com.suke.widget.SwitchButton switchButton1 = (com.suke.widget.SwitchButton)
+        com.suke.widget.SwitchButton mail_sb = (com.suke.widget.SwitchButton)
                 findViewById(R.id.switch_button1);
 
         if (str_email != null) {
@@ -166,7 +160,32 @@ public class QuickCreateEventVenues extends Activity {
         phone_et.setEnabled(false);
         email_et.setEnabled(false);
 
-        switchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+
+        registerrsvp_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    str_registerrsvp = "on";
+                } else {
+                    str_registerrsvp = "off";
+                }
+            }
+        });
+
+        inviteonlyevent_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                  //  str_registerrsvp = "on";
+                } else {
+                  //  str_registerrsvp = "off";
+                }
+            }
+        });
+
+        phone_sb.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO do your job
@@ -179,7 +198,7 @@ public class QuickCreateEventVenues extends Activity {
             }
         });
 
-        switchButton1.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+        mail_sb.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO do your job
@@ -200,6 +219,8 @@ public class QuickCreateEventVenues extends Activity {
         til_phone.setTypeface(lato);
         til_email.setTypeface(lato);
         til_msg.setTypeface(lato);
+
+        //-------------------Loader Dialog---------------------------//
 
         loader_dialog = new Dialog(QuickCreateEventVenues.this);
         loader_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -229,17 +250,6 @@ public class QuickCreateEventVenues extends Activity {
         listview = (ListView) dialog.findViewById(R.id.listView);
         new fetchGroup().execute();
 
-        specific_group.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-
-                    dialog.show();
-                } else {
-                    dialog.dismiss();
-                }
-            }
-        });
 
         previouslv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,8 +286,30 @@ public class QuickCreateEventVenues extends Activity {
                                     till_state.setError(null);
                                     if (!zipcode_et.getText().toString().trim().equalsIgnoreCase("")) {
                                         til_zipcode.setError(null);
+                                        if(phone_et.getText().toString().trim().length()>12)
+                                        {
+                                            til_phone.setError(null);
+                                            if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
+                                                til_email.setError(null);
+                                                new quickDetails().execute();
+                                            }
+                                            else {
+                                                SpannableString s = new SpannableString("Invalid Email");
+                                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                til_email.setError(s);
+                                            }
 
-                                        new quickDetails().execute();
+
+                                        }
+                                        else {
+                                            SpannableString s = new SpannableString("Invalid Phone No");
+                                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            til_phone.setError(s);
+                                            phone_et.setFocusable(true);
+                                            phone_et.requestFocus();
+
+                                        }
+
 
                                     } else {
                                         SpannableString s = new SpannableString("Enter Zipcode");
@@ -342,6 +374,31 @@ public class QuickCreateEventVenues extends Activity {
         finish();
     }
 
+    public void onRadioButtonClicked(View v) {
+        specificgroup_rb = findViewById(R.id.specificgroup_rb);
+        sharenetwork_rb = findViewById(R.id.invitedguest_cb);
+
+        boolean checked = ((RadioButton) v).isChecked();
+
+        //now check which radio button is selected
+        //android switch statement
+        switch (v.getId()) {
+
+            case R.id.specificgroup_rb:
+                if (checked)
+                    dialog.show();
+                else
+                    dialog.dismiss();
+                break;
+
+            case R.id.invitedguest_cb:
+
+                    break;
+
+
+        }
+    }
+
     public class quickDetails extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -364,9 +421,9 @@ public class QuickCreateEventVenues extends Activity {
                 httppost.setHeader("eventtitle", str_eventtopic);
                 httppost.setHeader("eventname", str_eventname);
                 httppost.setHeader("eventcategory", str_category);
-                httppost.setHeader("eventstartdate", "");
-                Log.e("tag", "ds33---------------------->:" + str_wowtag);
-                httppost.setHeader("eventenddate", "");
+                httppost.setHeader("eventstartdate", str_startdate);
+                Log.e("tag", "ds33---------------------->:" + str_startdate);
+                httppost.setHeader("eventenddate", str_enddate);
                 httppost.setHeader("eventtimezone", str_city);
                 httppost.setHeader("runtimefrom", "");
                 httppost.setHeader("eventdescription", str_desc);
@@ -480,7 +537,7 @@ public class QuickCreateEventVenues extends Activity {
                 jsonObject.accumulate("eventid", eventId);
                 jsonObject.accumulate("inviteonlyevent", "true");
                 jsonObject.accumulate("onlineevent", "true");
-                //   jsonObject.accumulate("eventvenueguestshare", "fggf");
+                jsonObject.accumulate("registerrsvp", str_registerrsvp);
                 //   jsonObject.accumulate("eventvenueaddressvisibility", "fgg");
 
 
@@ -492,7 +549,7 @@ public class QuickCreateEventVenues extends Activity {
                     JSONObject jGroup = new JSONObject();// /sub Object
 
                     try {
-                        // jGroup.put("eventvenuenumber", EventVenueFragment.listBeneficiary.get(i).getId());
+                        jGroup.put("eventvenuenumber", "1");
                         jGroup.put("eventvenuename", eventvenue_et.getText().toString());
                         jGroup.put("eventvenueaddress1", address_et.getText().toString());
                         jGroup.put("eventvenuecity", city_et.getText().toString());
@@ -529,13 +586,61 @@ public class QuickCreateEventVenues extends Activity {
                 try {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
+
+
                     if (status.equals("true")) {
                         edit.remove("video1");
                         edit.commit();
-                        Toast.makeText(QuickCreateEventVenues.this, "Quick Event Created Successfully", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(QuickCreateEventVenues.this, EventFeedDashboard.class));
-                        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                        finish();
+
+                        JSONObject jsonObject = jo.getJSONObject("message");
+                        final String eventId = jsonObject.getString("_id");
+                        Log.e("tag", "111-1-------->" + eventId);
+
+                        askinvite_dialog = new Dialog(QuickCreateEventVenues.this);
+                        askinvite_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        askinvite_dialog.setContentView(R.layout.dilaog_sendinvites);
+                        View v1 = askinvite_dialog.getWindow().getDecorView().getRootView();
+                        FontsOverride.overrideFonts(QuickCreateEventVenues.this, v1);
+                        ImageView close = askinvite_dialog.findViewById(R.id.closeiv);
+                        TextView tvinvite = (TextView) askinvite_dialog.findViewById(R.id.invitetv);
+                        TextView tvskip = (TextView) askinvite_dialog.findViewById(R.id.tvskip);
+                        tvinvite.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(QuickCreateEventVenues.this, EventInviteActivity.class);
+                                Log.e("tag", "11111111111" + eventId);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("eventId", eventId);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                sharedPrefces = PreferenceManager.getDefaultSharedPreferences(QuickCreateEventVenues.this);
+                                edit = sharedPrefces.edit();
+                                edit.putString("eventId", eventId);
+                                edit.putString("feedstatus", "allevents");
+                                edit.commit();
+                            }
+                        });
+                        close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                askinvite_dialog.dismiss();
+                            }
+                        });
+
+
+                        askinvite_dialog.show();
+
+                        tvskip.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                askinvite_dialog.dismiss();
+                                // Toast.makeText(QuickCreateEventVenues.this, "Quick Event Created Successfully", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(QuickCreateEventVenues.this, EventFeedDashboard.class));
+                                overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                                finish();
+                            }
+                        });
+
 
                     }
 
@@ -569,6 +674,8 @@ public class QuickCreateEventVenues extends Activity {
                     Log.e("tag", "gift urllllll");
                     jsonObject.accumulate("onlineeventname", "true");
                 }*/
+
+                //  jsonObject.accumulate("onlineeventname", onlinestatus);
                 if (!webinarlink_et.getText().toString().trim().matches("")) {
                     Log.e("tag", "gift urllllll");
                     jsonObject.accumulate("webinarlink", webinarlink_et.getText().toString().trim());
@@ -772,7 +879,6 @@ public class QuickCreateEventVenues extends Activity {
 
 
     }
-
 }
 
 

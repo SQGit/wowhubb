@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -23,15 +25,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import com.wowhubb.Activity.EventInviteActivity;
 import com.wowhubb.Activity.ViewMoreDetailspage;
 import com.wowhubb.FeedsData.Doc;
@@ -47,9 +52,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+
 
 /**
  * Created by Suleiman on 19/10/16.
@@ -64,9 +74,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int BUSINESS = 3;
     private static final int SOCIAL = 4;
     private static final int QUICK = 5;
-
+    public static MaterialBetterSpinner eventDay_spn;
     static Bitmap bitmap;
     public ImageLoader imageLoader1;
+    public List<Doc> docs = new ArrayList<>();
+    String str_eventday, str_frommonth, str_tomonth, str_fromdate, str_todate, str_fromtime, str_totime, str_timefrom, str_timeto;
+    int from, to;
     String token, wowsomecount, username, userimage, thoughtid, eventId, userId;
     EditText comments_et;
     CommentsRecyclerAdapter recyclerAdapter;
@@ -74,20 +87,26 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Dialog comments_dialog, menu_dialog;
     Userid userid;
     Activity activity;
+    SharedPreferences sharedPrefces;
+    SharedPreferences.Editor edit;
+    String[] MEMBERLIST = {"1", "2", "3", "4", "5", "6", "7"};
+    Dialog loader_dialog;
+    OnLoadMoreListener loadMoreListener;
+    boolean isLoading = false, isMoreDataAvailable = true;
+    String FromTimeExt;
     private ArrayList<FeedItem> feedList = new ArrayList<>();
-    private List<Doc> docs;
     private Context context;
     private boolean isLoadingAdded = false;
     private ArrayList<FeedItem> feedItems = new ArrayList<>();
     private int i = 0;
+    private List<Doc> filtercontactsList;
 
-    public PaginationAdapter(Context context) {
+    public PaginationAdapter(Context context, List<Doc> docs) {
         this.context = context;
         this.docs = docs;
-
-        docs = new ArrayList<>();
+        //  filtercontactsList = new ArrayList<>();
+        // filtercontactsList.addAll(docs);
     }
-
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath)
             throws Throwable {
@@ -120,6 +139,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         imageLoader1 = new ImageLoader(context);
+
         switch (viewType) {
 
             case PRIVATE:
@@ -159,6 +179,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 View v2 = inflater.inflate(R.layout.item_progress, parent, false);
                 viewHolder = new LoadingVH(v2);
                 break;
+
+            default:
+                return new LoadHolder(inflater.inflate(R.layout.item_progress, parent, false));
+
         }
         return viewHolder;
     }
@@ -170,21 +194,29 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         FontsOverride.overrideFonts(context, v1);
         viewHolder = new PrivateVH(v1);
 
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
         token = sharedPreferences.getString("token", "");
         userimage = sharedPreferences.getString("profilepath", "");
         username = sharedPreferences.getString("str_name", "");
         userId = sharedPreferences.getString("userid", "");
-
+        loader_dialog = new Dialog(context);
+        loader_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loader_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loader_dialog.setCancelable(false);
+        loader_dialog.setContentView(R.layout.test_loader);
         Doc doc = docs.get(position);
+        Log.e("tag", "pos" + position);
+        Log.e("tag", "pos" + getItemCount());
 
+        if (position >= getItemCount() - 1 && isMoreDataAvailable && !isLoading && loadMoreListener != null) {
+            isLoading = true;
+            loadMoreListener.onLoadMore();
+        }
         switch (getItemViewType(position)) {
 
 
@@ -209,13 +241,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
-              /*  //-------------------------DESCRIPTION---------------------------------------------//
-
-                if (doc.getEventdescription() != null) {
-                    thoughtsVH.desc.setText(docs.get(position).getThoughtstext());
-                } else {
-                    thoughtsVH.desc.setVisibility(View.GONE);
-                }*/
 
 
                 //-------------------------EVENT DESIGNATION------------------------------------//
@@ -226,25 +251,72 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
+                thoughtsVH.link_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(docs.get(position).getUrllink()));
+                        context.startActivity(i);
+                    }
+                });
+
 
                 //-------------------------COVER IMAGE---------------------------------------------//
 
-                Log.e("tag", "---------THOUGHTS IMAGE---------->" + doc.getThoughtsimage());
-                if (doc.getThoughtsimage() != null && !doc.getThoughtsimage().equals("null")) {
+                Log.e("tag", "---------THOUGHTS IMAGE---------->" + doc.getThoughtsimageurl());
+                if (doc.getThoughtsimageurl() != null && !doc.getThoughtsimageurl().equals("null")) {
                     thoughtsVH.feedImageView.setVisibility(View.VISIBLE);
                     Glide
                             .with(context)
-                            .load("http://104.197.80.225:3010/wow/media/event/" + doc.getThoughtsimage())
+                            .load(doc.getThoughtsimageurl())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                             .centerCrop()
                             .crossFade()
                             .into(thoughtsVH.feedImageView);
                 }
 
-                if (doc.getThoughtsvideo() != null && !doc.getThoughtsvideo().equals("null")) {
+
+                if (doc.getThoughtsvideothumb() != null && !doc.getThoughtsvideothumb().equals("null")) {
                     thoughtsVH.frameLayout.setVisibility(View.VISIBLE);
+                    Glide
+                            .with(context)
+                            .load(doc.getThoughtsvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(thoughtsVH.wowtagvideo);
                 }
 
+                thoughtsVH.frameLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Doc doc = docs.get(position);
+                        final Dialog dialog = new Dialog(context, R.style.dialog);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.dialog_videoview);
+                        View v1 = dialog.getWindow().getDecorView().getRootView();
+                        ImageView closeiv = dialog.findViewById(R.id.close_iv);
+                        closeiv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        VideoView videoView = dialog.findViewById(R.id.video_view);
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
+                            dialog.show();
+                            thoughtsVH.video3plus.setVisibility(View.VISIBLE);
+                            videoView.setVideoURI(Uri.parse(doc.getThoughtsvideourl()));
+                            videoView.start();
+                        } else {
+                            thoughtsVH.video3plus.setVisibility(View.INVISIBLE);
+                        }
+                        dialog.show();
+
+                    }
+                });
                 //-------------------------EVENT NAME---------------------------------------------//
                 if (doc.getEventname() != null) {
                     thoughtsVH.eventtopic_tv.setText(docs.get(position).getEventname());
@@ -306,7 +378,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Doc doc = docs.get(position);
                         String eventId = doc.getId();
                         Log.e("tag", "-----eventId---------->>>" + eventId);
-                        new addWowsome(eventId).execute();
+                        new addThoughtsWowsome(eventId).execute();
                         thoughtsVH.viewwowsome.setVisibility(view.VISIBLE);
                         thoughtsVH.viewwowsome.setText(wowsomecount + " Wowsomes");
                     }
@@ -412,9 +484,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
 
-                        if (doc.getThoughtsvideo() != null && doc.getThoughtsvideo() != null) {
+                        if (doc.getThoughtsvideourl() != null && doc.getThoughtsvideourl() != null) {
                             dialog.show();
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getThoughtsvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getThoughtsvideourl()));
                             videoView.start();
                         } else {
 
@@ -443,8 +515,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getThoughtsimage() != null && !doc.getThoughtsimage().equals("null")) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getThoughtsimage())
+                        if (doc.getThoughtsimageurl() != null && !doc.getThoughtsimageurl().equals("null")) {
+                            Glide.with(context).load(doc.getThoughtsimageurl())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -472,6 +544,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     quickVH.profilePic.setImageResource(R.drawable.profile_img);
                 }
 
+
+                List<Eventvenue> eventvenues1 = docs.get(position).getEventvenue();
+
+                Log.e("tag", "eventvenue---" + eventvenues1);
+
+                if (eventvenues1 != null) {
+                    if (eventvenues1.size() > 0) {
+                        for (int i = 0; i < eventvenues1.size(); i++) {
+                            quickVH.address_tv.setText(eventvenues1.get(0).getEventvenuename() + " , " + eventvenues1.get(0).getEventvenueaddress1() + ", " + eventvenues1.get(0).getEventvenuecity() + ", " +
+                                    eventvenues1.get(0).getEventvenuezipcode());
+                        }
+                    }
+
+
+                } else {
+                    quickVH.address_tv.setText(docs.get(position).getEventtimezone());
+                }
+
+
                 //-------------------------EVENT USERNAME-----------------------------------------//
                 if (doc.getUserid() != null) {
                     userid = docs.get(position).getUserid();
@@ -480,16 +571,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
-                if (doc.getEventtimezone() != null) {
-                    quickVH.address_tv.setText(doc.getEventtimezone());
+
+                //-------------------------EVENT NAME---------------------------------------------//
+                if (doc.getEventtitle() != null) {
+                    quickVH.eventname_tv.setText("! " + docs.get(position).getEventtitle());
                 }
                 //-------------------------EVENT NAME---------------------------------------------//
                 if (doc.getEventname() != null) {
-                    quickVH.eventname_tv.setText(docs.get(position).getEventtitle());
-                }
-                //-------------------------EVENT NAME---------------------------------------------//
-                if (doc.getEventname() != null) {
-                    quickVH.eventtopic_tv.setText("! " + docs.get(position).getEventname());
+                    quickVH.eventtopic_tv.setText(docs.get(position).getEventname());
                 }
 
                 //-------------------------EVENT CATAGORY-----------------------------------------//
@@ -506,8 +595,19 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
+                Log.e("tag", "12333" + doc.getWowtagvideothumb());
 
-                if (doc.getWowtagvideo() != null && !doc.getWowtagvideo().equals("null")) {
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(quickVH.wowtagvideo);
+                }
+
+                if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
                     quickVH.frameLayout.setVisibility(View.VISIBLE);
                 }
                 quickVH.frameLayout.setOnClickListener(new View.OnClickListener() {
@@ -528,10 +628,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
                             dialog.show();
                             PrivateVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             PrivateVH.video3plus.setVisibility(View.INVISIBLE);
@@ -569,8 +669,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 quickVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Doc doc = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
+                        Log.e("tag", "11111111111" + doc.getId());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", doc.getId());
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", doc.getId());
+                        edit.putString("feedstatus", "allevents");
+                        edit.commit();
                     }
                 });
 
@@ -665,7 +775,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 quickVH.frameLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         Doc doc = docs.get(position);
                         final Dialog dialog = new Dialog(context, R.style.dialog);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -678,12 +787,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 dialog.dismiss();
                             }
                         });
-
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
                             dialog.show();
                             quickVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             quickVH.video3plus.setVisibility(View.INVISIBLE);
@@ -692,7 +800,137 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
+                if ((!doc.getEventstartdate().equals("null")) && (!doc.getEventenddate().equals("null"))) {
 
+                    String fromTime = doc.getEventstartdate();
+                    String toTime = doc.getEventenddate();
+                    Log.e("tag", "111111Dateeeee------->" + fromTime + toTime);
+                    try {
+                        String[] separated = fromTime.split(" ");
+
+
+                        String runFromDate = separated[0];
+                        String runFromTime = separated[1];
+                        FromTimeExt = separated[2];
+                        //  String strDateFormatTo = fromTime;
+                        SimpleDateFormat spf = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate = null;
+                        try {
+                            newDate = spf.parse(runFromDate);
+                            spf = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate = spf.format(newDate);
+                            System.out.println(runFromDate);
+
+                            String str_fromdate1[] = runFromDate.split("/");
+                            str_frommonth = str_fromdate1[0];
+                            str_fromdate = str_fromdate1[1];
+                            String str_fromtime[] = runFromDate.split(" ");
+                            str_timefrom = str_fromtime[1];
+                            Log.e("tag", "date2222-------->" + str_timefrom + str_frommonth + str_fromdate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm");
+                        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+                        String strDateFormat = runFromTime;
+                        Log.e("tag", "date-------->" + runFromTime);
+                        try {
+                            Date dt = parseFormat.parse(strDateFormat);
+                            System.out.println(outputFormat.format(dt));
+                            str_fromtime = (outputFormat.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+
+                    try {
+                        String[] separated1 = toTime.split(" ");
+                        String runFromDate1 = separated1[0];
+                        String runFromTime1 = separated1[1];
+                        SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate1 = null;
+                        try {
+                            newDate1 = spf1.parse(runFromDate1);
+                            spf1 = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate1 = spf1.format(newDate1);
+                            Log.e("tag", "date-------->" + runFromDate1);
+                            String str_fromdate12[] = runFromDate1.split("/");
+                            str_tomonth = str_fromdate12[0];
+                            str_todate = str_fromdate12[1];
+                            String str_totime[] = runFromDate1.split(" ");
+                            str_timeto = str_totime[1];
+                            Log.e("tag", "date2222-------->" + str_timeto);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat outputFormat1 = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat1 = new SimpleDateFormat("hh:mm");
+                        String strDateFormat1 = runFromTime1 + "a";
+                        Log.e("tag", "date-------->" + runFromTime1);
+
+                        try {
+                            Date dt = parseFormat1.parse(strDateFormat1);
+                            System.out.println(outputFormat1.format(dt));
+                            str_totime = (outputFormat1.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat1.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+
+                    }
+                    try {
+                        if (str_frommonth.equals(str_tomonth)) {
+                            quickVH.month_tv.setText(str_frommonth);
+                        } else {
+                            quickVH.month_tv.setText(str_frommonth + " to " + str_tomonth);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
+
+                    quickVH.time_tv.setText(str_fromtime +FromTimeExt+ "-" + str_totime);
+                    try {
+                        from = Integer.parseInt(str_fromdate);
+                        to = Integer.parseInt(str_todate);
+                    } catch (NumberFormatException e) {
+
+                    }
+
+                    if (from == 01) {
+                        str_fromdate = str_fromdate + "st";
+                    } else if (from == 02) {
+                        str_fromdate = str_fromdate + "nd";
+                    } else if (from == 03) {
+                        str_fromdate = str_fromdate + "rd";
+                    } else {
+                        str_fromdate = str_fromdate + "th";
+                    }
+                    if (to == 01)
+                    {
+                        str_todate = str_todate + "st";
+                        quickVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                    else if (to == 02) {
+                        str_todate = str_todate + "nd";
+                        quickVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                    else if (to == 03) {
+                        str_todate = str_todate + "rd";
+                        quickVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                    else {
+                        str_todate = str_todate + "th";
+                        quickVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                } else {
+                    quickVH.runttime_lv.setVisibility(View.GONE);
+                }
 
                 break;
 
@@ -717,11 +955,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
 
                 }
+                Log.e("tag", "12333" + doc.getWowtagvideothumb());
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    //    privateVH.wowtagvideo.setVisibility(View.VISIBLE);
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(privateVH.wowtagvideo);
+                }
+
 
                 //-------------------------WOWSOMES COUNT------------------------------------------//
 
                 if (doc.getWowsomecount() != null) {
-
 
                 }
 
@@ -751,20 +1000,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(privateVH.feedImageView);
-
-
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(privateVH.highlight1_iv);
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -795,6 +1035,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (doc.getCommentcount() != null) {
                     privateVH.viewcomments.setText(doc.getCommentcount() + " Comments");
                     privateVH.viewcomments.setVisibility(View.VISIBLE);
+
                 }
                 List<Eventvenue> eventvenues = docs.get(position).getEventvenue();
 
@@ -808,6 +1049,100 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
                 }
+
+                final CustomAdapter eventdayAdapter = new CustomAdapter(context, android.R.layout.simple_dropdown_item_1line, MEMBERLIST) {
+                    @Override
+                    public boolean isEnabled(int position) {
+                        if (position == 0) {
+                            return true;
+                        } else {
+                            return true;
+                        }
+                    }
+
+                    @Override
+                    public View getDropDownView(int position, View convertView,
+                                                ViewGroup parent) {
+                        View view = super.getDropDownView(position, convertView, parent);
+                        TextView tv = (TextView) view;
+                        //tv.setTypeface(lato);
+                        tv.setTextSize(9);
+                        tv.setPadding(30, 55, 10, 25);
+                        if (position == 0) {
+                            tv.setTextColor(Color.BLACK);
+                        } else {
+                            tv.setTextColor(Color.BLACK);
+                        }
+                        return view;
+                    }
+
+
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View view = super.getDropDownView(position, convertView, parent);
+                        TextView tv = (TextView) view;
+                        tv.setTextSize(15);
+                        tv.setPadding(10, 20, 0, 20);
+                        // tv.setTypeface(lato);
+                        if (position == 0) {
+                            tv.setTextColor(Color.BLACK);
+                        } else {
+                            tv.setTextColor(Color.BLACK);
+                        }
+                        return view;
+                    }
+                };
+                privateVH.rsvptv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        final Dialog rsvp_dialog = new Dialog(context);
+                        rsvp_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        rsvp_dialog.setContentView(R.layout.dilaog_rsvpinvite);
+                        View v1 = rsvp_dialog.getWindow().getDecorView().getRootView();
+                        FontsOverride.overrideFonts(context, v1);
+                        ImageView close = rsvp_dialog.findViewById(R.id.closeiv);
+                        TextView rsvpinvite = (TextView) rsvp_dialog.findViewById(R.id.registertv);
+
+
+                        eventDay_spn = (MaterialBetterSpinner) rsvp_dialog.findViewById(R.id.eventday_spn);
+                        eventDay_spn.setAdapter(eventdayAdapter);
+                        close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                rsvp_dialog.dismiss();
+                            }
+                        });
+                        rsvpinvite.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (str_eventday != null) {
+                                    if (str_eventday.length() > 0) {
+                                        //  Toast.makeText(context, "Succesfully Register", Toast.LENGTH_LONG).show();
+                                        final Doc doc = docs.get(position);
+                                        eventId = doc.getId();
+                                        new postRSVP(eventId).execute();
+                                        rsvp_dialog.dismiss();
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Please select the no of persons", Toast.LENGTH_LONG).show();
+
+                                }
+                            }
+                        });
+
+                        eventDay_spn.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                str_eventday = adapterView.getItemAtPosition(i).toString();
+                                Log.e("tag", "str_category------>" + str_eventday);
+
+                            }
+                        });
+
+                        rsvp_dialog.show();
+                    }
+                });
 
                 privateVH.menu_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -852,15 +1187,39 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     String Uid = userid.getId();
                     if (userId.equals(Uid)) {
                         privateVH.sendinvite_tv.setVisibility(View.VISIBLE);
+                        privateVH.rsvptv.setVisibility(View.GONE);
                     } else {
                         privateVH.sendinvite_tv.setVisibility(View.GONE);
+                        privateVH.rsvptv.setVisibility(View.VISIBLE);
+
+                           /* if(doc.getRegisterrsvp().equals("on"))
+                            {
+                                privateVH.sendinvite_tv.setVisibility(View.GONE);
+                                privateVH.rsvptv.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                privateVH.sendinvite_tv.setVisibility(View.GONE);
+                                privateVH.rsvptv.setVisibility(View.GONE);
+                            }*/
+
                     }
                 }
                 privateVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Doc doc = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
+                        Log.e("tag", "11111111111" + doc.getId());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", doc.getId());
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", doc.getId());
+                        edit.putString("feedstatus", "allevents");
+                        edit.commit();
                     }
                 });
 
@@ -874,6 +1233,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         new addWowsome(eventId).execute();
                         privateVH.viewwowsome.setVisibility(view.VISIBLE);
                         privateVH.viewwowsome.setText(wowsomecount + " Wowsomes");
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -919,6 +1279,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         });
                         comments_dialog.show();
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -940,10 +1301,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
                             dialog.show();
                             PrivateVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             PrivateVH.video3plus.setVisibility(View.INVISIBLE);
@@ -972,10 +1333,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlightsvideo1() != null && doc.getEventhighlightsvideo1() != null) {
+                        if (doc.getEventhighlights2url() != null && doc.getEventhighlights2url() != null) {
                             dialog.show();
                             PrivateVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlightsvideo1()));
+                            videoView.setVideoURI(Uri.parse(doc.getEventhighlights2url()));
                             videoView.start();
                         } else {
                             PrivateVH.video3plus.setVisibility(View.INVISIBLE);
@@ -1002,8 +1363,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlights1() != null && !doc.getEventhighlights1().equals("null")) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
+
+                        if (doc.getEventhighlights1url() != null && !doc.getEventhighlights1url().equals("null")) {
+                            Glide.with(context).load(doc.getEventhighlights1url())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -1034,9 +1396,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getCoverpage() != null && !doc.getCoverpage().equals("null")) {
-
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        if (doc.getCoverpageurl() != null && !doc.getCoverpageurl().equals("null")) {
+                            Glide.with(context).load(doc.getCoverpageurl())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -1070,8 +1431,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
 
-                        if (doc.getWowtagvideo() != null) {
-                            bundle.putString("wowtagvideo", doc.getWowtagvideo());
+                        if (doc.getWowtagvideourl() != null) {
+                            bundle.putString("wowtagvideo", doc.getWowtagvideourl());
                         }
 
                         if (doc.getEventhighlights1() != null) {
@@ -1082,8 +1443,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             bundle.putString("highlight2", doc.getEventhighlightsvideo1());
                         }
 
-                        if (doc.getCoverpage() != null) {
-                            bundle.putString("coverpage", doc.getCoverpage());
+                        if (doc.getCoverpageurl() != null) {
+                            bundle.putString("coverpage", doc.getCoverpageurl());
                         }
 
                         if (doc.getEventname() != null) {
@@ -1151,6 +1512,267 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+
+                if ((!doc.getEventstartdate().equals("null")) && (!doc.getEventenddate().equals("null"))) {
+
+                    String fromTime = doc.getEventstartdate();
+                    String toTime = doc.getEventenddate();
+                    Log.e("tag", "111111Dateeeee------->" + fromTime + toTime);
+                    try {
+                        String[] separated = fromTime.split(" ");
+                        String runFromDate = separated[0];
+                        String runFromTime = separated[1];
+                        //  String strDateFormatTo = fromTime;
+                        SimpleDateFormat spf = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate = null;
+                        try {
+                            newDate = spf.parse(runFromDate);
+                            spf = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate = spf.format(newDate);
+                            System.out.println(runFromDate);
+
+                            String str_fromdate1[] = runFromDate.split("/");
+                            str_frommonth = str_fromdate1[0];
+                            str_fromdate = str_fromdate1[1];
+                            String str_fromtime[] = runFromDate.split(" ");
+                            str_timefrom = str_fromtime[1];
+                            Log.e("tag", "date2222-------->" + str_timefrom + str_frommonth + str_fromdate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+                        String strDateFormat = runFromTime + "a";
+                        Log.e("tag", "date-------->" + runFromTime);
+                        try {
+                            Date dt = parseFormat.parse(strDateFormat);
+                            System.out.println(outputFormat.format(dt));
+                            str_fromtime = (outputFormat.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+
+                    try {
+                        String[] separated1 = toTime.split(" ");
+                        String runFromDate1 = separated1[0];
+                        String runFromTime1 = separated1[1];
+                        SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate1 = null;
+                        try {
+                            newDate1 = spf1.parse(runFromDate1);
+                            spf1 = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate1 = spf1.format(newDate1);
+                            Log.e("tag", "date-------->" + runFromDate1);
+                            String str_fromdate12[] = runFromDate1.split("/");
+                            str_tomonth = str_fromdate12[0];
+                            str_todate = str_fromdate12[1];
+                            String str_totime[] = runFromDate1.split(" ");
+                            str_timeto = str_totime[1];
+                            Log.e("tag", "date2222-------->" + str_timeto);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat outputFormat1 = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat1 = new SimpleDateFormat("hh:mm");
+                        String strDateFormat1 = runFromTime1 + "a";
+                        Log.e("tag", "date-------->" + runFromTime1);
+
+                        try {
+                            Date dt = parseFormat1.parse(strDateFormat1);
+                            System.out.println(outputFormat1.format(dt));
+                            str_totime = (outputFormat1.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat1.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+
+                    }
+                    try {
+                        if (str_frommonth.equals(str_tomonth)) {
+                            privateVH.month_tv.setText(str_frommonth);
+                        } else {
+                            privateVH.month_tv.setText(str_frommonth + " to " + str_tomonth);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
+
+                    // date_tv.setText(str_fromdate + "-" + str_todate);
+                    privateVH.time_tv.setText(str_fromtime + "-" + str_totime);
+                    try {
+                        from = Integer.parseInt(str_fromdate);
+                        to = Integer.parseInt(str_todate);
+                    } catch (NumberFormatException e) {
+
+                    }
+
+                    if (from == 01) {
+                        str_fromdate = str_fromdate + "st";
+                    } else if (from == 02) {
+                        str_fromdate = str_fromdate + "nd";
+                    } else if (from == 03) {
+                        str_fromdate = str_fromdate + "rd";
+                    } else {
+                        str_fromdate = str_fromdate + "th";
+                    }
+                    if (to == 01) {
+                        str_todate = str_todate + "st";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 02) {
+                        str_todate = str_todate + "nd";
+                        //  date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 03) {
+                        str_todate = str_todate + "rd";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else {
+                        str_todate = str_todate + "th";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                } else {
+                    privateVH.runttime_lv.setVisibility(View.GONE);
+                }
+
+                if ((!doc.getEventstartdate().equals("null")) && (!doc.getEventenddate().equals("null"))) {
+
+                    String fromTime = doc.getEventstartdate();
+                    String toTime = doc.getEventenddate();
+                    Log.e("tag", "111111Dateeeee------->" + fromTime + toTime);
+                    try {
+                        String[] separated = fromTime.split(" ");
+                        String runFromDate = separated[0];
+                        String runFromTime = separated[1];
+                        //  String strDateFormatTo = fromTime;
+                        SimpleDateFormat spf = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate = null;
+                        try {
+                            newDate = spf.parse(runFromDate);
+                            spf = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate = spf.format(newDate);
+                            System.out.println(runFromDate);
+
+                            String str_fromdate1[] = runFromDate.split("/");
+                            str_frommonth = str_fromdate1[0];
+                            str_fromdate = str_fromdate1[1];
+                            String str_fromtime[] = runFromDate.split(" ");
+                            str_timefrom = str_fromtime[1];
+                            Log.e("tag", "date2222-------->" + str_timefrom + str_frommonth + str_fromdate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+                        String strDateFormat = runFromTime + "a";
+                        Log.e("tag", "date-------->" + runFromTime);
+                        try {
+                            Date dt = parseFormat.parse(strDateFormat);
+                            System.out.println(outputFormat.format(dt));
+                            str_fromtime = (outputFormat.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+
+                    try {
+                        String[] separated1 = toTime.split(" ");
+                        String runFromDate1 = separated1[0];
+                        String runFromTime1 = separated1[1];
+                        SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate1 = null;
+                        try {
+                            newDate1 = spf1.parse(runFromDate1);
+                            spf1 = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate1 = spf1.format(newDate1);
+                            Log.e("tag", "date-------->" + runFromDate1);
+                            String str_fromdate12[] = runFromDate1.split("/");
+                            str_tomonth = str_fromdate12[0];
+                            str_todate = str_fromdate12[1];
+                            String str_totime[] = runFromDate1.split(" ");
+                            str_timeto = str_totime[1];
+                            Log.e("tag", "date2222-------->" + str_timeto);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat outputFormat1 = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat1 = new SimpleDateFormat("hh:mm");
+                        String strDateFormat1 = runFromTime1 + "a";
+                        Log.e("tag", "date-------->" + runFromTime1);
+
+                        try {
+                            Date dt = parseFormat1.parse(strDateFormat1);
+                            System.out.println(outputFormat1.format(dt));
+                            str_totime = (outputFormat1.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat1.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+
+                    }
+                    try {
+                        if (str_frommonth.equals(str_tomonth)) {
+                            privateVH.month_tv.setText(str_frommonth);
+                        } else {
+                            privateVH.month_tv.setText(str_frommonth + " to " + str_tomonth);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
+
+                    privateVH.time_tv.setText(str_fromtime + "-" + str_totime);
+
+                    try {
+                        from = Integer.parseInt(str_fromdate);
+                        to = Integer.parseInt(str_todate);
+                    } catch (NumberFormatException e) {
+
+                    }
+
+                    if (from == 01) {
+                        str_fromdate = str_fromdate + "st";
+                    } else if (from == 02) {
+                        str_fromdate = str_fromdate + "nd";
+                    } else if (from == 03) {
+                        str_fromdate = str_fromdate + "rd";
+                    } else {
+                        str_fromdate = str_fromdate + "th";
+                    }
+                    if (to == 01) {
+                        str_todate = str_todate + "st";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 02) {
+                        str_todate = str_todate + "nd";
+                        //  date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 03) {
+                        str_todate = str_todate + "rd";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else {
+                        str_todate = str_todate + "th";
+                        //date_tv.setText("");
+                        privateVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                } else {
+                    privateVH.runttime_lv.setVisibility(View.GONE);
+                }
+
                 break;
 
             case PROFESSIONAL:
@@ -1171,7 +1793,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (userid.getFirstname() != null) {
                         prfessionalVH.name.setText(userid.getFirstname());
                     }
-
                 }
 
                 //-------------------------WOWSOMES COUNT------------------------------------------//
@@ -1179,7 +1800,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (doc.getWowsomecount() != null) {
 
                 }
-
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.wowtagvideo);
+                }
                 //-------------------------DESCRIPTION---------------------------------------------//
 
                 if (doc.getEventdescription() != null) {
@@ -1217,8 +1846,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 prfessionalVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Doc doc = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
+                        Log.e("tag", "11111111111" + doc.getId());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", doc.getId());
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", doc.getId());
+                        edit.putString("feedstatus", "allevents");
+                        edit.commit();
                     }
                 });
 
@@ -1226,20 +1865,23 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(prfessionalVH.feedImageView);
 
 
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(prfessionalVH.highlight1_iv);
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    //    privateVH.wowtagvideo.setVisibility(View.VISIBLE);
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(prfessionalVH.wowtagvideo);
+                }
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -1395,10 +2037,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
                             dialog.show();
                             prfessionalVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             prfessionalVH.video3plus.setVisibility(View.INVISIBLE);
@@ -1427,13 +2069,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlightsvideo1() != null && !doc.getEventhighlightsvideo1().equals("null")) {
+                        if (doc.getEventhighlights2url() != null && doc.getEventhighlights2url() != null) {
                             dialog.show();
-                            prfessionalVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlightsvideo1()));
+                            PrivateVH.video3plus.setVisibility(View.VISIBLE);
+                            videoView.setVideoURI(Uri.parse(doc.getEventhighlights2url()));
                             videoView.start();
                         } else {
-                            prfessionalVH.video3plus.setVisibility(View.INVISIBLE);
+                            PrivateVH.video3plus.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -1457,8 +2099,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlights1() != null && !doc.getEventhighlights1().equals("null")) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
+                        if (doc.getEventhighlights1url() != null && !doc.getEventhighlights1url().equals("null")) {
+                            Glide.with(context).load(doc.getEventhighlights1url())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -1489,9 +2131,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getCoverpage() != null && !doc.getCoverpage().equals("null")) {
+                        if (doc.getCoverpageurl() != null && !doc.getCoverpageurl().equals("null")) {
 
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                            Glide.with(context).load(doc.getCoverpageurl())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -1525,8 +2167,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
 
-                        if (doc.getWowtagvideo() != null) {
-                            bundle.putString("wowtagvideo", doc.getWowtagvideo());
+                        if (doc.getWowtagvideourl() != null) {
+                            bundle.putString("wowtagvideo", doc.getWowtagvideourl());
                         }
 
                         if (doc.getEventhighlights1() != null) {
@@ -1537,8 +2179,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             bundle.putString("highlight2", doc.getEventhighlightsvideo1());
                         }
 
-                        if (doc.getCoverpage() != null) {
-                            bundle.putString("coverpage", doc.getCoverpage());
+                        if (doc.getCoverpageurl() != null) {
+                            bundle.putString("coverpage", doc.getCoverpageurl());
                         }
 
                         if (doc.getEventname() != null) {
@@ -1605,6 +2247,139 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
+
+
+                if ((!doc.getEventstartdate().equals("null")) && (!doc.getEventenddate().equals("null"))) {
+
+                    String fromTime = doc.getEventstartdate();
+                    String toTime = doc.getEventenddate();
+                    Log.e("tag", "111111Dateeeee------->" + fromTime + toTime);
+                    try {
+                        String[] separated = fromTime.split(" ");
+                        String runFromDate = separated[0];
+                        String runFromTime = separated[1];
+                        //  String strDateFormatTo = fromTime;
+                        SimpleDateFormat spf = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate = null;
+                        try {
+                            newDate = spf.parse(runFromDate);
+                            spf = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate = spf.format(newDate);
+                            System.out.println(runFromDate);
+
+                            String str_fromdate1[] = runFromDate.split("/");
+                            str_frommonth = str_fromdate1[0];
+                            str_fromdate = str_fromdate1[1];
+                            String str_fromtime[] = runFromDate.split(" ");
+                            str_timefrom = str_fromtime[1];
+                            Log.e("tag", "date2222-------->" + str_timefrom + str_frommonth + str_fromdate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+                        String strDateFormat = runFromTime + "a";
+                        Log.e("tag", "date-------->" + runFromTime);
+                        try {
+                            Date dt = parseFormat.parse(strDateFormat);
+                            System.out.println(outputFormat.format(dt));
+                            str_fromtime = (outputFormat.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+
+                    try {
+                        String[] separated1 = toTime.split(" ");
+                        String runFromDate1 = separated1[0];
+                        String runFromTime1 = separated1[1];
+                        SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate1 = null;
+                        try {
+                            newDate1 = spf1.parse(runFromDate1);
+                            spf1 = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate1 = spf1.format(newDate1);
+                            Log.e("tag", "date-------->" + runFromDate1);
+                            String str_fromdate12[] = runFromDate1.split("/");
+                            str_tomonth = str_fromdate12[0];
+                            str_todate = str_fromdate12[1];
+                            String str_totime[] = runFromDate1.split(" ");
+                            str_timeto = str_totime[1];
+                            Log.e("tag", "date2222-------->" + str_timeto);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat outputFormat1 = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat1 = new SimpleDateFormat("hh:mm");
+                        String strDateFormat1 = runFromTime1 + "a";
+                        Log.e("tag", "date-------->" + runFromTime1);
+
+                        try {
+                            Date dt = parseFormat1.parse(strDateFormat1);
+                            System.out.println(outputFormat1.format(dt));
+                            str_totime = (outputFormat1.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat1.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+
+                    }
+                    try {
+                        if (str_frommonth.equals(str_tomonth)) {
+                            prfessionalVH.month_tv.setText(str_frommonth);
+                        } else {
+                            prfessionalVH.month_tv.setText(str_frommonth + " to " + str_tomonth);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
+
+                    // date_tv.setText(str_fromdate + "-" + str_todate);
+                    prfessionalVH.time_tv.setText(str_fromtime + "-" + str_totime);
+                    try {
+                        from = Integer.parseInt(str_fromdate);
+                        to = Integer.parseInt(str_todate);
+                    } catch (NumberFormatException e) {
+
+                    }
+
+                    if (from == 01) {
+                        str_fromdate = str_fromdate + "st";
+                    } else if (from == 02) {
+                        str_fromdate = str_fromdate + "nd";
+                    } else if (from == 03) {
+                        str_fromdate = str_fromdate + "rd";
+                    } else {
+                        str_fromdate = str_fromdate + "th";
+                    }
+                    if (to == 01) {
+                        str_todate = str_todate + "st";
+                        //date_tv.setText("");
+                        prfessionalVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 02) {
+                        str_todate = str_todate + "nd";
+                        //  date_tv.setText("");
+                        prfessionalVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 03) {
+                        str_todate = str_todate + "rd";
+                        //date_tv.setText("");
+                        prfessionalVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else {
+                        str_todate = str_todate + "th";
+                        //date_tv.setText("");
+                        prfessionalVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                } else {
+                    prfessionalVH.runttime_lv.setVisibility(View.GONE);
+                }
+
+
                 break;
 
 
@@ -1631,6 +2406,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
+
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(socialVH.wowtagvideo);
+                }
+
                 //-------------------------WOWSOMES COUNT------------------------------------------//
 
                 if (doc.getWowsomecount() != null) {
@@ -1655,8 +2441,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 socialVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Doc doc = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
+                        Log.e("tag", "11111111111" + doc.getId());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", doc.getId());
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("feedstatus", "allevents");
+                        edit.putString("eventId", doc.getId());
+                        edit.commit();
                     }
                 });
 
@@ -1687,20 +2483,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(socialVH.feedImageView);
-
-
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(socialVH.highlight1_iv);
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -1828,13 +2615,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         FontsOverride.overrideFonts(comments_dialog.getContext(), v1);
 
-
                         close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 comments_dialog.dismiss();
                             }
                         });
+
                         comments_dialog.show();
                     }
                 });
@@ -1857,10 +2644,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getWowtagvideo() != null && doc.getWowtagvideo() != null) {
+                        if (doc.getWowtagvideourl() != null && doc.getWowtagvideourl() != null) {
                             dialog.show();
                             socialVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             socialVH.video3plus.setVisibility(View.INVISIBLE);
@@ -1889,13 +2676,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlightsvideo1() != null && doc.getEventhighlightsvideo1() != null) {
+                        if (doc.getEventhighlights2url() != null && doc.getEventhighlights2url() != null) {
                             dialog.show();
-                            socialVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlightsvideo1()));
+                            PrivateVH.video3plus.setVisibility(View.VISIBLE);
+                            videoView.setVideoURI(Uri.parse(doc.getEventhighlights2url()));
                             videoView.start();
                         } else {
-                            socialVH.video3plus.setVisibility(View.INVISIBLE);
+                            PrivateVH.video3plus.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -1919,14 +2706,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlights1() != null && doc.getEventhighlights1() != null) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
+                        if (doc.getEventhighlights1url() != null && !doc.getEventhighlights1url().equals("null")) {
+                            Glide.with(context).load(doc.getEventhighlights1url())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
                                     .into(videoView);
+                            //  imageLoader1.DisplayImage("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1(), videoView);
                             dialog.show();
                         } else {
+
                         }
                     }
                 });
@@ -1952,8 +2741,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getCoverpage() != null && doc.getCoverpage() != null) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        if (doc.getCoverpageurl() != null && doc.getCoverpageurl() != null) {
+                            Glide.with(context).load(doc.getCoverpageurl())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -1986,8 +2775,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
 
-                        if (doc.getWowtagvideo() != null) {
-                            bundle.putString("wowtagvideo", doc.getWowtagvideo());
+                        if (doc.getWowtagvideourl() != null) {
+                            bundle.putString("wowtagvideo", doc.getWowtagvideourl());
                         }
 
                         if (doc.getEventhighlights1() != null) {
@@ -1998,8 +2787,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             bundle.putString("highlight2", doc.getEventhighlightsvideo1());
                         }
 
-                        if (doc.getCoverpage() != null) {
-                            bundle.putString("coverpage", doc.getCoverpage());
+                        if (doc.getCoverpageurl() != null) {
+                            bundle.putString("coverpage", doc.getCoverpageurl());
                         }
 
                         if (doc.getEventname() != null) {
@@ -2066,6 +2855,138 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
+
+                if ((!doc.getEventstartdate().equals("null")) && (!doc.getEventenddate().equals("null"))) {
+
+                    String fromTime = doc.getEventstartdate();
+                    String toTime = doc.getEventenddate();
+                    Log.e("tag", "111111Dateeeee------->" + fromTime + toTime);
+                    try {
+                        String[] separated = fromTime.split(" ");
+                        String runFromDate = separated[0];
+                        String runFromTime = separated[1];
+                        //  String strDateFormatTo = fromTime;
+                        SimpleDateFormat spf = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate = null;
+                        try {
+                            newDate = spf.parse(runFromDate);
+                            spf = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate = spf.format(newDate);
+                            System.out.println(runFromDate);
+
+                            String str_fromdate1[] = runFromDate.split("/");
+                            str_frommonth = str_fromdate1[0];
+                            str_fromdate = str_fromdate1[1];
+                            String str_fromtime[] = runFromDate.split(" ");
+                            str_timefrom = str_fromtime[1];
+                            Log.e("tag", "date2222-------->" + str_timefrom + str_frommonth + str_fromdate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
+                        String strDateFormat = runFromTime + "a";
+                        Log.e("tag", "date-------->" + runFromTime);
+                        try {
+                            Date dt = parseFormat.parse(strDateFormat);
+                            System.out.println(outputFormat.format(dt));
+                            str_fromtime = (outputFormat.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+
+                    try {
+                        String[] separated1 = toTime.split(" ");
+                        String runFromDate1 = separated1[0];
+                        String runFromTime1 = separated1[1];
+                        SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                        Date newDate1 = null;
+                        try {
+                            newDate1 = spf1.parse(runFromDate1);
+                            spf1 = new SimpleDateFormat("MMM/dd/yyyy EEE");
+                            runFromDate1 = spf1.format(newDate1);
+                            Log.e("tag", "date-------->" + runFromDate1);
+                            String str_fromdate12[] = runFromDate1.split("/");
+                            str_tomonth = str_fromdate12[0];
+                            str_todate = str_fromdate12[1];
+                            String str_totime[] = runFromDate1.split(" ");
+                            str_timeto = str_totime[1];
+                            Log.e("tag", "date2222-------->" + str_timeto);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat outputFormat1 = new SimpleDateFormat("KK:mma");
+                        SimpleDateFormat parseFormat1 = new SimpleDateFormat("hh:mm");
+                        String strDateFormat1 = runFromTime1 + "a";
+                        Log.e("tag", "date-------->" + runFromTime1);
+
+                        try {
+                            Date dt = parseFormat1.parse(strDateFormat1);
+                            System.out.println(outputFormat1.format(dt));
+                            str_totime = (outputFormat1.format(dt));
+                            Log.e("tag", "todate-------->" + outputFormat1.format(dt));
+                        } catch (ParseException exc) {
+                            exc.printStackTrace();
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+
+                    }
+                    try {
+                        if (str_frommonth.equals(str_tomonth)) {
+                            socialVH.month_tv.setText(str_frommonth);
+                        } else {
+                            socialVH.month_tv.setText(str_frommonth + " to " + str_tomonth);
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
+
+                    // date_tv.setText(str_fromdate + "-" + str_todate);
+                    socialVH.time_tv.setText(str_fromtime + "-" + str_totime);
+                    try {
+                        from = Integer.parseInt(str_fromdate);
+                        to = Integer.parseInt(str_todate);
+                    } catch (NumberFormatException e) {
+
+                    }
+
+                    if (from == 01) {
+                        str_fromdate = str_fromdate + "st";
+                    } else if (from == 02) {
+                        str_fromdate = str_fromdate + "nd";
+                    } else if (from == 03) {
+                        str_fromdate = str_fromdate + "rd";
+                    } else {
+                        str_fromdate = str_fromdate + "th";
+                    }
+                    if (to == 01) {
+                        str_todate = str_todate + "st";
+                        //date_tv.setText("");
+                        socialVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 02) {
+                        str_todate = str_todate + "nd";
+                        //  date_tv.setText("");
+                        socialVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else if (to == 03) {
+                        str_todate = str_todate + "rd";
+                        //date_tv.setText("");
+                        socialVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    } else {
+                        str_todate = str_todate + "th";
+                        //date_tv.setText("");
+                        socialVH.date_tv.setText(str_timefrom + " " + str_fromdate + "-" + str_timeto + " " + str_todate);
+                    }
+                } else {
+                    socialVH.runttime_lv.setVisibility(View.GONE);
+                }
+
+
                 break;
 
             case BUSINESS:
@@ -2109,8 +3030,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 businessVH.sendinvite_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Doc doc = docs.get(position);
                         Intent intent = new Intent(context, EventInviteActivity.class);
+                        Log.e("tag", "11111111111" + doc.getId());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId", doc.getId());
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
+                        sharedPrefces = PreferenceManager.getDefaultSharedPreferences(context);
+                        edit = sharedPrefces.edit();
+                        edit.putString("eventId", doc.getId());
+                        edit.putString("feedstatus", "allevents");
+                        edit.commit();
                     }
                 });
 
@@ -2141,20 +3072,23 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Glide
                         .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                        .load(doc.getCoverpageurl())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                         .centerCrop()
                         .crossFade()
                         .into(businessVH.feedImageView);
 
 
-                Glide
-                        .with(context)
-                        .load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
-                        .centerCrop()
-                        .crossFade()
-                        .into(businessVH.highlight1_iv);
+                if (doc.getWowtagvideothumb() != null && !doc.getWowtagvideothumb().equals("null")) {
+                    //    privateVH.wowtagvideo.setVisibility(View.VISIBLE);
+                    Glide
+                            .with(context)
+                            .load(doc.getWowtagvideothumb())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
+                            .centerCrop()
+                            .crossFade()
+                            .into(businessVH.wowtagvideo);
+                }
 
 
                 //-------------------------EVENT NAME---------------------------------------------//
@@ -2309,10 +3243,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         });
 
-                        if (doc.getWowtagvideo() != null && !doc.getWowtagvideo().equals("null")) {
+                        if (doc.getWowtagvideourl() != null && !doc.getWowtagvideourl().equals("null")) {
                             dialog.show();
                             businessVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getWowtagvideo()));
+                            videoView.setVideoURI(Uri.parse(doc.getWowtagvideourl()));
                             videoView.start();
                         } else {
                             businessVH.video3plus.setVisibility(View.INVISIBLE);
@@ -2341,13 +3275,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         VideoView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlightsvideo1() != null && !doc.getEventhighlightsvideo1().equals("null")) {
+                        if (doc.getEventhighlights2url() != null && doc.getEventhighlights2url() != null) {
                             dialog.show();
-                            businessVH.video3plus.setVisibility(View.VISIBLE);
-                            videoView.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlightsvideo1()));
+                            PrivateVH.video3plus.setVisibility(View.VISIBLE);
+                            videoView.setVideoURI(Uri.parse(doc.getEventhighlights2url()));
                             videoView.start();
                         } else {
-                            businessVH.video3plus.setVisibility(View.INVISIBLE);
+                            PrivateVH.video3plus.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -2371,8 +3305,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getEventhighlights1() != null && !doc.getEventhighlights1().equals("null")) {
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getEventhighlights1())
+                        if (doc.getEventhighlights1url() != null && !doc.getEventhighlights1url().equals("null")) {
+                            Glide.with(context).load(doc.getEventhighlights1url())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -2403,9 +3337,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
 
                         ImageView videoView = dialog.findViewById(R.id.video_view);
-                        if (doc.getCoverpage() != null && !doc.getCoverpage().equals("null")) {
+                        if (doc.getCoverpageurl() != null && !doc.getCoverpageurl().equals("null")) {
 
-                            Glide.with(context).load("http://104.197.80.225:3010/wow/media/event/" + doc.getCoverpage())
+                            Glide.with(context).load(doc.getCoverpageurl())
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)   // cache both original & resized image
                                     .centerCrop()
                                     .crossFade()
@@ -2439,8 +3373,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
 
-                        if (doc.getWowtagvideo() != null) {
-                            bundle.putString("wowtagvideo", doc.getWowtagvideo());
+                        if (doc.getWowtagvideourl() != null) {
+                            bundle.putString("wowtagvideo", doc.getWowtagvideourl());
                         }
 
                         if (doc.getEventhighlights1() != null) {
@@ -2451,8 +3385,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             bundle.putString("highlight2", doc.getEventhighlightsvideo1());
                         }
 
-                        if (doc.getCoverpage() != null) {
-                            bundle.putString("coverpage", doc.getCoverpage());
+                        if (doc.getCoverpageurl() != null) {
+                            bundle.putString("coverpage", doc.getCoverpageurl());
                         }
 
                         if (doc.getEventname() != null) {
@@ -2519,6 +3453,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
+
+
                 break;
 
 
@@ -2542,6 +3478,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (s) {
             case 0:
                 return THOUGHT;
+
 
             case 1:
                 return PRIVATE;
@@ -2638,11 +3575,78 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return docs.get(position);
     }
 
+    public void filter(String charText) {
+
+        charText = charText.toLowerCase(Locale.getDefault());
+        Log.e("tag", "FILTERRRRR--->>>>" + charText);
+        for (int i = 0; i < filtercontactsList.size(); i++) {
+            if (filtercontactsList.get(i).getEventname().contains(charText)) {
+                Log.e("tag", "FILTERRRRR--->>>>" + charText);
+
+                docs.clear();
+                //  filtercontactsList.add(filtercontactsList.get(i).getEventname());
+
+            }
+        }
+        //docs.clear();
+       /* if (charText.length() == 0) {
+            docs.addAll(docs);
+        } else {
+            for (Doc contact : filtercontactsList) {
+                Log.e("tag", "FILTERRRRR111111--->>>>" + contact.getEventname());
+
+                if (charText.length() != 0 && contact.getEventname().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    Log.e("tag", "FILTERRRRR111111" + contact.getEventname());
+                    docs.add(contact);
+                } else if (charText.length() != 0 && contact.getEventname().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    docs.add(contact);
+                }
+            }
+        }*/
+        notifyDataSetChanged();
+    }
+
+    public void setFilter(List<Doc> countryModels) {
+        docs = new ArrayList<>();
+        Log.e("tag", "ITEMMMMMMtdocsssssss" + countryModels);
+
+        docs.addAll(countryModels);
+
+
+        notifyDataSetChanged();
+    }
+
+    public void setMoreDataAvailable(boolean moreDataAvailable) {
+        isMoreDataAvailable = moreDataAvailable;
+    }
+
+    /* notifyDataSetChanged is final method so we can't override it
+         call adapter.notifyDataChanged(); after update the list
+         */
+    public void notifyDataChanged() {
+        notifyDataSetChanged();
+        isLoading = false;
+    }
+
+    public void setLoadMoreListener(OnLoadMoreListener loadMoreListener) {
+        this.loadMoreListener = loadMoreListener;
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    static class LoadHolder extends RecyclerView.ViewHolder {
+        public LoadHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
     protected static class PrivateVH extends RecyclerView.ViewHolder {
 
         private static ImageView video3plus;
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
-        private TextView sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
+        private TextView rsvptv, sendinvite_tv, timestamp, eventname_tv, name, desc, share, menu_tv, comments, eventtopic_tv, otherurl_tv, eventaddress_tv, month_tv, date_tv, time_tv;
         private ImageView profilePic;
         private ImageView feedImageView, wowtagvideo, highlight1_iv, highlight2_iv;
         private ImageView video1plus;
@@ -2659,7 +3663,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             desc = (TextView) itemView.findViewById(R.id.desc_tv);
             profilePic = (ImageView) itemView.findViewById(R.id.imageview_profile);
             feedImageView = (ImageView) itemView.findViewById(R.id.feedImage1);
-
+            rsvptv = itemView.findViewById(R.id.rsvptv);
             wowsome_tv = itemView.findViewById(R.id.wowsome_tv);
             menu_tv = itemView.findViewById(R.id.menu_tv);
             eventcategory_tv = itemView.findViewById(R.id.eventcategory_tv);
@@ -2754,9 +3758,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public QuickVH(View itemView) {
             super(itemView);
-
             name = (TextView) itemView.findViewById(R.id.hoster_name);
-
             timestamp = (TextView) itemView.findViewById(R.id.timestamp);
             desc = (TextView) itemView.findViewById(R.id.desc_tv);
             profilePic = (ImageView) itemView.findViewById(R.id.imageview_profile);
@@ -2780,7 +3782,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             video3plus = itemView.findViewById(R.id.video1plus_iv);
             frameLayout = itemView.findViewById(R.id.framevideo1);
             wowtagvideo = itemView.findViewById(R.id.video0_iv);
-
 
         }
     }
@@ -2837,7 +3838,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-
     protected class SocialVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
@@ -2890,7 +3890,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-
     protected class BusinessVH extends RecyclerView.ViewHolder {
 
         TextView viewmore_tv, viewcomments, viewshare, wowsome_tv, viewwowsome, eventcategory_tv;
@@ -2924,7 +3923,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             menu_tv = itemView.findViewById(R.id.menu_tv);
 
             month_tv = itemView.findViewById(R.id.month_tv);
-            date_tv = itemView.findViewById(R.id.date_tv);
+            //date_tv = itemView.findViewById(R.id.date_tv);
             time_tv = itemView.findViewById(R.id.time_tv);
             runttime_lv = itemView.findViewById(R.id.runtimelv);
 
@@ -2990,6 +3989,60 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         String wowsomestr = message.getString("wowsome");
                         wowsomecount = jo.getString("wowsomes");
                         Log.e("tag", "wowsomestr-------->" + wowsomecount);
+                    }
+
+                } catch (JSONException e) {
+
+                }
+
+            } else {
+            }
+
+        }
+
+
+    }
+    private class addThoughtsWowsome extends AsyncTask<String, Void, String> {
+        String eventId;
+
+        public addThoughtsWowsome(String eventId) {
+            this.eventId = eventId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("thoughtid", eventId);
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/postthoughtscomment", json, token);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "RESSSSSSS-------->" + s.toString());
+
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    String status = jo.getString("success");
+                    if (status.equals("true")) {
+                        JSONObject message = jo.getJSONObject("message");
+                      //  String wowsomestr = message.getString("comments");
+                        wowsomecount = jo.getString("commentcount");
+                        Log.e("tag", "wowsomestr-------->" + wowsomecount);
+                      //  notifyDataChanged();
                     }
 
                 } catch (JSONException e) {
@@ -3279,5 +4332,57 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
+    private class postRSVP extends AsyncTask<String, Void, String> {
+        String eventId;
 
+        public postRSVP(String eventId) {
+            this.eventId = eventId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loader_dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("eventid", eventId);
+                jsonObject.accumulate("extra", str_eventday);
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/postrsvp", json, token);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "RESSSSSSS-------->" + s.toString());
+            loader_dialog.dismiss();
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    String status = jo.getString("success");
+                    if (status.equals("true")) {
+                        // JSONObject message = jo.getJSONObject("message");
+                        Toast.makeText(context, "Succesfully Register", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+
+                }
+
+            } else {
+            }
+
+        }
+
+
+    }
 }

@@ -9,11 +9,11 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/_10sdp"
@@ -21,7 +21,14 @@
             android:gravity="center"
             android:text="Invite to Specific Group"
             android:textColor="@color/textcolr"
+            android:layout_weight="1"
             android:textSize="@dimen/_15sdp" />
+        <ImageView
+            android:id="@+id/closeiv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:src="@drawable/close_round"/>
 
     </LinearLayout>
 
@@ -37,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:fadeScrollbars="false"
             android:choiceMode="singleChoice" />
     </LinearLayout>
 
@@ -55,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/btnbg_curve"
+            android:background="@drawable/curve_btnbg"
             android:gravity="center"
             android:paddingBottom="@dimen/_7sdp"
             android:paddingLeft="@dimen/_16sdp"

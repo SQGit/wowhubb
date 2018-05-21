@@ -15,11 +15,12 @@ import android.view.ViewGroup;
 
 import com.wang.avi.AVLoadingIndicatorView;
 import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.Fragment.DayFragment;
-import com.wowhubb.Fragment.ProgramScheduleFragmentNew;
+import com.wowhubb.Nearbyeventsmodule.Database_Helper.DatabaseHandler;
+import com.wowhubb.Nearbyeventsmodule.Model.ScheduleEventModelPojo;
 import com.wowhubb.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ScheduleInnerEventFragment extends Fragment {
@@ -28,7 +29,7 @@ public class ScheduleInnerEventFragment extends Fragment {
     AVLoadingIndicatorView av_loader;
     private ArrayList<ScheduleEventModelPojo> staticArrayListforschedule=new ArrayList<>();
     ScheduleInnerEventAdapter scheduleInnerEventAdapter;
-
+    ScheduleEventModelPojo dbscheduleEventModelPojo;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -53,41 +54,10 @@ public class ScheduleInnerEventFragment extends Fragment {
         recycler_eventhighlight = (RecyclerView) view.findViewById(R.id.recycler_eventhighlight);
         av_loader = (AVLoadingIndicatorView)view. findViewById(R.id.avi);
 
-        //load static data to method:
-        loadStaticEventsHighlights();
-
-
-
         //call NearbyEvents Separete Activity Asynctask:
         new callEventHighlights().execute();
-
-
         return view;
     }
-
-    /**
-     * Parsing json reponse and passing the data to feed view list adapter
-     */
-
-
-    private void loadStaticEventsHighlights() {
-        ScheduleEventModelPojo item1, item2, item3;
-
-        staticArrayListforschedule.clear();
-
-        item1 = new ScheduleEventModelPojo("7:00AM- 8:00AM", "Welcome Registration", "Floyer Counter","");
-        staticArrayListforschedule.add(item1);
-
-
-        item2 = new ScheduleEventModelPojo("8:00AM- 9:00AM", "BBQ- Breakfast", "Elex Young","");
-        staticArrayListforschedule.add(item2);
-
-        item3 = new ScheduleEventModelPojo("10:00AM- 11:00AM", "Fashion Catwalk1", "Organizer","");
-        staticArrayListforschedule.add(item3);
-
-    }
-
-
 
     private class callEventHighlights extends AsyncTask<String,String,String> {
 
@@ -109,22 +79,31 @@ public class ScheduleInnerEventFragment extends Fragment {
         protected void onPostExecute(String jsonstr) {
             av_loader.setVisibility(View.GONE);
             super.onPostExecute(jsonstr);
-            Log.e("tag","POST EXECUTE"+staticArrayListforschedule.size());
 
+            DatabaseHandler db = new DatabaseHandler(getActivity());
+            staticArrayListforschedule.clear();
+            List<ScheduleEventModelPojo> list = db.getNearbyEventSchedule();
 
+            Log.e("tag","View Details"+list.size());
 
-            for (int i1 = 0; i1 < staticArrayListforschedule.size(); i1++) {
+            for (int i = 0; i < list.size(); i++) {
+                dbscheduleEventModelPojo = list.get(i);
+                Log.e("tag", " ADAAV1" + dbscheduleEventModelPojo.eventInnerTime);
+                Log.e("tag", " ADAAV2" + dbscheduleEventModelPojo.eventInnerWho);
+                Log.e("tag", " ADAAV3" + dbscheduleEventModelPojo.eventInnerEvent);
+                Log.e("tag", " ADAAV4" + dbscheduleEventModelPojo.eventInnerWhere);
 
+                staticArrayListforschedule.add(dbscheduleEventModelPojo);
+            }
 
                 scheduleInnerEventAdapter = new ScheduleInnerEventAdapter(getActivity(), staticArrayListforschedule);
                 recycler_eventhighlight.setAdapter(scheduleInnerEventAdapter);
                 scheduleInnerEventAdapter.notifyDataSetChanged();
                 recycler_eventhighlight.setLayoutManager(new LinearLayoutManager(getActivity()));
-
             }
 
         }
 
     }
 
-}
+

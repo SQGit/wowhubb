@@ -1,9 +1,9 @@
 package com.wowhubb.Activity;
 
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -57,6 +58,7 @@ import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.GetFilePathFromDevice;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
+import com.wowhubb.Utils.Utils;
 import com.wowhubb.data.EventData;
 
 import org.apache.commons.io.IOUtils;
@@ -75,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+
 /**
  * Created by Salman on 01-03-2018.
  */
@@ -91,7 +94,7 @@ public class QuickCreateEvent extends Activity {
     public static String date, str_category, str_eventday, strDateFormat1, strDateFormat2;
     public static TextInputLayout til_eventtimeto, til_eventtime, til_event_spn, til_desc, til_spincategory, til_spindays, eventdate_til, eventtopic_til, eventaddcategory_til, eventtimezone_til, eventdateto_til;
     public static String selectedVideoFilePath1;
-    public static AutoCompleteTextView eventtimezone_et;
+     static AutoCompleteTextView eventtimezone_et;
     public static Calendar selectedCal, selectedCalto, wowtagfrom, wowtagto;
     public static FrameLayout framestart, frameend;
     public static ScrollView scrollView;
@@ -103,7 +106,7 @@ public class QuickCreateEvent extends Activity {
     LinearLayout layout_eventdate, layout_eventdateto, nextlv;
     LinearLayout fromlv, tolv, layout_fromtime, layout_totime, layout_runfromdate, layout_runtodate, backiv;
     TextView txt_fromgallery, txt_takevideo;
-    EditText eventstarttime, eventendtime, fromtime_tv, totime_tv;
+    EditText eventstarttime, eventendtime;
     Typeface lato;
     TextView helpfultips_tv, publishtv;
     SharedPreferences sharedPrefces;
@@ -116,17 +119,10 @@ public class QuickCreateEvent extends Activity {
     HashMap<String, List<String>> expandableListDetail;
     FrameLayout framevideo1;
     DatePicker datePicker, dp;
-    int strdayscounrt;
     CheckBox onlineevent_cb;
-    TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
-
-        @Override
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            String time1 = String.valueOf(hour) + ":" + String.valueOf(minute);
-        }
-    };
     String[] EVENTLIST = {"Webinar", "Teleconference", "Podcast"};
-
+    String eventstartdate, eventenddate, eventstart, eventend;
+    int hour, min, hoursto, minto;
     private Uri fileUri, videoUri;
 
     public static String getFilePathFromURI(Context context, Uri contentUri) {
@@ -220,7 +216,7 @@ public class QuickCreateEvent extends Activity {
         edit = sharedPrefces.edit();
         token = sharedPrefces.getString("token", "");
         edit.putString("onlinestatus", "false");
-        edit.commit();
+        edit.apply();
 
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(QuickCreateEvent.this, v1);
@@ -240,10 +236,9 @@ public class QuickCreateEvent extends Activity {
 
         til_desc = findViewById(R.id.til_eventdesc);
         scrollView = findViewById(R.id.scrollView);
-        fromtime_tv = findViewById(R.id.eventdate);
-        totime_tv = findViewById(R.id.eventdateto_et);
-        fromlv = (LinearLayout) findViewById(R.id.fromlv);
-        tolv = (LinearLayout) findViewById(R.id.tolv);
+
+        fromlv =  findViewById(R.id.fromlv);
+        tolv = findViewById(R.id.tolv);
         eventstarttime = findViewById(R.id.eventstarttime);
         eventendtime = findViewById(R.id.eventendtime);
         runfromtime_tv = findViewById(R.id.runfromtv);
@@ -257,7 +252,7 @@ public class QuickCreateEvent extends Activity {
         framevideo1 = findViewById(R.id.framevideo1);
         tickiv = findViewById(R.id.tickiv);
         eventname_et = findViewById(R.id.eventtitle_et);
-        video0_iv = (ImageView) findViewById(R.id.video0_iv);
+        video0_iv = findViewById(R.id.video0_iv);
         video1plus = findViewById(R.id.video1plus_iv);
         publishtv = findViewById(R.id.publishtv);
         wowtagfrom = Calendar.getInstance();
@@ -323,11 +318,11 @@ public class QuickCreateEvent extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.e("tag", "11111-------" + isChecked);
                 if (isChecked) {
-                    Log.e("tag", "111112222222-------" + isChecked);
+
                     SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor edit = sharedPrefces.edit();
                     edit.putString("onlinestatus", "true");
-                    edit.commit();
+                    edit.apply();
                     comments_dialog = new Dialog(QuickCreateEvent.this);
                     comments_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     comments_dialog.setContentView(R.layout.dialog_onlineevent);
@@ -351,7 +346,7 @@ public class QuickCreateEvent extends Activity {
                             edit.putString("webinar_link", webinarlink_et.getText().toString().trim());
                             edit.putString("str_tele_phone", telephone_et.getText().toString().trim());
                             edit.putString("str_tele_passcode", telepasscode_et.getText().toString().trim());
-                            edit.commit();
+                            edit.apply();
                         }
                     });
 
@@ -366,7 +361,7 @@ public class QuickCreateEvent extends Activity {
                     TextInputLayout til_webinar_link = comments_dialog.findViewById(R.id.til_webinar_link);
                     TextInputLayout til_telecon_phone = comments_dialog.findViewById(R.id.til_telecon_phone);
                     TextInputLayout til_passcode = comments_dialog.findViewById(R.id.til_passcode);
-                    event_spn = (MaterialBetterSpinner) comments_dialog.findViewById(R.id.category_spn);
+                    event_spn = comments_dialog.findViewById(R.id.category_spn);
 
                     FontsOverride.overrideFonts(comments_dialog.getContext(), v2);
 
@@ -447,12 +442,11 @@ public class QuickCreateEvent extends Activity {
 
 
                 } else {
-                    Log.e("tag", "11111333333333-------" + isChecked);
                     comments_dialog.dismiss();
                     SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor edit = sharedPrefces.edit();
                     edit.putString("onlinestatus", "false");
-                    edit.commit();
+                    edit.apply();
                 }
 
             }
@@ -471,62 +465,87 @@ public class QuickCreateEvent extends Activity {
                                 eventtimezone_til.setError(null);
                                 if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
                                     eventdate_til.setError(null);
-                                    if (!eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                        eventname_et.setError(null);
-                                        if (selectedVideoFilePath1 != null) {
-                                            if (!runfromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                                                til_from.setError(null);
-                                                if (!runtotime_tv.getText().toString().trim().equalsIgnoreCase("")) {
-                                                    til_to.setError(null);
-                                                    Log.e("tag", "hgchgxc");
-                                                    SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                                    SharedPreferences.Editor edit = sharedPrefces.edit();
-                                                    edit.putString("str_eventtopic", eventtopic_et.getText().toString().trim());
-                                                    edit.putString("str_category", str_category);
-                                                    edit.putString("str_eventday", str_eventday);
-                                                    edit.putString("str_desc", eventdesc_et.getText().toString().trim());
-                                                    edit.putString("str_city", eventtimezone_et.getText().toString().trim());
-                                                    edit.putString("str_eventname", eventname_et.getText().toString().trim());
-                                                    edit.putString("str_wowtag", selectedVideoFilePath1);
-                                                    edit.putString("str_startdate", "");
-                                                    edit.putString("str_enddate", "");
-                                                    edit.putString("str_runfrom", "");
-                                                    edit.putString("str_runto", "");
-                                                    edit.commit();
-                                                    startActivity(new Intent(QuickCreateEvent.this, QuickCreateEventVenues.class));
-                                                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                    if (!eventdateto_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                        if (!eventstarttime.getText().toString().trim().equalsIgnoreCase("")) {
 
+                                            if (!eventendtime.getText().toString().trim().equalsIgnoreCase("")) {
+
+                                                if (!eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                                eventname_et.setError(null);
+                                                if (selectedVideoFilePath1 != null) {
+                                                    if (!runfromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                                        til_from.setError(null);
+                                                        if (!runtotime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                                                            til_to.setError(null);
+                                                            Log.e("tag", "hgchgxc");
+                                                            SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                            SharedPreferences.Editor edit = sharedPrefces.edit();
+                                                            edit.putString("str_eventtopic", eventtopic_et.getText().toString().trim());
+                                                            edit.putString("str_category", str_category);
+                                                            edit.putString("str_eventday", str_eventday);
+                                                            edit.putString("str_desc", eventdesc_et.getText().toString().trim());
+                                                            edit.putString("str_city", eventtimezone_et.getText().toString().trim());
+                                                            edit.putString("str_eventname", eventname_et.getText().toString().trim());
+                                                            edit.putString("str_wowtag", selectedVideoFilePath1);
+                                                            edit.putString("str_startdate", eventstartdate + " " + eventstart);
+                                                            edit.putString("str_enddate", eventenddate + " " + eventend);
+                                                            edit.putString("str_runfrom", "");
+                                                            edit.putString("str_runto", "");
+                                                            edit.apply();
+                                                            startActivity(new Intent(QuickCreateEvent.this, QuickCreateEventVenues.class));
+                                                            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+
+                                                        } else {
+                                                            SpannableString s = new SpannableString("Select Run To Date");
+                                                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                            Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                                                        }
+
+                                                    } else {
+                                                        SpannableString s = new SpannableString("Select Run From Date");
+                                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                        Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                                                    }
                                                 } else {
-                                                    SpannableString s = new SpannableString("Select End Date");
+                                                    SpannableString s = new SpannableString("Select Wowtag Video");
                                                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                    til_to.setError(s);
+                                                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                                                 }
 
+
                                             } else {
-                                                SpannableString s = new SpannableString("Select Start Date");
+                                                SpannableString s = new SpannableString("Enter Event Title");
                                                 s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                til_from.setError(s);
+                                                eventname_et.setError(s);
+                                                eventname_et.requestFocus();
+                                            }
+                                            } else {
+                                                SpannableString s = new SpannableString("Select Event End Time");
+                                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
                                             }
                                         } else {
-                                            SpannableString s = new SpannableString("Select Wowtag Video");
+                                            SpannableString s = new SpannableString("Select Event Start Time");
                                             s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
                                         }
                                     } else {
-                                        SpannableString s = new SpannableString("Enter Event Title");
+                                        SpannableString s = new SpannableString("Select Event End Date");
                                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        eventname_et.setError(s);
-                                        eventname_et.requestFocus();
+                                        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
                                     }
-
-
                                 } else {
                                     SpannableString s = new SpannableString("Select Event Start Date");
                                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    eventdate_til.setError(s);
+                                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
 
                                 }
+
+
 
                             } else {
 
@@ -548,7 +567,8 @@ public class QuickCreateEvent extends Activity {
                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                     }
-                } else {
+                }
+                else {
                     SpannableString s = new SpannableString("Enter Event Name");
                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     eventtopic_til.setError(s);
@@ -567,12 +587,16 @@ public class QuickCreateEvent extends Activity {
             @Override
             public void onClick(View view) {
 
+                if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                    if (!eventdateto_et.getText().toString().trim().equalsIgnoreCase("")) {
                 ctimedialog = new Dialog(QuickCreateEvent.this);
                 ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 ctimedialog.setContentView(R.layout.dialog_customtime);
                 View v1 = ctimedialog.getWindow().getDecorView().getRootView();
 
                 final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
+
+                //dp.setIs24HourView(true);
                 TextView ok = ctimedialog.findViewById(R.id.oktv);
                 TextView cancel = ctimedialog.findViewById(R.id.canceltv);
 
@@ -582,7 +606,7 @@ public class QuickCreateEvent extends Activity {
                 ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) ctimedialog).getWindow();
+                        Window view1 = ctimedialog.getWindow();
 
                     }
                 });
@@ -597,8 +621,8 @@ public class QuickCreateEvent extends Activity {
                 ok.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
 
-                        int hour = 0;
-                        int min = 0;
+                        hour = 0;
+                        min = 0;
 
                         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
                         if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -614,59 +638,151 @@ public class QuickCreateEvent extends Activity {
                     }
                 });
                 ctimedialog.show();
+                    } else {
+                        SpannableString s = new SpannableString("Select Event End Date");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    SpannableString s = new SpannableString("Select Event Start Date");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
+
+                }
+
             }
         });
-
+// function
+        // purpose
+        // creaqted date:
+        // altered date;  pupose:
         layout_totime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ctimedialog = new Dialog(QuickCreateEvent.this);
-                ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                ctimedialog.setContentView(R.layout.dialog_customtime);
-                View v1 = ctimedialog.getWindow().getDecorView().getRootView();
+                if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                    if (!eventdateto_et.getText().toString().trim().equalsIgnoreCase("")) {
+                        if (!eventstarttime.getText().toString().trim().equalsIgnoreCase("")) {
+                            ctimedialog = new Dialog(QuickCreateEvent.this);
+                            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            ctimedialog.setContentView(R.layout.dialog_customtime);
+                            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
 
-                final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
-                TextView ok = ctimedialog.findViewById(R.id.oktv);
-                TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+                            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
+                            TextView ok = ctimedialog.findViewById(R.id.oktv);
+                            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+                            dp.setIs24HourView(false);
 
-                FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
+                            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
+
+                            try {
+                                if (eventstartdate.equals(eventenddate)) {
+                                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                        dp.setHour(hour);
+                                        dp.setMinute(min);
+
+                                    } else {
+                                        dp.setCurrentHour(hour);
+                                        dp.setCurrentMinute(min);
+
+                                    }
+                                }
+                            }
+                            catch (NullPointerException e)
+                            {
+                                Log.e("tag","exc"+e.toString());
+
+                            }
 
 
-                ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) ctimedialog).getWindow();
+                            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                @Override
+                                public void onShow(DialogInterface dialogInterface) {
+                                    Window view1 = ((Dialog) ctimedialog).getWindow();
 
-                    }
-                });
+                                }
+                            });
 
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        ctimedialog.dismiss();
-                    }
-                });
+                            cancel.setOnClickListener(new View.OnClickListener() {
+                                public void onClick(View view) {
+                                    ctimedialog.dismiss();
+                                }
+                            });
 
 
-                ok.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
+                            ok.setOnClickListener(new View.OnClickListener() {
+                                public void onClick(View view) {
 
-                        int hour = 0;
-                        int min = 0;
+                                    hoursto = 0;
+                                    minto = 0;
+                                    eventendtime.setText("");
+                                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                                    try {
+                                    if (eventstartdate.equals(eventenddate)) {
+                                        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                            hoursto = dp.getHour();
+                                            minto = dp.getMinute();
+                                            double s = hoursto + (0.0 + minto);
+                                            double s1 = hour + (0.0 + min);
+                                            if (s > s1) {
+                                                populateSetTimeTo(hoursto, minto);
+                                            }
 
-                        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-                        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                            hour = dp.getHour();
-                            min = dp.getMinute();
+
+                                        } else {
+                                            hoursto = dp.getCurrentHour();
+                                            minto = dp.getCurrentMinute();
+                                            double s = hoursto + (0.0 + minto);
+                                            double s1 = hour + (0.0 + min);
+                                            if (s > s1) {
+                                                populateSetTimeTo(hoursto, minto);
+                                            }
+                                        }
+                                    } else {
+                                        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                            hoursto = dp.getHour();
+                                            minto = dp.getMinute();
+                                            populateSetTimeTo(hoursto, minto);
+                                        } else {
+                                            hoursto = dp.getCurrentHour();
+                                            minto = dp.getCurrentMinute();
+                                            populateSetTimeTo(hoursto, minto);
+                                        }
+                                    }
+
+                                    }
+                                    catch (NullPointerException e)
+                                    {
+                                        Log.e("tag","exc"+e.toString());
+                                    }
+                                    ctimedialog.dismiss();
+
+
+                                }
+                            });
+                            ctimedialog.show();
                         } else {
-                            hour = dp.getCurrentHour();
-                            min = dp.getCurrentMinute();
-                        }
+                            SpannableString s = new SpannableString("Select Event Start Time");
+                            s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
-                        ctimedialog.dismiss();
-                        populateSetTimeTo(hour, min);
+                        }
+                    } else {
+                        SpannableString s = new SpannableString("Select Event End Date");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
                     }
-                });
-                ctimedialog.show();
+                } else {
+                    SpannableString s = new SpannableString("Select Event Start Date");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
+
+                }
+
             }
         });
 
@@ -687,7 +803,7 @@ public class QuickCreateEvent extends Activity {
                 cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) cdialog).getWindow();
+                        Window view1 = cdialog.getWindow();
                     }
                 });
                 cancel.setOnClickListener(new View.OnClickListener() {
@@ -719,46 +835,61 @@ public class QuickCreateEvent extends Activity {
         layout_eventdateto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                eventdateto_til.setError("");
-                cdialog = new Dialog(QuickCreateEvent.this);
-                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                cdialog.setContentView(R.layout.dialog_customcalendar);
-                View v1 = cdialog.getWindow().getDecorView().getRootView();
-                dp = cdialog.findViewById(R.id.datePicker);
-                TextView ok = cdialog.findViewById(R.id.oktv);
-                TextView cancel = cdialog.findViewById(R.id.canceltv);
-                FontsOverride.overrideFonts(cdialog.getContext(), v1);
-                dp.setMinDate(System.currentTimeMillis() - 1000);
-                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) cdialog).getWindow();
+                if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                    eventdate_til.setError(null);
+                    eventdateto_til.setError(null);
+                    cdialog = new Dialog(QuickCreateEvent.this);
+                    cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    cdialog.setContentView(R.layout.dialog_customcalendar);
+                    View v1 = cdialog.getWindow().getDecorView().getRootView();
+                    dp = cdialog.findViewById(R.id.datePicker);
+                    TextView ok = cdialog.findViewById(R.id.oktv);
+                    TextView cancel = cdialog.findViewById(R.id.canceltv);
+                    FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                    try {
+                        //long selectedMilli = wowtagfrom.getTimeInMillis();
+                        //    dp.setMinDate(selectedMilli - 1000);
+                        //  dp.setMinDate(System.currentTimeMillis() - 1000);
+                        long selectedMillisec = wowtagfrom.getTimeInMillis();
+                        dp.setMinDate(selectedMillisec - 1000);
+                    } catch (NullPointerException e) {
+                        Log.e("tag","exc"+e.toString());
                     }
-                });
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        cdialog.dismiss();
-                    }
-                });
 
-                ok.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        int day = dp.getDayOfMonth();
-                        int month = dp.getMonth();
-                        int year = dp.getYear();
-                        wowtagto = Calendar.getInstance();
-                        selectedCal.set(year, month, day);
-                        wowtagto.set(year, month, day);
-                        Log.e("tag", "values---------------------->>>>>>>" + day + month + year);
-                        populateSetDateTo(year, month + 1, day);
-                        cdialog.dismiss();
-                    }
-                });
-                cdialog.show();
+                    cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialogInterface) {
+                            Window view1 = cdialog.getWindow();
+                        }
+                    });
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            cdialog.dismiss();
+                        }
+                    });
+
+                    ok.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View view) {
+                            int day = dp.getDayOfMonth();
+                            int month = dp.getMonth();
+                            int year = dp.getYear();
+                            wowtagto = Calendar.getInstance();
+                            selectedCal.set(year, month, day);
+                            wowtagto.set(year, month, day);
+                            Log.e("tag", "values---------------------->>>>>>>" + day + month + year);
+                            populateSetDateTo(year, month + 1, day);
+                            cdialog.dismiss();
+                        }
+                    });
+                    cdialog.show();
 
 
+                } else {
+                    SpannableString s = new SpannableString("Select Event Start Date");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -777,7 +908,7 @@ public class QuickCreateEvent extends Activity {
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) dialog).getWindow();
+                        Window view1 = dialog.getWindow();
 
                     }
                 });
@@ -789,7 +920,7 @@ public class QuickCreateEvent extends Activity {
                     }
                 });
 
-                expandableListView = (ExpandableListView) dialog.findViewById(R.id.expandableListView);
+                expandableListView = dialog.findViewById(R.id.expandableListView);
                 expandableListDetail = ExpandableListDataPump.getData();
                 expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
                 expandableListAdapter = new ExpandableListAdapter(dialog.getContext(), expandableListTitle, expandableListDetail);
@@ -828,17 +959,17 @@ public class QuickCreateEvent extends Activity {
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) dialog).getWindow();
+                        Window view1 = dialog.getWindow();
                         view1.setBackgroundDrawableResource(R.drawable.border_bg);
                     }
                 });
-                txt_fromgallery = (TextView) dialog.findViewById(R.id.txt_fromgallery);
+                txt_fromgallery =  dialog.findViewById(R.id.txt_fromgallery);
                 //img_take_gallery = (ImageView) dialog.findViewById(R.id.img_take_gallery);
-                txt_takevideo = (TextView) dialog.findViewById(R.id.txt_takevideo);
+                txt_takevideo =  dialog.findViewById(R.id.txt_takevideo);
                 //img_take_video = (ImageView) dialog.findViewById(R.id.img_take_video);
-                ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
-                final LinearLayout lnr_video = (LinearLayout) dialog.findViewById(R.id.lnr_video);
-                final LinearLayout lnr_gallery = (LinearLayout) dialog.findViewById(R.id.lnr_gallery);
+                ImageView image =  dialog.findViewById(R.id.imageDialog);
+                final LinearLayout lnr_video = dialog.findViewById(R.id.lnr_video);
+                final LinearLayout lnr_gallery =  dialog.findViewById(R.id.lnr_gallery);
 
 
                 txt_fromgallery.setTextColor(Color.parseColor("#3c3c3c"));
@@ -867,7 +998,7 @@ public class QuickCreateEvent extends Activity {
                             intent.setType("video/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(Intent.createChooser(intent, "Select Video"), INTENT_REQUEST_GET_GALERYVIDEO1);
-                            Toast.makeText(QuickCreateEvent.this, "Please choose less than 2 mb video", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(QuickCreateEvent.this, "Please choose less than 2 mb video", Toast.LENGTH_LONG).show();
                         }
 
 
@@ -887,6 +1018,7 @@ public class QuickCreateEvent extends Activity {
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); // set the image file
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.putExtra("android.intent.extra.durationLimit", 120);
                                 startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO11);
                                 dialog.dismiss();
                             }
@@ -904,6 +1036,7 @@ public class QuickCreateEvent extends Activity {
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.putExtra("android.intent.extra.durationLimit", 120);
                                 startActivityForResult(intent, INTENT_REQUEST_GET_VIDEO1);
                                 dialog.dismiss();
                             }
@@ -923,7 +1056,6 @@ public class QuickCreateEvent extends Activity {
             public void onClick(View view) {
 
                 if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
-
                     runfromtime_tv.setError(null);
                     cdialog = new Dialog(QuickCreateEvent.this);
                     cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -944,14 +1076,14 @@ public class QuickCreateEvent extends Activity {
                         long selectedMillisec = wowtagto.getTimeInMillis();
                         dp.setMaxDate(selectedMillisec - 1000);
                     } catch (NullPointerException e) {
-
+                        Log.e("tag","exc"+e.toString());
                     }
 
 
                     cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
-                            Window view1 = ((Dialog) cdialog).getWindow();
+                            Window view1 = cdialog.getWindow();
 
                         }
                     });
@@ -980,7 +1112,7 @@ public class QuickCreateEvent extends Activity {
                 } else {
                     SpannableString s = new SpannableString("Select Event Start Date");
                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    eventdate_til.setError(s);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -989,57 +1121,73 @@ public class QuickCreateEvent extends Activity {
         layout_runtodate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                runtotime_tv.setError(null);
-                cdialog = new Dialog(QuickCreateEvent.this);
-                cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                cdialog.setContentView(R.layout.dialog_customcalendar);
-                View v1 = cdialog.getWindow().getDecorView().getRootView();
 
-                final DatePicker dp = cdialog.findViewById(R.id.datePicker);
-                TextView ok = cdialog.findViewById(R.id.oktv);
-                TextView cancel = cdialog.findViewById(R.id.canceltv);
+                if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
+                    if (!runfromtime_tv.getText().toString().trim().equalsIgnoreCase("")) {
+                        runfromtime_tv.setError(null);
+                        runtotime_tv.setError(null);
+                        cdialog = new Dialog(QuickCreateEvent.this);
+                        cdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        cdialog.setContentView(R.layout.dialog_customcalendar);
+                        View v1 = cdialog.getWindow().getDecorView().getRootView();
 
-                FontsOverride.overrideFonts(cdialog.getContext(), v1);
-                try {
-                    long selectedMilli = wowtagfrom.getTimeInMillis();
-                    dp.setMinDate(selectedMilli - 1000);
+                        final DatePicker dp = cdialog.findViewById(R.id.datePicker);
+                        TextView ok = cdialog.findViewById(R.id.oktv);
+                        TextView cancel = cdialog.findViewById(R.id.canceltv);
 
-                    long selectedMillisec = wowtagto.getTimeInMillis();
-                    dp.setMaxDate(selectedMillisec - 1000);
-                } catch (NullPointerException e) {
+                        FontsOverride.overrideFonts(cdialog.getContext(), v1);
+                        try {
+                            long selectedMilli = wowtagfrom.getTimeInMillis();
+                            dp.setMinDate(selectedMilli - 1000);
+
+                            long selectedMillisec = wowtagto.getTimeInMillis();
+                            dp.setMaxDate(selectedMillisec - 1000);
+                        } catch (NullPointerException e) {
+
+                            Log.e("tag","exc"+e.toString());
+                        }
+                        cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialogInterface) {
+                                Window view1 = cdialog.getWindow();
+
+                            }
+                        });
+
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cdialog.dismiss();
+                            }
+                        });
+
+
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View view) {
+                                ///cdialog.dismiss();
+                                int day = dp.getDayOfMonth();
+                                int month = dp.getMonth();
+                                int year = dp.getYear();
+                                runpopulateSetDateTo(year, month + 1, day);
+                                cdialog.dismiss();
+                            }
+                        });
+                        cdialog.show();
+                    } else {
+                        SpannableString s = new SpannableString("Select From Run Date");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    SpannableString s = new SpannableString("Select Event Start Date");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
                 }
-                cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) cdialog).getWindow();
-
-                    }
-                });
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        cdialog.dismiss();
-                    }
-                });
-
-
-                ok.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        ///cdialog.dismiss();
-                        int day = dp.getDayOfMonth();
-                        int month = dp.getMonth();
-                        int year = dp.getYear();
-                        runpopulateSetDateTo(year, month + 1, day);
-                        cdialog.dismiss();
-                    }
-                });
-                cdialog.show();
-
             }
         });
-        MaterialBetterSpinner materialDesignSpinner = (MaterialBetterSpinner) findViewById(R.id.category_spn);
+        MaterialBetterSpinner materialDesignSpinner =findViewById(R.id.category_spn);
         View view1 = materialDesignSpinner.getRootView();
         FontsOverride.overrideFonts(QuickCreateEvent.this, view1);
 
@@ -1137,11 +1285,15 @@ public class QuickCreateEvent extends Activity {
 
         try {
             newDate = spf.parse(strDateFormatTo);
+
             spf = new SimpleDateFormat("MMM/dd/yyyy");
+
             strDateFormatTo = spf.format(newDate);
             eventdate_et.setText(strDateFormatTo);
             eventdateto_et.setText("");
-
+            SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+            eventstartdate = spf1.format(newDate);
+            Log.e("tag", "new Date------>" + eventstartdate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -1158,8 +1310,9 @@ public class QuickCreateEvent extends Activity {
             strDateFormatTo = spf.format(newDate);
             eventdateto_et.setText(strDateFormatTo);
             Log.e("tag", "date------------>" + strDateFormatTo);
-
-
+            SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+            eventenddate = spf1.format(newDate);
+            Log.e("tag", "new Date------>" + eventenddate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -1171,7 +1324,7 @@ public class QuickCreateEvent extends Activity {
         Date newDate = null;
 
         String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
-
+        strDateFormat = strDateFormat + " a";
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
         SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
@@ -1181,6 +1334,7 @@ public class QuickCreateEvent extends Activity {
             System.out.println(outputFormat.format(dt));
             eventstarttime.setText("");
             eventstarttime.setText(outputFormat.format(dt));
+            eventstart = (outputFormat.format(dt));
 
 
         } catch (ParseException exc) {
@@ -1196,9 +1350,7 @@ public class QuickCreateEvent extends Activity {
         Date newDate = null;
 
         String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
-
         strDateFormat = strDateFormat + " a";
-
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("KK:mm a");
         SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm");
@@ -1206,10 +1358,10 @@ public class QuickCreateEvent extends Activity {
         try {
             Date dt = parseFormat.parse(strDateFormat);
             System.out.println(outputFormat.format(dt));
+
             eventendtime.setText("");
             eventendtime.setText(outputFormat.format(dt));
-
-
+            eventend = (outputFormat.format(dt));
         } catch (ParseException exc) {
             exc.printStackTrace();
         }
@@ -1263,7 +1415,7 @@ public class QuickCreateEvent extends Activity {
             ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialogInterface) {
-                    Window view1 = ((Dialog) ctimedialog).getWindow();
+                    Window view1 = ctimedialog.getWindow();
 
                 }
             });
@@ -1278,8 +1430,8 @@ public class QuickCreateEvent extends Activity {
 
             ok.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    int hour = 0;
-                    int min = 0;
+                     hour = 0;
+                     min = 0;
                     int currentApiVersion = android.os.Build.VERSION.SDK_INT;
                     if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
                         hour = dp.getHour();
@@ -1309,21 +1461,82 @@ public class QuickCreateEvent extends Activity {
                     Uri selectedMediaUri = data.getData();
                     selectedVideoFilePath1 = GetFilePathFromDevice.getPath(QuickCreateEvent.this, selectedMediaUri);
                     Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                    video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
-                    edit.putString("video1", selectedVideoFilePath1);
-                    edit.commit();
-                } catch (NullPointerException e) {
 
+                    MediaPlayer mp = new MediaPlayer();
+                    int duration = 0;
+                    try {
+                        mp.setDataSource(selectedVideoFilePath1);
+                        mp.prepare();
+                        duration = mp.getDuration();
+                    } catch (IOException e) {
+                        Log.e(Utils.class.getName(), e.getMessage());
+                    } finally {
+                        mp.release();
+                    }
+                    Log.e("tag", "duration------------->" + duration);
+                    Log.e("tag", "duration------------->" + duration / 1000);
+
+                    if ((duration / 1000) > 30) {
+                        video0_iv.setImageBitmap(null);
+                        video0_iv.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.dotted_square));
+                        video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.plus_icon));
+                        SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        // til_eventdays.setError(s);
+                        Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                            video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
+                            edit.putString("video1", selectedVideoFilePath1);
+                            edit.commit();
+
+
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    Log.e("tag","exc"+e.toString());
                 }
             } else {
 
                 selectedVideoFilePath1 = fileUri.getPath();
                 Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
-                edit.putString("video1", selectedVideoFilePath1);
-                edit.commit();
+
+                MediaPlayer mp = new MediaPlayer();
+                int duration = 0;
+                try {
+                    mp.setDataSource(selectedVideoFilePath1);
+                    mp.prepare();
+                    duration = mp.getDuration();
+                } catch (IOException e) {
+                    Log.e(Utils.class.getName(), e.getMessage());
+                } finally {
+                    mp.release();
+                }
+                Log.e("tag", "duration------------->" + duration);
+                Log.e("tag", "duration------------->" + duration / 1000);
+                if ((duration / 1000) > 120) {
+                    video0_iv.setImageBitmap(null);
+                    video0_iv.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.dotted_square));
+                    video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.plus_icon));
+                    SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    // til_eventdays.setError(s);
+                    Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+
+
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 
             }
@@ -1334,24 +1547,82 @@ public class QuickCreateEvent extends Activity {
                     Uri selectedMediaUri = videoUri;
                     selectedVideoFilePath1 = getFilePathFromURI(QuickCreateEvent.this, selectedMediaUri);
                     Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                    video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
-                    edit.putString("video1", selectedVideoFilePath1);
-                    edit.commit();
-                } catch (NullPointerException e) {
 
+                    MediaPlayer mp = new MediaPlayer();
+                    int duration = 0;
+                    try {
+                        mp.setDataSource(selectedVideoFilePath1);
+                        mp.prepare();
+                        duration = mp.getDuration();
+                    } catch (IOException e) {
+                        Log.e(Utils.class.getName(), e.getMessage());
+                    } finally {
+                        mp.release();
+                    }
+                    Log.e("tag", "duration------------->" + duration);
+                    Log.e("tag", "duration------------->" + duration / 1000);
+                    if ((duration / 1000) > 120) {
+                        video0_iv.setImageBitmap(null);
+                        video0_iv.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.dotted_square));
+                        video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.plus_icon));
+                        SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        // til_eventdays.setError(s);
+                        Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                            video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
+                            edit.putString("video1", selectedVideoFilePath1);
+                            edit.commit();
+
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    Log.e("tag","exc"+e.toString());
                 }
             } else {
                 try {
                     Uri selectedMediaUri = data.getData();
                     selectedVideoFilePath1 = GetFilePathFromDevice.getPath(QuickCreateEvent.this, selectedMediaUri);
                     Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                    video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
-                    edit.putString("video1", selectedVideoFilePath1);
-                    edit.commit();
+                    MediaPlayer mp = new MediaPlayer();
+                    int duration = 0;
+                    try {
+                        mp.setDataSource(selectedVideoFilePath1);
+                        mp.prepare();
+                        duration = mp.getDuration();
+                    } catch (IOException e) {
+                        Log.e(Utils.class.getName(), e.getMessage());
+                    } finally {
+                        mp.release();
+                    }
+                    Log.e("tag", "duration------------->" + duration);
+                    Log.e("tag", "duration------------->" + duration / 1000);
+
+                    if ((duration / 1000) > 120) {
+                        video0_iv.setImageBitmap(null);
+                        video0_iv.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.dotted_square));
+                        video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.plus_icon));
+                        SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        // til_eventdays.setError(s);
+                        Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                            video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
+                            edit.putString("video1", selectedVideoFilePath1);
+                            edit.commit();
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (NullPointerException e) {
 
+                    Log.e("tag","exc"+e.toString());
                 }
             }
         } else if (requestCode == INTENT_REQUEST_GET_GALERYVIDEO1) {
@@ -1359,15 +1630,46 @@ public class QuickCreateEvent extends Activity {
                 Uri selectedMediaUri = data.getData();
                 selectedVideoFilePath1 = GetFilePathFromDevice.getPath(QuickCreateEvent.this, selectedMediaUri);
                 Log.e("tag", "qqqqqqqqqqqqqqqqqq------------" + selectedVideoFilePath1);
-                video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
-                edit.putString("video1", selectedVideoFilePath1);
-                edit.commit();
-            } catch (NullPointerException e) {
 
+                MediaPlayer mp = new MediaPlayer();
+                int duration = 0;
+                try {
+                    mp.setDataSource(selectedVideoFilePath1);
+                    mp.prepare();
+                    duration = mp.getDuration();
+                } catch (IOException e) {
+                    Log.e(Utils.class.getName(), e.getMessage());
+                } finally {
+                    mp.release();
+                }
+                Log.e("tag", "duration------------->" + duration);
+                Log.e("tag", "duration------------->" + duration / 1000);
+
+                if ((duration / 1000) > 120) {
+                    video0_iv.setImageBitmap(null);
+                    video0_iv.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.dotted_square));
+                    video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.plus_icon));
+
+                    SpannableString s = new SpannableString("Upload minimum 2 min Video");
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    // til_eventdays.setError(s);
+                    Toast.makeText(QuickCreateEvent.this, s, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        video0_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                        video1plus.setImageDrawable(QuickCreateEvent.this.getDrawable(R.drawable.video_icon));
+                        edit.putString("video1", selectedVideoFilePath1);
+                        edit.commit();
+
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (NullPointerException e) {
+                Log.e("tag","exc"+e.toString());
             }
         } else {
-
+            Log.e("tag","exc");
         }
 
     }

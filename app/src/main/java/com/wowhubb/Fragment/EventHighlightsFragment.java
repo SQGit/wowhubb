@@ -1,6 +1,7 @@
 package com.wowhubb.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -81,11 +83,11 @@ public class EventHighlightsFragment extends Fragment {
     public static String eventhighlightsvideo2, eventhighlights2;
     public EventData eventData;
     Typeface lato;
-    FrameLayout framehighlight1, fraehighlight2;
-    ImageView highl1_iv, highl2_iv, high13_iv, high14_iv;
+    FrameLayout framehighlight1;
+    ImageView highl1_iv, high13_iv;
     ImageView h1plus, h2plus, wowtagiv;
-    FrameLayout framehighlight11, fraehighlight12;
-    ImageView h11plus, h12plus;
+    FrameLayout framehighlight11;
+    //ImageView h11plus, h12plus;
     Dialog dialog;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
@@ -133,14 +135,14 @@ public class EventHighlightsFragment extends Fragment {
         str_addmore = sharedPrefces.getString("addmorestatus", "");
 
         Log.e("tag", "111111111" + str_addmore);
-        til_speaker = (TextInputLayout) view.findViewById(R.id.til_nameofspeaker);
-        til_url = (TextInputLayout) view.findViewById(R.id.til_url);
-        til_intro = (TextInputLayout) view.findViewById(R.id.til_intro);
+        til_speaker = view.findViewById(R.id.til_nameofspeaker);
+        til_url =  view.findViewById(R.id.til_url);
+        til_intro = view.findViewById(R.id.til_intro);
         til_guesttype = view.findViewById(R.id.til_guesttype);
 
-        til_speaker1 = (TextInputLayout) view.findViewById(R.id.til_nameofspeaker1);
-        til_url1 = (TextInputLayout) view.findViewById(R.id.til_url1);
-        til_intro1 = (TextInputLayout) view.findViewById(R.id.til_intro1);
+        til_speaker1 =  view.findViewById(R.id.til_nameofspeaker1);
+        til_url1 =view.findViewById(R.id.til_url1);
+        til_intro1 =  view.findViewById(R.id.til_intro1);
         til_guesttype1 = view.findViewById(R.id.til_guesttype1);
 
         helpfultips_tv = view.findViewById(R.id.helpfultips_tv);
@@ -160,14 +162,14 @@ public class EventHighlightsFragment extends Fragment {
         til_guesttype1.setTypeface(lato);
 
         h1plus = view.findViewById(R.id.highlight1plus_iv);
-        h2plus = view.findViewById(R.id.highlight2plus_iv);
+        //h2plus = view.findViewById(R.id.highlight2plus_iv);
 
         framehighlight1 = view.findViewById(R.id.frame_highlight1);
-        fraehighlight2 = view.findViewById(R.id.frame_highlight2);
+     //   fraehighlight2 = view.findViewById(R.id.frame_highlight2);
         addmore_iv = view.findViewById(R.id.addmore_iv);
 
         highl1_iv = (ImageView) view.findViewById(R.id.highlight1_iv);
-        highl2_iv = (ImageView) view.findViewById(R.id.highlight2_iv);
+     //   highl2_iv = (ImageView) view.findViewById(R.id.highlight2_iv);
         speaker_et = view.findViewById(R.id.speaker_et);
         url_et = view.findViewById(R.id.url_et);
         intro_et = view.findViewById(R.id.intro_et);
@@ -181,14 +183,14 @@ public class EventHighlightsFragment extends Fragment {
         url_et.setText(eventData.guesturl);
         intro_et.setText(eventData.guestintro);
 
-        h11plus = view.findViewById(R.id.highlight1plus_iv1);
-        h12plus = view.findViewById(R.id.highlight2plus_iv1);
+     /*   h11plus = view.findViewById(R.id.highlight1plus_iv1);
+        h12plus = view.findViewById(R.id.highlight2plus_iv1);*/
 
         framehighlight11 = view.findViewById(R.id.frame_highlight11);
-        fraehighlight12 = view.findViewById(R.id.frame_highlight21);
+        //fraehighlight12 = view.findViewById(R.id.frame_highlight21);
 
         high13_iv = (ImageView) view.findViewById(R.id.highlight1_iv1);
-        high14_iv = (ImageView) view.findViewById(R.id.highlight2_iv1);
+       // high14_iv = (ImageView) view.findViewById(R.id.highlight2_iv1);
         speaker1_et = view.findViewById(R.id.speaker_et1);
         url1_et = view.findViewById(R.id.url_et1);
         intro1_et = view.findViewById(R.id.intro_et1);
@@ -211,7 +213,7 @@ public class EventHighlightsFragment extends Fragment {
                 addmore_iv.setText("View Highlights Clips");
 
                 edit.putString("addmorestatus", "trueh2");
-                edit.commit();
+                edit.apply();
             } else if (str_addmore.equals("trueh2")) {
                 scrollView.scrollTo(0, intro1_et.getTop());
                 highlight_lv2.setVisibility(View.GONE);
@@ -245,24 +247,24 @@ public class EventHighlightsFragment extends Fragment {
             if (eventData.eventhighlight2 != "") {
                 Log.e("tag", "111111111111111111-dddd------" + eventData.eventhighlight2);
                 if (eventData.eventhighlight2 != null) {
-                    highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventData.eventhighlight2, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                  //  highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventData.eventhighlight2, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
                     h2plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
                     //highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
                 }
             } else if (eventData.eventhighlight2.equals("null")) {
                 Log.e("tag", "22222222222-dddd------" + eventData.eventhighlight2);
-                highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+               // highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
                 h2plus.setVisibility(View.VISIBLE);
                 //highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
             } else {
                 Log.e("tag", "3333333333333-dddd------" + eventData.eventhighlight2);
-                highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
+               // highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
                 h2plus.setVisibility(View.VISIBLE);
             }
 
 
         } catch (NullPointerException e) {
-
+            Log.e("tag","exc"+e.toString());
         }
         Log.e("tag", "ev1111-dddd------" + eventData.eventhighlight1);
         try {
@@ -293,36 +295,16 @@ public class EventHighlightsFragment extends Fragment {
                 }
                 Log.e("tag", "11111-dddd------" + eventData.eventhighlight1);
             }
-        } catch (NullPointerException e) {
-
+        }
+        catch (NullPointerException e)
+        {
+            Log.e("tag","exc"+e.toString());
         }
 
 
         //------------------------------------------------------------------------------------------//
 
-        try {
-            if (eventData.eventhighlight12 != "") {
-                Log.e("tag", "111111111111111111-dddd------" + eventData.eventhighlight12);
-                if (eventData.eventhighlight12 != null) {
-                    high14_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventData.eventhighlight12, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                    h12plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
-                    //highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
-                }
-            } else if (eventData.eventhighlight12.equals("null")) {
-                Log.e("tag", "22222222222-dddd------" + eventData.eventhighlight12);
-                high14_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
-                h12plus.setVisibility(View.VISIBLE);
-                //highl2_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
-            } else {
-                Log.e("tag", "3333333333333-dddd------" + eventData.eventhighlight12);
-                high14_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
-                h12plus.setVisibility(View.VISIBLE);
-            }
 
-
-        } catch (NullPointerException e) {
-
-        }
         Log.e("tag", "ev1111-dddd------" + eventData.eventhighlight1);
         try {
             if (eventData.eventhighlight11 != "") {
@@ -333,12 +315,12 @@ public class EventHighlightsFragment extends Fragment {
                     //ImageView imageView=(ImageView)findViewById(R.id.imageView);
                     high13_iv.setImageBitmap(myBitmap);
                     //    highl1_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
-                    h11plus.setVisibility(View.GONE);
+                  //..  h11plus.setVisibility(View.GONE);
                 }
-                Log.e("tag", "11111-dddd------" + eventData.eventhighlight11);
+                Log.e("tag", "11111-dddd------>" + eventData.eventhighlight11);
 
             } else if (eventData.eventhighlight11 == null) {
-                Log.e("tag", "22222222222-dddd------" + eventData.eventwowvideo);
+                Log.e("tag", "22222222222-dddd------>" + eventData.eventwowvideo);
                 File imgFile = new File(eventData.eventhighlight11);
                 if (imgFile.exists()) {
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -346,14 +328,16 @@ public class EventHighlightsFragment extends Fragment {
                     highl1_iv.setImageBitmap(myBitmap);
                     // highl1_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
                     h1plus.setVisibility(View.GONE);
-                } else {
+                }
+                else
+                {
                     highl1_iv.setImageDrawable(getActivity().getDrawable(R.drawable.dotted_square));
                     h1plus.setVisibility(View.VISIBLE);
                 }
-                Log.e("tag", "11111-dddd------" + eventData.eventhighlight11);
+                Log.e("tag", "11111------->" + eventData.eventhighlight11);
             }
         } catch (NullPointerException e) {
-
+            Log.e("tag","exc"+e.toString());
         }
 
 
@@ -375,16 +359,15 @@ public class EventHighlightsFragment extends Fragment {
                 dialog.setContentView(R.layout.dialog_helpfultips);
                 View v1 = dialog.getWindow().getDecorView().getRootView();
                 ImageView close = dialog.findViewById(R.id.closeiv);
-
                 FontsOverride.overrideFonts(dialog.getContext(), v1);
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
-                        Window view1 = ((Dialog) dialog).getWindow();
-
+                        Window view1 = dialog.getWindow();
                     }
                 });
+
 
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -393,7 +376,7 @@ public class EventHighlightsFragment extends Fragment {
                     }
                 });
 
-                expandableListView = (ExpandableListView) dialog.findViewById(R.id.expandableListView);
+                expandableListView =  dialog.findViewById(R.id.expandableListView);
                 expandableListDetail = ExpandableListDataPump.getData();
                 expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
                 expandableListAdapter = new ExpandableListAdapter(dialog.getContext(), expandableListTitle, expandableListDetail);
@@ -401,19 +384,17 @@ public class EventHighlightsFragment extends Fragment {
                 expandableListView.setAdapter(expandableListAdapter);
 
                 expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    public void onGroupExpand(int groupPosition) {
-                    }
+                    public void onGroupExpand(int groupPosition) {}
                 });
 
                 expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-                    public void onGroupCollapse(int groupPosition) {
-                    }
+                    public void onGroupCollapse(int groupPosition) { }
                 });
 
                 expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                     @Override
-                    public boolean onChildClick(ExpandableListView parent, View v,
-                                                int groupPosition, int childPosition, long id) {
+                    public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id)
+                    {
                         return true;
                     }
                 });
@@ -421,13 +402,13 @@ public class EventHighlightsFragment extends Fragment {
                 dialog.show();
             }
         });
+
         addmore_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 str_addmore = sharedPrefces.getString("addmorestatus", "");
-
                 Log.e("tag", "adddmoew------------->>>" + str_addmore);
-
                 if (str_addmore != null) {
                     if (str_addmore.equals("trueh2")) {
                         scrollView.scrollTo(0, intro1_et.getTop());
@@ -447,7 +428,6 @@ public class EventHighlightsFragment extends Fragment {
                         edit.commit();
                     } else {
                         scrollView.scrollTo(0, intro1_et.getTop());
-
                         highlight_lv1.setVisibility(View.GONE);
                         highlight_lv2.setVisibility(View.VISIBLE);
                         highlight_lv2.startAnimation(slide_up);
@@ -458,7 +438,6 @@ public class EventHighlightsFragment extends Fragment {
 
                 } else {
                     scrollView.scrollTo(0, intro1_et.getTop());
-
                     highlight_lv1.setVisibility(View.GONE);
                     highlight_lv2.setVisibility(View.VISIBLE);
                     highlight_lv2.startAnimation(slide_up);
@@ -519,8 +498,8 @@ public class EventHighlightsFragment extends Fragment {
         til_speaker.setTypeface(lato);
         til_intro.setTypeface(lato);
 
-        materialDesignSpinner = (MaterialBetterSpinner) view.findViewById(R.id.sp);
-        materialBetterSpinner1 = (MaterialBetterSpinner) view.findViewById(R.id.sp1);
+        materialDesignSpinner = view.findViewById(R.id.sp);
+        materialBetterSpinner1 =  view.findViewById(R.id.sp1);
         final CustomAdapter arrayAdapter = new CustomAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, SPINNERLIST) {
             @Override
             public boolean isEnabled(int position) {
@@ -532,6 +511,7 @@ public class EventHighlightsFragment extends Fragment {
             }
 
             @Override
+            @NonNull
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -549,6 +529,7 @@ public class EventHighlightsFragment extends Fragment {
 
 
             @Override
+            @NonNull
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
@@ -577,7 +558,7 @@ public class EventHighlightsFragment extends Fragment {
 
             @Override
             public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
+                                        @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 tv.setTypeface(lato);
@@ -592,6 +573,7 @@ public class EventHighlightsFragment extends Fragment {
             }
 
 
+            @NonNull
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -878,20 +860,7 @@ public class EventHighlightsFragment extends Fragment {
 
             }
         });
-        fraehighlight2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkPermission()) {
-                    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    //pickIntent.setType("*/*");
-                    pickIntent.setType("video/*");
-                    pickIntent.setAction(Intent.ACTION_GET_CONTENT);
-                    //  pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
-                    startActivityForResult(pickIntent, INTENT_REQUEST_GET_HIGHLIGHT2);
-                }
 
-            }
-        });
 
 
         ///----------------------------------------------------------------//
@@ -908,20 +877,7 @@ public class EventHighlightsFragment extends Fragment {
 
             }
         });
-        fraehighlight12.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkPermission()) {
-                    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    //pickIntent.setType("*/*");
-                    pickIntent.setType("video/*");
-                    pickIntent.setAction(Intent.ACTION_GET_CONTENT);
-                    //  pickIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
-                    startActivityForResult(pickIntent, INTENT_REQUEST_GET_HIGHLIGHT12);
-                }
 
-            }
-        });
         return view;
     }
 
@@ -970,7 +926,7 @@ public class EventHighlightsFragment extends Fragment {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedMediaUri);
                     // Log.d(TAG, String.valueOf(bitmap));
                     high13_iv.setImageBitmap(bitmap);
-                    h11plus.setVisibility(View.GONE);
+                    //..h11plus.setVisibility(View.GONE);
                     Log.e("tag", "code------------->" + eventhighlights2);
                     edit.putString("eventhighlights2", eventhighlights2);
                     edit.commit();
@@ -985,8 +941,8 @@ public class EventHighlightsFragment extends Fragment {
                 Uri selectedMediaUri = data.getData();
                 Log.d("tag", "567231546" + selectedMediaUri);
                 eventhighlightsvideo2 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-                high14_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventhighlightsvideo2, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-                h12plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
+               //.. high14_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventhighlightsvideo2, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+                //..h12plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
                 edit.putString("highlight2_status", "video");
                 edit.putString("eventhighlightsvideo2", eventhighlightsvideo2);
                 edit.commit();
@@ -996,7 +952,7 @@ public class EventHighlightsFragment extends Fragment {
                 Uri selectedMediaUri = data.getData();
                 Log.d("tag", "567231546" + selectedMediaUri);
                 eventhighlightsvideo1 = GetFilePathFromDevice.getPath(getActivity(), selectedMediaUri);
-                highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventhighlightsvideo1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
+               //.. highl2_iv.setImageBitmap(ThumbnailUtils.createVideoThumbnail(eventhighlightsvideo1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
                 h2plus.setImageDrawable(getActivity().getDrawable(R.drawable.video_icon));
                 edit.putString("highlight2_status", "video");
                 edit.putString("eventhighlightsvideo1", eventhighlightsvideo1);
@@ -1028,6 +984,7 @@ public class EventHighlightsFragment extends Fragment {
         eventData.eventhighlight12 = eventhighlightsvideo2;
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class getWowtag extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -1037,7 +994,7 @@ public class EventHighlightsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            String json = "", jsonStr = "";
+            String json, jsonStr = "";
             try {
                 // Log.e("tag", "section_str" + section_str);
                 JSONObject jsonObject = new JSONObject();
@@ -1075,7 +1032,7 @@ public class EventHighlightsFragment extends Fragment {
                                     map1.add(wowtag);
                                     ar_sectionno.add(wowtag);
                                 } catch (JSONException e) {
-
+                                    Log.e("tag","exc"+e.toString());
                                 }
 
                             }

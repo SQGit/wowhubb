@@ -41,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textcolr"
+                android:textSize="@dimen/_12sdp"
                 android:text="! Segun" />
 
 
@@ -49,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10 Mutual Connections"
+                android:textSize="@dimen/_11sdp"
                 android:visibility="gone"
                 android:textColor="@color/colorPrimary" />
 
@@ -68,6 +70,8 @@
                     android:paddingLeft="@dimen/_10sdp"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_3sdp"
+                    android:textSize="@dimen/_12sdp"
+
                     android:textColor="@color/white"
                     android:text="Add Friend" />
 
@@ -79,6 +83,7 @@
                     android:background="@drawable/bg_parent_rounded_corner"
                     android:paddingBottom="@dimen/_3sdp"
                     android:paddingLeft="@dimen/_10sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:paddingRight="@dimen/_10sdp"
                     android:paddingTop="@dimen/_3sdp"
                     android:text="Remove" />

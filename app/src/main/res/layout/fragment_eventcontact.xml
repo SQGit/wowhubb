@@ -429,6 +429,7 @@
                         android:paddingLeft="@dimen/_5sdp">
 
                         <CheckBox
+                            android:id="@+id/private_cb"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="This Private Event"
@@ -455,6 +456,7 @@
                     android:paddingLeft="@dimen/_5sdp">
 
                     <CheckBox
+                        android:id="@+id/registerrsvp_cb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Guest Register RSVP"

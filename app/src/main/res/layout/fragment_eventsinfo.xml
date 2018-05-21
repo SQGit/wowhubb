@@ -25,9 +25,6 @@
                     android:layout_marginRight="@dimen/_10sdp">
 
 
-
-
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -35,42 +32,37 @@
                             android:weightSum="8">
 
 
-
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="2.5">
+                                    android:layout_marginTop="@dimen/_10sdp"
+                                    android:layout_weight="3">
 
 
                                         <ImageView
                                             android:id="@+id/img_show_events"
                                             android:layout_width="match_parent"
-                                            android:layout_height="@dimen/_90sdp"
-                                            android:background="@drawable/event2"
-                                            />
-
-
-
+                                            android:layout_gravity="top"
+                                            android:layout_height="wrap_content"/>
 
                                 </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="5.5"
-                                    android:layout_marginLeft="@dimen/_10sdp"
+                                    android:layout_weight="5"
+                                    android:layout_marginLeft="@dimen/_5sdp"
                                     android:orientation="vertical">
 
 
 
                                         <TextView
-                                            android:id="@+id/event_description"
+                                            android:id="@+id/event_name"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:singleLine="false"
-                                            android:textSize="@dimen/_13sdp"
+                                            android:textSize="@dimen/_15sdp"
                                             android:textStyle="bold"
-                                            android:layout_marginTop="10dp"
                                             android:text="Join the Worlds Greatest Fashion Show"
                                             android:textColor="@color/black_87" />
 
@@ -107,13 +99,36 @@
                                                     android:layout_marginLeft="@dimen/_3sdp"
                                                     android:singleLine="false"
                                                     android:textSize="@dimen/_11sdp"
-                                                    android:text="12235 Florida Oaks MI MA 77448  7:00AM to 4:00PM"
+                                                    android:text="12235 Florida Oaks MI MA 77448"
                                                     android:textColor="@color/textcolr" />
 
                                         </LinearLayout>
 
 
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
 
+
+                                                <ImageView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="top"
+                                                    android:background="@drawable/time_icon"/>
+
+                                                <TextView
+                                                    android:id="@+id/event_time"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="top"
+                                                    android:layout_marginLeft="@dimen/_3sdp"
+                                                    android:singleLine="false"
+                                                    android:textSize="@dimen/_11sdp"
+                                                    android:text="7.00AM to 4:00PM"
+                                                    android:textColor="@color/textcolr" />
+
+                                        </LinearLayout>
 
 
                                         <LinearLayout
@@ -210,6 +225,7 @@
 
 
                                 <TextView
+                                    android:id="@+id/txt_description"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/textcolr"
@@ -299,6 +315,8 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_10sdp"
+                                    android:gravity="center"
                                     android:orientation="horizontal">
 
 
@@ -309,17 +327,6 @@
                                             android:textSize="@dimen/_7sdp"
                                             android:drawablePadding="@dimen/_3sdp"
                                             android:drawableLeft="@drawable/wowsomes_icon"/>
-
-
-                                       <!-- <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="30 Comments"
-                                            android:textSize="@dimen/_8sdp"
-                                            android:drawablePadding="@dimen/_3sdp"
-                                            android:layout_marginLeft="@dimen/_10sdp"
-                                            android:drawableLeft="@drawable/comments_icon"/>
--->
 
 
                                         <TextView

@@ -5,7 +5,7 @@ package com.wowhubb.MyFeedsData;
 public class Rsvp {
 
     private String extra;
-    private String userid;
+    private Userid userid;
     private String id;
 
     public String getExtra() {
@@ -16,11 +16,11 @@ public class Rsvp {
         this.extra = extra;
     }
 
-    public String getUserid() {
+    public Userid getUserid() {
         return userid;
     }
 
-    public void setUserid(String userid) {
+    public void setUserid(Userid userid) {
         this.userid = userid;
     }
 

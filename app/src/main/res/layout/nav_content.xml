@@ -119,7 +119,7 @@
                         android:paddingBottom="@dimen/_8sdp"
                         android:paddingLeft="@dimen/_5sdp"
                         android:paddingTop="@dimen/_8sdp"
-                        android:text="Eventhubb"
+                        android:text="My Events"
                         android:textColor="@drawable/tab_text_color"
                         android:textSize="@dimen/_13sdp" />
 

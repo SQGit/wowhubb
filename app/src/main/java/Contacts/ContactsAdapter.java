@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,9 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item
-        Contact contact = getItem(position);
+        final Contact contact = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         View view = convertView;
         if (view == null) {
@@ -48,7 +49,13 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
 
         tvinvite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
+                contact.getId();
+                Log.e("tag","CONTACT ID-----"+contact.numbers.get(0).number.trim());
+                Log.e("tag","CONTACT ID-----"+contact.getName());
+
+                Log.e("tag","CONTACT ID-----"+contacts.get(position).getName());
                 startTest();
             }
         });

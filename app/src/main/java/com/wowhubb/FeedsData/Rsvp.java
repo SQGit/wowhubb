@@ -1,13 +1,11 @@
+
 package com.wowhubb.FeedsData;
 
-/**
- * Created by Salman on 08-02-2018.
- */
 
 public class Rsvp {
 
     private String extra;
-    private String userid;
+    private Userid_ userid;
     private String id;
 
     public String getExtra() {
@@ -18,11 +16,11 @@ public class Rsvp {
         this.extra = extra;
     }
 
-    public String getUserid() {
+    public Userid_ getUserid() {
         return userid;
     }
 
-    public void setUserid(String userid) {
+    public void setUserid(Userid_ userid) {
         this.userid = userid;
     }
 
@@ -35,5 +33,3 @@ public class Rsvp {
     }
 
 }
-
-

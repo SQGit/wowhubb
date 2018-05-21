@@ -1,8 +1,6 @@
+
 package com.wowhubb.FeedsData;
 
-/**
- * Created by Salman on 08-02-2018.
- */
 
 public class Eventvenue {
 
@@ -13,11 +11,6 @@ public class Eventvenue {
     private String eventvenuename;
     private String eventvenuenumber;
     private String id;
-    private String eventvenueticketprice;
-    private String eventvenueticketurl;
-    private String eventvenuecountry;
-    private String eventvenueenddate;
-    private String eventvenuestartdate;
 
     public String getEventvenuezipcode() {
         return eventvenuezipcode;
@@ -73,46 +66,6 @@ public class Eventvenue {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getEventvenueticketprice() {
-        return eventvenueticketprice;
-    }
-
-    public void setEventvenueticketprice(String eventvenueticketprice) {
-        this.eventvenueticketprice = eventvenueticketprice;
-    }
-
-    public String getEventvenueticketurl() {
-        return eventvenueticketurl;
-    }
-
-    public void setEventvenueticketurl(String eventvenueticketurl) {
-        this.eventvenueticketurl = eventvenueticketurl;
-    }
-
-    public String getEventvenuecountry() {
-        return eventvenuecountry;
-    }
-
-    public void setEventvenuecountry(String eventvenuecountry) {
-        this.eventvenuecountry = eventvenuecountry;
-    }
-
-    public String getEventvenueenddate() {
-        return eventvenueenddate;
-    }
-
-    public void setEventvenueenddate(String eventvenueenddate) {
-        this.eventvenueenddate = eventvenueenddate;
-    }
-
-    public String getEventvenuestartdate() {
-        return eventvenuestartdate;
-    }
-
-    public void setEventvenuestartdate(String eventvenuestartdate) {
-        this.eventvenuestartdate = eventvenuestartdate;
     }
 
 }

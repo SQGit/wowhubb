@@ -95,4 +95,10 @@ public class InterestActivity extends Activity {
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

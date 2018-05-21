@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:digits="a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:hint="Event Venue Name"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
@@ -175,7 +175,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                            android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                             android:hint="City"
                             android:imeOptions="actionNext"
                             android:inputType="textCapSentences"
@@ -216,7 +216,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                            android:digits="a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                             android:hint="State"
                             android:imeOptions="actionNext"
                             android:inputType="textCapSentences"
@@ -325,7 +325,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:digits="0123456789a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        android:digits="a bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                         android:hint="Name"
                         android:imeOptions="actionNext"
                         android:inputType="textCapSentences"
@@ -464,62 +464,53 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@color/graybg"
                 android:orientation="vertical">
 
+                <RadioGroup
+                    android:id="@+id/group_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/_5sdp">
-
-                    <CheckBox
-                        android:id="@+id/specific_group_cb"
+                    <RadioButton
+                        android:id="@+id/specificgroup_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Publish to Selected Group"
-                        android:textColor="@color/textcolr" />
-                </LinearLayout>
+                        android:onClick="onRadioButtonClicked"
+                       />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <RadioButton
+                        android:id="@+id/invitedguest_cb"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/_5sdp">
+                        android:text="Invited guest can share Event"
+                        android:onClick="onRadioButtonClicked"
+                        />
 
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Invited guest can share Event"
-                            android:textColor="@color/textcolr" />
-
-                    </LinearLayout>
-
-
-                </FrameLayout>
-
+                </RadioGroup>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/_5sdp">
-
+                    android:orientation="vertical"
+                    >
                     <CheckBox
+                        android:id="@+id/invitedonly_event"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Invited Only Event"
+                        />
+                    <CheckBox
+                        android:id="@+id/registerrsvp_cb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guest Register RSVP"
                         android:textColor="@color/textcolr" />
                 </LinearLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -22,8 +21,6 @@ import com.wowhubb.Adapter.ViewPagerAdapter;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.Pager.SimpleViewPagerIndicator;
 import com.wowhubb.R;
-
-
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,12 +50,14 @@ public class SplashActivity extends Activity {
     private int resourceList[] = {R.drawable.splash_image1,
             R.drawable.splash_image2, R.drawable.splash_image3
     };
+
     private int List[] = {R.string.splashtwo, R.string.splashtwo, R.string.splashtwo};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         try {
             currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             Log.e("tag", "version:" + currentVersion);
@@ -66,10 +65,10 @@ public class SplashActivity extends Activity {
             e.printStackTrace();
             Log.e("tag", "err:" + e.toString());
         }
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
         splashcontent_tv = (TextView) findViewById(R.id.splashcontent);
         status = sharedPreferences.getString("status", "");
-
         registertv = findViewById(R.id.registertv);
         logintv = findViewById(R.id.logintv);
 
@@ -96,10 +95,8 @@ public class SplashActivity extends Activity {
             }
         });
 
-           // new GetVersionCode().execute();
 
-
-        if (status == "") {
+        if (status == "" || status == null) {
             logintv.setVisibility(View.VISIBLE);
             registertv.setVisibility(View.VISIBLE);
             final Handler handler = new Handler();
@@ -112,12 +109,10 @@ public class SplashActivity extends Activity {
                         splashcontent_tv.setText(splashone);
 
                     } else if (currentPage == 2) {
-
                         String splashtwo = getString(R.string.splashothree);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashtwo);
                     } else if (currentPage == 3) {
-
                         String splashthree = getString(R.string.splashone);
                         splashcontent_tv.setText("");
                         splashcontent_tv.setText(splashthree);
@@ -295,4 +290,10 @@ public class SplashActivity extends Activity {
         }
     }
 */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

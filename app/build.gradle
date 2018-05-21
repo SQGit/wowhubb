@@ -81,6 +81,7 @@ dependencies {
     compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
     compile 'com.github.mabbas007:TagsEditText:1.0.5'
     compile 'com.doodle.android:android-material-chips:1.2.0'
-
-
+    compile 'org.jsoup:jsoup:1.8.3' // required
+    compile 'com.leocardz:link-preview:2.0.0@aar'
+    compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
 }

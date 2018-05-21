@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+
+    <LinearLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/colorPrimary"
+        android:weightSum="3"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/_7sdp"
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:background="@drawable/whitepre_arrow"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="2">
+
+
+
+            <TextView
+                android:id="@+id/txt_provider_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_book"
+                android:gravity="left"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:textSize="@dimen/_17sdp"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_weight="0.5">
+
+
+            <!-- <com.andexert.library.RippleView
+                 android:id="@+id/more"
+                 android:layout_width="?android:actionBarSize"
+                 android:layout_height="?android:actionBarSize"
+                 android:layout_toLeftOf="@+id/more2"
+                 android:layout_margin="5dp"
+                 app:rv_zoomDuration="50"
+                 app:rv_rippleDuration="400"
+                 rv_centered="true">
+
+                 <ImageView
+                     android:id="@+id/img_close"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/filter_icon"
+                     android:layout_centerInParent="true"
+                     android:padding="10dp"
+                     android:background="@color/colorPrimary"/>
+             </com.andexert.library.RippleView>-->
+
+            <!--
+                       <ImageView
+                              android:id="@+id/img_close"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_gravity="center"
+                              android:background="@drawable/close_icon"/>-->
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_50sdp"
+        >
+
+
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/no_results_icon"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="We have searched near and far"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:textSize="@dimen/_15sdp"
+            android:textColor="@color/black_87"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="We can't find any results that match your search"
+            android:gravity="center"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginTop="-7dp"
+            android:textColor="@color/black_54"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

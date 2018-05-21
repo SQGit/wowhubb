@@ -306,7 +306,7 @@
                                 android:gravity="left"
                                 android:paddingLeft="@dimen/_5sdp"
                                 android:drawablePadding="@dimen/_4sdp"
-                                android:text="100 Shares"/>
+                                android:text="0 Shares"/>
 
                         </LinearLayout>
 
@@ -325,7 +325,7 @@
                                 android:paddingLeft="@dimen/_5sdp"
                                 android:drawablePadding="@dimen/_4sdp"
                                 android:drawableLeft="@drawable/attending_icon"
-                                android:text="1000 Attending"/>
+                                android:text="0 Attending"/>
 
                         </LinearLayout>
 
@@ -345,7 +345,7 @@
                                 android:paddingLeft="@dimen/_5sdp"
                                 android:drawablePadding="@dimen/_4sdp"
                                 android:drawableLeft="@drawable/views_icon"
-                                android:text="1000 Views"/>
+                                android:text="0 Views"/>
                         </LinearLayout>
                     </LinearLayout>
 

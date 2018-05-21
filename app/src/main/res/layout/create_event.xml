@@ -175,7 +175,7 @@
                     android:layout_gravity="center"
                     android:layout_toLeftOf="@+id/next_fb"
                     android:layout_toRightOf="@+id/previous_fb"
-                    android:background="@drawable/btnbg"
+                    android:background="@drawable/btnbg_curve"
                     android:gravity="center"
                     android:paddingBottom="@dimen/_7sdp"
                     android:paddingLeft="@dimen/_16sdp"

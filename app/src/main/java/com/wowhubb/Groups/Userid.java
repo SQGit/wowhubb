@@ -4,7 +4,7 @@ package com.wowhubb.Groups;
 
 public class Userid {
 
-    private String id;
+    private String _id;
     private String firstname;
     private String lastname;
     private String wowtagid;
@@ -12,11 +12,11 @@ public class Userid {
     private String designation;
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getFirstname() {

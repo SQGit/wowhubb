@@ -6,17 +6,28 @@ import java.util.List;
 public class Message {
 
     private String _id;
+
+    private String eventhighlightsvideo2;
+    private String eventhighlightsvideo1;
+
+    private String urllink;
+    private String thoughtsimage;
+    private String thoughtsvideo;
+    private String title;
+    private String description;
+    private String imageurl;
     private String userid;
     private String eventtype;
     private Integer eventtypeint;
+    private Integer eventdayscount;
     private String eventcategory;
     private String eventname;
-    private String tickettype;
-    private String eventdescription;
+    private String eventtimezone;
     private String eventstartdate;
     private String eventenddate;
+    private String eventdescription;
     private String coverpage;
-    private String organisationlogo;
+    private String coverpageurl;
     private String createdAt;
     private List<Object> comments = null;
     private List<Rsvp> rsvp = null;
@@ -29,6 +40,8 @@ public class Message {
     private List<Eventvenue> eventvenue = null;
     private List<Object> physicalsalesstorelocation = null;
     private Integer v;
+    private String wowtagvideothumb;
+    private String wowtagvideourl;
     private String wowtagvideo;
     private String runtimeto;
     private String runtimefrom;
@@ -42,55 +55,110 @@ public class Message {
     private String faqquestion2;
     private String faqanswer1;
     private String faqquestion1;
-    private Object inviteonlyevent;
-    private Object onlineevent;
-    private Object eventvenueguestshare;
+    private String inviteonlyevent;
+    private String onlineevent;
+    private String eventvenueguestshare;
     private String eventvenueaddressvisibility;
-    private String eventhighlightsvideo2;
-    private String eventhighlightsvideo1;
+    private String eventhighlights2thumb;
+    private String eventhighlights2url;
     private String eventhighlights2;
+    private String eventhighlights1thumb;
+    private String eventhighlights1url;
     private String eventhighlights1;
-    private Object eventspeakeractivities2;
+    private String eventspeakeractivities2;
     private String eventspeakeractivities1;
-    private Object eventspeakerlink2;
+    private String eventspeakerlink2;
     private String eventspeakerlink1;
-    private Object eventspeakername2;
+    private String eventspeakername2;
     private String eventspeakername1;
-    private Object eventguesttype2;
-    private Object eventguesttype1;
+    private String eventguesttype2;
+    private String eventguesttype1;
+    private String eventnolinks;
+    private String donationsurl;
+    private String giftregistryurl;
+    private String otherurl;
+    private String registerrsvp;
+    private String privateevent;
     private String eventcontactmessage;
     private String eventcontactemail;
     private String eventcontactphone;
     private String eventcontactname;
+    private Integer wowsomecount;
+    private Integer commentcount;
+    private String tickettype;
+    private String ticketprice;
+    private String eventticketurl;
+    private String organisationlogo;
+    private String organisationlogourl;
     private String organisationname;
     private String numberofcitiestour;
-    private Object inviteonlyeventtour;
-    private Object onlineeventtour;
-    private Object eventtourguestshare;
-    private Object eventtouraddressvisibility;
+    private String inviteonlyeventtour;
+    private String onlineeventtour;
+    private String eventtourguestshare;
+    private String eventtouraddressvisibility;
     private String engagementformaction;
     private String engagementformtype;
     private Audienceengagementform audienceengagementform;
-    private Integer wowsomecount;
-    private Integer commentcount;
-    private Integer eventdayscount;
-    private String eventtimezone;
-    private Object eventnolinks;
-    private String donationsurl;
-    private String giftregistryurl;
-    private String otherurl;
-    private Object registerrsvp;
-    private String privateevent;
     private String teleconferencepassword;
     private String teleconferencephone;
     private String webinarlink;
     private String onlineeventname;
-    private String urllink;
-    private String thoughtsimage;
-    private String thoughtsvideo;
-    private String title;
-    private String description;
-    private String imageurl;
+
+    public String getEventhighlights1url() {
+        return eventhighlights1url;
+    }
+
+    public void setEventhighlights1url(String eventhighlights1url) {
+        this.eventhighlights1url = eventhighlights1url;
+    }
+
+    public String getEventhighlights2url() {
+        return eventhighlights2url;
+    }
+
+    public void setEventhighlights2url(String eventhighlights2url) {
+        this.eventhighlights2url = eventhighlights2url;
+    }
+
+    public String getEventhighlights1thumb() {
+        return eventhighlights1thumb;
+    }
+
+    public void setEventhighlights1thumb(String eventhighlights1thumb) {
+        this.eventhighlights1thumb = eventhighlights1thumb;
+    }
+
+    public String getEventhighlights2thumb() {
+        return eventhighlights2thumb;
+    }
+
+    public void setEventhighlights2thumb(String eventhighlights2thumb) {
+        this.eventhighlights2thumb = eventhighlights2thumb;
+    }
+
+    public String getCoverpageurl() {
+        return coverpageurl;
+    }
+
+    public void setCoverpageurl(String coverpageurl) {
+        this.coverpageurl = coverpageurl;
+    }
+
+    public String getWowtagvideourl() {
+        return wowtagvideourl;
+    }
+
+    public void setWowtagvideourl(String wowtagvideourl) {
+        this.wowtagvideourl = wowtagvideourl;
+    }
+
+    public String getWowtagvideothumb() {
+        return wowtagvideothumb;
+    }
+
+    public void setWowtagvideothumb(String wowtagvideothumb) {
+        this.wowtagvideothumb = wowtagvideothumb;
+    }
 
     public String getId() {
         return _id;
@@ -388,11 +456,11 @@ public class Message {
         this.faqquestion1 = faqquestion1;
     }
 
-    public Object getInviteonlyevent() {
+    public String getInviteonlyevent() {
         return inviteonlyevent;
     }
 
-    public void setInviteonlyevent(Object inviteonlyevent) {
+    public void setInviteonlyevent(String inviteonlyevent) {
         this.inviteonlyevent = inviteonlyevent;
     }
 
@@ -400,15 +468,15 @@ public class Message {
         return onlineevent;
     }
 
-    public void setOnlineevent(Object onlineevent) {
+    public void setOnlineevent(String onlineevent) {
         this.onlineevent = onlineevent;
     }
 
-    public Object getEventvenueguestshare() {
+    public String getEventvenueguestshare() {
         return eventvenueguestshare;
     }
 
-    public void setEventvenueguestshare(Object eventvenueguestshare) {
+    public void setEventvenueguestshare(String eventvenueguestshare) {
         this.eventvenueguestshare = eventvenueguestshare;
     }
 
@@ -456,7 +524,7 @@ public class Message {
         return eventspeakeractivities2;
     }
 
-    public void setEventspeakeractivities2(Object eventspeakeractivities2) {
+    public void setEventspeakeractivities2(String eventspeakeractivities2) {
         this.eventspeakeractivities2 = eventspeakeractivities2;
     }
 
@@ -472,7 +540,7 @@ public class Message {
         return eventspeakerlink2;
     }
 
-    public void setEventspeakerlink2(Object eventspeakerlink2) {
+    public void setEventspeakerlink2(String eventspeakerlink2) {
         this.eventspeakerlink2 = eventspeakerlink2;
     }
 
@@ -488,7 +556,7 @@ public class Message {
         return eventspeakername2;
     }
 
-    public void setEventspeakername2(Object eventspeakername2) {
+    public void setEventspeakername2(String eventspeakername2) {
         this.eventspeakername2 = eventspeakername2;
     }
 
@@ -504,7 +572,7 @@ public class Message {
         return eventguesttype2;
     }
 
-    public void setEventguesttype2(Object eventguesttype2) {
+    public void setEventguesttype2(String eventguesttype2) {
         this.eventguesttype2 = eventguesttype2;
     }
 
@@ -512,7 +580,7 @@ public class Message {
         return eventguesttype1;
     }
 
-    public void setEventguesttype1(Object eventguesttype1) {
+    public void setEventguesttype1(String eventguesttype1) {
         this.eventguesttype1 = eventguesttype1;
     }
 
@@ -568,7 +636,7 @@ public class Message {
         return inviteonlyeventtour;
     }
 
-    public void setInviteonlyeventtour(Object inviteonlyeventtour) {
+    public void setInviteonlyeventtour(String inviteonlyeventtour) {
         this.inviteonlyeventtour = inviteonlyeventtour;
     }
 
@@ -576,7 +644,7 @@ public class Message {
         return onlineeventtour;
     }
 
-    public void setOnlineeventtour(Object onlineeventtour) {
+    public void setOnlineeventtour(String onlineeventtour) {
         this.onlineeventtour = onlineeventtour;
     }
 
@@ -584,7 +652,7 @@ public class Message {
         return eventtourguestshare;
     }
 
-    public void setEventtourguestshare(Object eventtourguestshare) {
+    public void setEventtourguestshare(String eventtourguestshare) {
         this.eventtourguestshare = eventtourguestshare;
     }
 
@@ -592,7 +660,7 @@ public class Message {
         return eventtouraddressvisibility;
     }
 
-    public void setEventtouraddressvisibility(Object eventtouraddressvisibility) {
+    public void setEventtouraddressvisibility(String eventtouraddressvisibility) {
         this.eventtouraddressvisibility = eventtouraddressvisibility;
     }
 
@@ -656,7 +724,7 @@ public class Message {
         return eventnolinks;
     }
 
-    public void setEventnolinks(Object eventnolinks) {
+    public void setEventnolinks(String eventnolinks) {
         this.eventnolinks = eventnolinks;
     }
 
@@ -688,7 +756,7 @@ public class Message {
         return registerrsvp;
     }
 
-    public void setRegisterrsvp(Object registerrsvp) {
+    public void setRegisterrsvp(String registerrsvp) {
         this.registerrsvp = registerrsvp;
     }
 

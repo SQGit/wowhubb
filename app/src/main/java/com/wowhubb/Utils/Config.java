@@ -1,7 +1,7 @@
 package com.wowhubb.Utils;
 
 /**
- * Created by Admin on 22-03-2017.
+ * Created by Salman on 22-03-2017.
  */
 public class Config {
 
@@ -28,8 +28,7 @@ public class Config {
     public static final String WEB_URL_EVENT_SERVICE_LIST="http://104.197.80.225:3010/wow/provider/getservices";
     public static final String WEB_URL_EVENT_FILTER_LIST="http://104.197.80.225:3010/wow/provider/filterservice";
 
-    //Near By Events:
-    public static final String WEB_URL_GET_NEAR_BY_EVENTS="http://104.197.80.225:3010/wow/event/getnearbyeventslist";
+
     //WowtagVideos
     public static final String WEB_URL_GET_WOWTAGLIST="http://104.197.80.225:3010/wow/event/geteventtitles";
     public static final String WEB_URL_PARTICULARLIST="http://104.197.80.225:3010/wow/event/myeventtitles";
@@ -37,6 +36,10 @@ public class Config {
     public static final String WEB_URL_GET_PARTICULAR_WOWTAGLIST_DELETE="http://104.197.80.225:3010/wow/event/deletewowtagvideo";
     public static final String WEB_URL_FRTCH_WOWTAGID="http://104.197.80.225:3010/wow/event/fetchparticularevent";
 
+
+    //Near By Events:
+    public static final String WEB_URL_GET_NEARBY_EVENT_LIST="http://104.197.80.225:3010/wow/event/getnearbyeventslist";
+    public static final String WEB_URL_GET_NEAR_BY_EVENTS="http://104.197.80.225:3010/wow/event/getnearbyevents";
 
 
     public static boolean isStringNullOrWhiteSpace(String value) {

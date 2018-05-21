@@ -29,7 +29,8 @@ public class AccountsActivity extends Activity {
 
         privacytv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intent = new Intent(AccountsActivity.this, AccountsPrivacyActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);

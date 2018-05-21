@@ -5,19 +5,25 @@ import java.util.List;
 
 public class Group {
 
-    private String id;
+    private String _id;
     private String firstname;
     private Adminid adminid;
     private String wowtagid;
     private String lastname;
-
-
-
     private String groupname;
     private String createdAt;
     private String groupcount;
+    private String privacy;
     private Integer v;
     private List<User> users = null;
+
+    public String getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
 
     public String getFirstname() {
         return firstname;
@@ -52,11 +58,11 @@ public class Group {
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 
     public Adminid getAdminid() {

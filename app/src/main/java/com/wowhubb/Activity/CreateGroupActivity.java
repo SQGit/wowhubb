@@ -43,7 +43,7 @@ import java.util.List;
 
 public class CreateGroupActivity extends Activity {
     public static MaterialBetterSpinner privacy_spn;
-    TextView backtv, privacytv;
+    TextView backtv;
     String[] PRIVACYLIST = {"Public Group", "Closed Group", "Secret Group"};
     Typeface lato;
     SharedPreferences.Editor editor;
@@ -83,7 +83,7 @@ public class CreateGroupActivity extends Activity {
         privacy_spn = (MaterialBetterSpinner) findViewById(R.id.privacy_spn);
         groupname_til = findViewById(R.id.til_groupname);
         people_til = findViewById(R.id.til_people);
-        privacy_til = findViewById(R.id.til_selectprivacy);
+        //privacy_til = findViewById(R.id.til_selectprivacy);
         createtv = findViewById(R.id.createtv);
         groupname_et = findViewById(R.id.groupname_et);
 
@@ -136,7 +136,7 @@ public class CreateGroupActivity extends Activity {
         privacy_spn.setTypeface(lato);
         groupname_til.setTypeface(lato);
         people_til.setTypeface(lato);
-        privacy_til.setTypeface(lato);
+       // privacy_til.setTypeface(lato);
 
 
         loader_dialog = new Dialog(CreateGroupActivity.this);
@@ -301,6 +301,7 @@ public class CreateGroupActivity extends Activity {
 
                 jsonObject.accumulate("groupname", groupname_et.getText().toString());
                 jsonObject.accumulate("users", jsonArray);
+                jsonObject.accumulate("privacy",privacy_str);
                 Log.e("tag", "tagqqqqqqqqqq" + jsonObject.toString());
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/group/creategroup", json, token);

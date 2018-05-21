@@ -77,7 +77,7 @@ public class ViewFeedActivityDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewmore_dialog_image);
 
-        final ArrayList<Programschedule> programschedules = getIntent().getParcelableArrayListExtra("program");
+    final ArrayList<Programschedule> programschedules = getIntent().getParcelableArrayListExtra("program");
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(ViewFeedActivityDetails.this);
         edit = sharedPrefces.edit();
         View v1 = getWindow().getDecorView().getRootView();

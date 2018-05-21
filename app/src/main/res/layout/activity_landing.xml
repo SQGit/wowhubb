@@ -47,9 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textView1"
-                android:hint="Enter your Wowtag"
+                android:hint="!Search Wowtag"
                 android:layout_marginRight="@dimen/_20sdp"
-
                 android:layout_marginLeft="36dp"
                 android:layout_marginTop="17dp"
                 android:ems="10"

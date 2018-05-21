@@ -329,12 +329,13 @@ public class WowtagRsvp extends Activity {
 
                         event_name.setText(jsonObject.getString("eventname"));
 
-                        String str_wowtag_video=jsonObject.getString("wowtagvideo");
+                        String str_wowtag_video=jsonObject.getString("wowtagvideourl");
 
                         if(!str_wowtag_video.equals("null"))
                         {
                             Log.e("tag","NOT NULL");
-                            wowtag_video.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/"+str_wowtag_video));
+                           // wowtag_video.setVideoURI(Uri.parse("http://104.197.80.225:3010/wow/media/event/"+str_wowtag_video));
+                            wowtag_video.setVideoURI(Uri.parse(str_wowtag_video));
                         }
                         else
                         {
@@ -358,15 +359,30 @@ public class WowtagRsvp extends Activity {
                             String time1 = splited_start[1];
                             String ampm1 = splited_start[2];
 
+                            String[] splitdate_from=date1.split("/");
+                            String dd1=splitdate_from[0];
+                            String mm1=splitdate_from[1];
+                            String yy1=splitdate_from[2];
+
+
                             String[] splited_end = e_end_date.split("\\s+");
                             String date2 = splited_end[0];
                             String time2 = splited_end[1];
                             String ampm2 = splited_end[2];
 
+                            String[] splitdate_to=date2.split("/");
+                            String dd2=splitdate_to[0];
+                            String mm2=splitdate_to[1];
+                            String yy2=splitdate_to[2];
+
+
                             Log.e("tag","print val"+date1+"  "+time1+"   "+date2+"  "+time2);
 
                             wowtag_event_time.setText(time1 + " AM-" + time2+" PM");
-                            wowtag_date.setText(date1+ " to "+date2);
+
+
+
+                            wowtag_date.setText(mm1+"/"+yy1+"/"+dd1+ " to "+mm2+"/"+yy2+"/"+dd2);
 
                             JSONArray event=jsonObject.getJSONArray("eventvenue");
                             Log.e("tag","JsonArray"+event.length());

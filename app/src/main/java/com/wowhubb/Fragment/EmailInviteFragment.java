@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,22 +12,27 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doodle.android.chips.ChipsView;
 import com.doodle.android.chips.model.Contact;
-import com.wowhubb.Activity.EventInviteActivity;
+import com.doodle.android.chips.util.Common;
+import com.wowhubb.Activity.EventFeedDashboard;
+import com.wowhubb.Activity.MyEventFeedsActivity;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.Groups.Group;
 import com.wowhubb.R;
@@ -37,24 +43,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.StringTokenizer;
-
-import mabbas007.tagsedittext.TagsEditText;
 
 
-public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEditListener, View.OnClickListener {
-    TagsEditText tagsEditText;
-    String collectionval, token;
-    TextInputLayout til_tags;
+public class EmailInviteFragment extends Fragment {
+
+    String token, groupId, email, eventId;
     Typeface lato;
-
-    TextView sendemail_tv, selectgroup_tv;
+    TextView sendemail_tv, selectgroup_tv, invitetv;
     Dialog loader_dialog, dialog;
     ListView listview;
+    String feedstatus;
+    EditText msg_et;
     private List<Group> groups;
+    private RecyclerView mContacts;
+    private ChipsView mChipsView;
 
     @SuppressLint("NewApi")
     @Override
@@ -64,37 +67,72 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         token = sharedPreferences.getString("token", "");
-
-        tagsEditText = view.findViewById(R.id.tagsEditText);
-        sendemail_tv = view.findViewById(R.id.sendemail_tv);
-        selectgroup_tv = view.findViewById(R.id.selectgroup_tv);
-        til_tags = view.findViewById(R.id.til_tags);
-        tagsEditText.setTagsListener(this);
-        groups = new ArrayList<>();
-
+        eventId = sharedPreferences.getString("eventId", "");
+        feedstatus = sharedPreferences.getString("feedstatus", "");
         View v1 = getActivity().getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(getActivity(), v1);
         lato = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf");
-        til_tags.setTypeface(lato);
+        mChipsView = (ChipsView) view.findViewById(R.id.cv_contacts);
+        msg_et = view.findViewById(R.id.msg_et);
+
+        mChipsView.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf"));
+        sendemail_tv = view.findViewById(R.id.sendemail_tv);
+        selectgroup_tv = view.findViewById(R.id.selectgroup_tv);
+
+        groups = new ArrayList<>();
 
         loader_dialog = new Dialog(getActivity());
         loader_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loader_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loader_dialog.setCancelable(false);
+
         loader_dialog.setContentView(R.layout.test_loader);
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-
+        View v = dialog.getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(getActivity(), v);
         dialog.setContentView(R.layout.dialog_wowhubb_invitelist);
         listview = (ListView) dialog.findViewById(R.id.listView);
-        TextView invitetv=dialog.findViewById(R.id.invitetv);
+        listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        invitetv = dialog.findViewById(R.id.invitetv);
+        ImageView close = dialog.findViewById(R.id.closeiv);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
         new fetchGroup().execute();
+
+        sendemail_tv.setTypeface(lato);
+        selectgroup_tv.setTypeface(lato);
+
         sendemail_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("tag", "122" + EventInviteActivity.eventId);
-                new email_invite(EventInviteActivity.eventId).execute();
+                try {
+                    email = mChipsView.getEditText().getText().toString();
+                    Log.e("tag", "1111groupIDDDDD-------------------->" + email);
+
+                    if (mChipsView.getChips().size() > 0) {
+                        new email_invite(eventId).execute();
+
+                    } else if (email != null && Common.isValidEmail(email.trim())) {
+                        new email_invite(eventId).execute();
+                        Log.e("tag", "eeeeeeeeeee-------------------->");
+                    } else {
+                        mChipsView.getEditText().setError("Enter Vaild Email");
+                    }
+
+
+                } catch (IndexOutOfBoundsException e) {
+
+                }
+
+
             }
         });
 
@@ -108,7 +146,68 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
             @Override
             public void onClick(View view) {
 
-                new groupemail_invite(EventInviteActivity.eventId).execute();
+
+                if (groupId != null) {
+                    new groupemail_invite(eventId).execute();
+                } else {
+                    Toast.makeText(getActivity(), "Select Group", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+        // change EditText config
+        mChipsView.getEditText().setCursorVisible(true);
+        mChipsView.setChipsValidator(new ChipsView.ChipValidator() {
+            @Override
+            public boolean isValid(Contact contact) {
+                if (!Common.isValidEmail(contact.getDisplayName().trim())) {
+                    return false;
+                } else {
+
+                }
+                return true;
+            }
+        });
+
+        mChipsView.setChipsListener(new ChipsView.ChipsListener() {
+            @Override
+            public void onChipAdded(ChipsView.Chip chip) {
+                for (ChipsView.Chip chipItem : mChipsView.getChips()) {
+                    Log.e("ChipList", "chip: " + chipItem.toString());
+                }
+            }
+
+            @Override
+            public void onChipDeleted(ChipsView.Chip chip) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text) {
+                //mAdapter.filterItems(text);
+            }
+
+            @Override
+            public boolean onInputNotRecognized(String text) {
+
+                try {
+                    if (text.length() > 0 && Common.isValidEmail(text.trim())) {
+
+
+                    } else {
+                        View view = getActivity().getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        Toast.makeText(getActivity(), "Enter Valid Email", Toast.LENGTH_LONG).show();
+                        mChipsView.getEditText().setError("Enter Vaild Email");
+                    }
+                } catch (ClassCastException e) {
+                    Log.e("CHIPS", "Error ClassCast", e);
+                }
+                return false;
             }
         });
 
@@ -116,41 +215,6 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
         return view;
     }
 
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    @Override
-    public void onTagsChanged(Collection<String> collection) {
-        Log.e("tag", "Tags changed: " + collection.toString());
-        Log.e("tag", Arrays.toString(collection.toArray()));
-        String s = Arrays.toString(collection.toArray());
-        StringTokenizer tokens = new StringTokenizer(s, ",");
-        for (int i = 0; i < collection.size(); i++) {
-            collectionval = tokens.nextToken();
-
-            Log.e("tag", "12ddddvvv" + collectionval);
-        }
-
-        Log.e("tag", "3233333333----------->>>" + collectionval);
-        if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(collectionval).matches())) {
-            Log.e("tag", "12ddddvvv");
-
-        } else {
-            Log.e("tag", "Invalid");
-            Toast.makeText(getActivity(), "invalid", Toast.LENGTH_LONG).show();
-
-        }
-
-    }
-
-    @Override
-    public void onEditingFinished() {
-
-        Log.e("tag", "OnEditing finished");
-    }
 
     public class email_invite extends AsyncTask<String, Void, String> {
         String eventid;
@@ -172,11 +236,27 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("email", "ramya@sqindia.net");
+
+                Log.e("tag", "Chips-------------->" + mChipsView.getChips().size());
+                if (mChipsView.getChips().size() > 0) {
+                    for (int i = 0; i < mChipsView.getChips().size(); i++) {
+                        jsonObject.accumulate("email", mChipsView.getChips().get(i).getContact().getEmailAddress());
+                    }
+                } else {
+                    Log.e("tag", "Emaillll-------------->" + email);
+                    jsonObject.accumulate("email", email);
+                }
 
                 jsonObject.accumulate("eventid", eventid);
+                if (!msg_et.getText().toString().trim().equalsIgnoreCase(""))
+                {
+                    jsonObject.accumulate("mesage", msg_et.getText().toString().trim());
+                }
 
-                json = jsonObject.toString();
+
+
+
+                    json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/emailinvite", json, token);
             } catch (Exception e) {
                 Log.e("InputStream", e.getLocalizedMessage());
@@ -200,6 +280,19 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
                         if (status.equals("true")) {
                             String msg = jo.getString("message");
                             Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+
+                            if (feedstatus.equals("myevents")) {
+                                Intent intent = new Intent(getActivity(), MyEventFeedsActivity.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                getActivity().finish();
+                            } else {
+                                Intent intent = new Intent(getActivity(), EventFeedDashboard.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                getActivity().finish();
+                            }
+
                         }
                     } else {
                         String msg = jo.getString("message");
@@ -223,7 +316,7 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loader_dialog.show();
+            //    loader_dialog.show();
         }
 
         @Override
@@ -244,7 +337,7 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.e("tag", "tag" + s);
-            loader_dialog.dismiss();
+            // loader_dialog.dismiss();
             if (s != null) {
                 try {
                     JSONObject jo = new JSONObject(s);
@@ -262,7 +355,7 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
                                 JSONArray users = feedObj.getJSONArray("users");
                                 item.setGroupcount("" + users.length());
 
-                             JSONObject adminobj=feedObj.getJSONObject("adminid");
+                                JSONObject adminobj = feedObj.getJSONObject("adminid");
                                 {
                                     item.setFirstname(adminobj.getString("firstname"));
                                 }
@@ -292,6 +385,7 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
 
                             groupAdapter adapter = new groupAdapter(getActivity(), groups);
                             listview.setAdapter(adapter);
+                            listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -311,10 +405,91 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
 
     }
 
+
+    public class groupemail_invite extends AsyncTask<String, Void, String> {
+        String eventid;
+
+        public groupemail_invite(String eventid) {
+            this.eventid = eventid;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loader_dialog.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("groupid", groupId);
+                jsonObject.accumulate("eventid", eventid);
+
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/groupemailinvite", json, token);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            loader_dialog.dismiss();
+
+            Log.e("tag", "aaaaaaaaashjdh------------" + s);
+
+            if (s != null) {
+                try {
+
+                    JSONObject jo = new JSONObject(s);
+                    if (jo.has("success")) {
+                        String status = jo.getString("success");
+                        if (status.equals("true")) {
+                            String msg = jo.getString("message");
+                            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                            if (feedstatus.equals("myevents")) {
+                                Intent intent = new Intent(getActivity(), MyEventFeedsActivity.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                getActivity().finish();
+                            } else {
+                                Intent intent = new Intent(getActivity(), EventFeedDashboard.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                getActivity().finish();
+                            }
+
+                        }
+                    } else {
+                        String msg = jo.getString("message");
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+
+                } catch (NullPointerException e) {
+
+                }
+
+            } else {
+
+            }
+
+        }
+
+    }
+
     class groupAdapter extends BaseAdapter {
         SharedPreferences.Editor editor;
         String token, userId;
         Dialog dialog;
+        int selectedIndex = -1;
         private Activity activity;
         private LayoutInflater inflater;
         private List<Group> feedItems;
@@ -370,8 +545,34 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
             viewHolder.memberscount.setText(item.getGroupcount() + " Members");
 
             viewHolder.createdname_tv.setText("Created by " + item.getFirstname());
+            viewHolder.name.setChecked(false);
+
+            if (position == selectedIndex) {
+                viewHolder.name.setChecked(true);
+            } else {
+                viewHolder.name.setChecked(false);
+            }
+
+            viewHolder.name.setOnClickListener(onStateChangedListener(viewHolder.name, position));
+
 
             return convertView;
+        }
+
+        private View.OnClickListener onStateChangedListener(final CheckBox checkBox, final int position) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (checkBox.isChecked()) {
+                        selectedIndex = position;
+                        Group item = groups.get(position);
+                        groupId = item.getId();
+                    } else {
+                        selectedIndex = -1;
+                    }
+                    notifyDataSetChanged();
+                }
+            };
         }
 
         class ViewHolder {
@@ -382,72 +583,6 @@ public class EmailInviteFragment extends Fragment implements TagsEditText.TagsEd
 
         }
 
-
-    }
-    public class groupemail_invite extends AsyncTask<String, Void, String> {
-        String eventid;
-
-        public groupemail_invite(String eventid) {
-            this.eventid = eventid;
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loader_dialog.show();
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String json = "", jsonStr = "";
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("groupid", "");
-
-                jsonObject.accumulate("eventid", eventid);
-
-                json = jsonObject.toString();
-                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/emailinvite", json, token);
-            } catch (Exception e) {
-                Log.e("InputStream", e.getLocalizedMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            loader_dialog.dismiss();
-
-            Log.e("tag", "aaaaaaaaashjdh------------" + s);
-
-            if (s != null) {
-                try {
-
-                    JSONObject jo = new JSONObject(s);
-                    if (jo.has("success")) {
-                        String status = jo.getString("success");
-                        if (status.equals("true")) {
-                            String msg = jo.getString("message");
-                            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        String msg = jo.getString("message");
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-
-                } catch (NullPointerException e) {
-
-                }
-
-            } else {
-
-            }
-
-        }
 
     }
 

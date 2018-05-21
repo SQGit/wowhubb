@@ -14,10 +14,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -76,9 +78,9 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
 
     private static final int INTENT_REQUEST_GET_COVERIMAGES = 11;
     private static final int Time_id = 1;
-    public static EditText eventdate_et, eventdateto_et, desc_et, eventtopic_et, eventaddcategory_et, eventdescr_et;
+    public static EditText eventdate_et, eventdateto_et, desc_et, eventtopic_et, eventaddcategory_et;
     public static String str_category, str_eventday, selectedCoverFilePath, strDateFormat1, strDateFormat2;
-    public static TextInputLayout til_eventdays, til_spincategory, til_spindays, desc_til, eventdate_til, eventtopic_til, eventaddcategory_til, eventtimezone_til, eventdateto_til;
+    public static TextInputLayout til_eventdays, til_spincategory, desc_til, eventdate_til, eventtopic_til, eventaddcategory_til, eventtimezone_til, eventdateto_til;
     public static String str_start;
     public static String str_end, date;
     public static AutoCompleteTextView eventtimezone_et;
@@ -112,6 +114,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
         }
     };
     DatePicker.OnDateChangedListener dateChangedListener;
+    String eventstartdate, eventenddate, eventstart, eventend;
 
     public static EventTypeFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
@@ -125,9 +128,11 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        eventData = ((CreateEventActivity) getActivity()).eventData;
+        if (((CreateEventActivity) getActivity()) != null) {
+            eventData = ((CreateEventActivity) getActivity()).eventData;
+        }
 
         if (view == null) {
             view = inflater.inflate(R.layout.activity_event_type, container, false);
@@ -138,7 +143,6 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             lato = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf");
 
             eventdate_et = view.findViewById(R.id.eventdate);
-            eventdescr_et = view.findViewById(R.id.description_et);
             eventdateto_et = view.findViewById(R.id.eventdateto_et);
             desc_til = view.findViewById(R.id.til_description);
             eventtopic_til = view.findViewById(R.id.til_eventtopic);
@@ -158,8 +162,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             layout_eventdateto = view.findViewById(R.id.layout_todate);
             eventaddcategory_et = view.findViewById(R.id.eventaddcategory_et);
             eventtimezone_et = view.findViewById(R.id.eventtimezone_et);
-            til_spindays = view.findViewById(R.id.til_spindays);
-            cover_iv = (ImageView) view.findViewById(R.id.coverpage_iv);
+            cover_iv = view.findViewById(R.id.coverpage_iv);
             coverplus = view.findViewById(R.id.coverplusiv);
             framecoverpage = view.findViewById(R.id.frame_cover);
             framestart = view.findViewById(R.id.frame_startdate);
@@ -170,7 +173,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             eventtopic_til.setTypeface(lato);
             eventaddcategory_til.setTypeface(lato);
             eventtimezone_til.setTypeface(lato);
-            til_spindays.setTypeface(lato);
+            til_eventdays.setTypeface(lato);
             til_spincategory.setTypeface(lato);
 
             selectedCal = Calendar.getInstance();
@@ -208,7 +211,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
                         cdialog.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialogInterface) {
-                                Window view1 = ((Dialog) cdialog).getWindow();
+                                Window view1 = cdialog.getWindow();
                             }
                         });
 
@@ -236,9 +239,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
                             }
                         });
                         cdialog.show();
-                    }
-                    else
-                    {
+                    } else {
                         SpannableString s = new SpannableString("Select Event Days");
                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         // til_eventdays.setError(s);
@@ -254,52 +255,59 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
                 public void onClick(View view) {
                     if (str_eventday != null) {
                         eventdate_til.setError("");
-                        ctimedialog = new Dialog(getActivity());
-                        ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        ctimedialog.setContentView(R.layout.dialog_customtime);
-                        View v1 = ctimedialog.getWindow().getDecorView().getRootView();
+                    if (!eventdate_et.getText().toString().trim().equalsIgnoreCase("")) {
 
-                        final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
-                        TextView ok = ctimedialog.findViewById(R.id.oktv);
-                        TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+                            ctimedialog = new Dialog(getActivity());
+                            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            ctimedialog.setContentView(R.layout.dialog_customtime);
+                            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
+                            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
+                            TextView ok = ctimedialog.findViewById(R.id.oktv);
+                            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
+                            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
 
-                        //   dp.setOnDateChangedListener(dateChangedListener);
-                        FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
+                            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                @Override
+                                public void onShow(DialogInterface dialogInterface) {
+                                    Window view1 = ctimedialog.getWindow();
 
-                        ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialogInterface) {
-                                Window view1 = ((Dialog) ctimedialog).getWindow();
-
-                            }
-                        });
-
-                        cancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ctimedialog.dismiss();
-                            }
-                        });
-
-
-                        ok.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                int hour = 0;
-                                int min = 0;
-                                int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-                                if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                                    hour = dp.getHour();
-                                    min = dp.getMinute();
-                                } else {
-                                    hour = dp.getCurrentHour();
-                                    min = dp.getCurrentMinute();
                                 }
+                            });
 
-                                ctimedialog.dismiss();
-                                populateSetTimeTo(hour, min);
-                            }
-                        });
-                        ctimedialog.show();
+                            cancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ctimedialog.dismiss();
+                                }
+                            });
+
+
+                            ok.setOnClickListener(new View.OnClickListener() {
+                                public void onClick(View view) {
+                                    int hour = 0;
+                                    int min = 0;
+                                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+                                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                        hour = dp.getHour();
+                                        min = dp.getMinute();
+                                    } else {
+                                        hour = dp.getCurrentHour();
+                                        min = dp.getCurrentMinute();
+                                    }
+
+                                    ctimedialog.dismiss();
+                                    populateSetTimeTo(hour, min);
+                                }
+                            });
+                            ctimedialog.show();
+
+                    }
+                    else {
+                        SpannableString s = new SpannableString("Select Event Start Date");
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+                        eventDay_spn.setFocusable(true);
+                    }
                     } else {
                         SpannableString s = new SpannableString("Select Event Days");
                         s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -429,6 +437,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             materialDesignSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                     FontsOverride.overrideFonts(getContext(), view);
                     str_category = adapterView.getItemAtPosition(i).toString();
                     Log.e("tag", "str_category------>" + str_category);
@@ -448,7 +457,6 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             });
 
             eventDay_spn = (MaterialBetterSpinner) view.findViewById(R.id.eventday_spn);
-            FontsOverride.overrideFonts(getActivity(), view1);
 
 
             final CustomAdapter eventdayAdapter = new CustomAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, EVENTDAYLIST) {
@@ -558,7 +566,9 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             strDateFormatTo = spf.format(newDate);
             eventdate_et.setText(strDateFormatTo);
             Log.e("tag", "date------------>" + strDateFormatTo);
-
+            SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+            eventstartdate = spf1.format(newDate);
+            Log.e("tag", "new Date------>" + eventstartdate);
             ctimedialog = new Dialog(getActivity());
             ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             ctimedialog.setContentView(R.layout.dialog_customtime);
@@ -641,21 +651,32 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             eventdate_et.setText(strDateFormat1 + " " + outputFormat.format(dt));
             str_start = outputFormat.format(dt);
             str_end = outputFormat.format(dt);
+            edit.putString("eventstartdate", eventstartdate + " " + str_start);
+            edit.commit();
             strdayscounrt = sharedPrefces.getInt("str_eventday", 0);
             if (strdayscounrt == 1) {
                 selectedCal.add(Calendar.DATE, 1);
                 SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
                 date = spfdate.format(selectedCal.getTime());
+
                 Log.e("tag", "vvvvvvvvvvvvvvvvv-------" + selectedCal.get(Calendar.MONTH) + selectedCal.get(Calendar.DATE) + selectedCal.get(Calendar.YEAR));
                 Log.e("tag", "date-------" + date);
-
                 eventdateto_et.setText("");
                 eventdateto_et.setText(date + " " + str_start);
+
+                SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                newDate = spfdate.parse(date);
+                eventenddate = spf1.format(newDate);
+                Log.e("tag", "new Datedddddd------>" + eventenddate);
+                edit.putString("eventenddate", eventenddate + " " + str_start);
+                edit.commit();
+
                 wowtagto = Calendar.getInstance();
                 int month = selectedCal.get(Calendar.MONTH);
                 int day = selectedCal.get(Calendar.DATE);
                 int year = selectedCal.get(Calendar.YEAR);
                 wowtagto.set(year, month, day);
+
             } else if (strdayscounrt == 2) {
                 selectedCal.add(Calendar.DATE, 2);
                 SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
@@ -663,11 +684,18 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
                 Log.e("tag", "vvvvvvvvvvvvvvvvv-------" + selectedCal);
                 eventdateto_et.setText("");
                 eventdateto_et.setText(date + " " + str_start);
+
                 wowtagto = Calendar.getInstance();
                 int month = selectedCal.get(Calendar.MONTH);
                 int day = selectedCal.get(Calendar.DATE);
                 int year = selectedCal.get(Calendar.YEAR);
                 wowtagto.set(year, month, day);
+                SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                newDate = spfdate.parse(date);
+                eventenddate = spf1.format(newDate);
+                Log.e("tag", "new Datedddddd------>" + eventenddate);
+                edit.putString("eventenddate", eventenddate + " " + str_start);
+                edit.commit();
             } else if (strdayscounrt == 3) {
                 selectedCal.add(Calendar.DATE, 3);
                 SimpleDateFormat spfdate = new SimpleDateFormat("MMM/dd/yyyy");
@@ -675,13 +703,22 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
 
                 eventdateto_et.setText("");
                 eventdateto_et.setText(date + " " + str_start);
+
                 wowtagto = Calendar.getInstance();
                 int month = selectedCal.get(Calendar.MONTH);
                 int day = selectedCal.get(Calendar.DATE);
                 int year = selectedCal.get(Calendar.YEAR);
                 wowtagto.set(year, month, day);
+                SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+                newDate = spfdate.parse(date);
+                eventenddate = spf1.format(newDate);
+                Log.e("tag", "new Datedddddd------>" + eventenddate);
+                edit.putString("eventenddate", eventenddate + " " + str_start);
+                edit.commit();
             } else {
                 eventdateto_et.setText("");
+           //     edit.remove("eventenddate");
+               // edit.commit();
             }
 
         } catch (ParseException exc) {
@@ -691,77 +728,6 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
 
     }
 
-    private void populateSetDateTo(int year, int month, int day) {
-        String strDateFormatTo = month + "/" + day + "/" + year;
-        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
-        Date newDate = null;
-
-        try {
-            newDate = spf.parse(strDateFormatTo);
-            spf = new SimpleDateFormat("MMM/dd/yyyy");
-            strDateFormatTo = spf.format(newDate);
-            eventdateto_et.setText(strDateFormatTo);
-            Log.e("tag", "dvhdsvjvj" + strDateFormatTo);
-            eventData.eventstarttime = "";
-            eventData.eventendtime = "";
-            try {
-                WowtagFragment.fromtime_tv.setText("");
-                WowtagFragment.totime_tv.setText("");
-            } catch (NullPointerException e) {
-
-            }
-
-            ctimedialog = new Dialog(getActivity());
-            ctimedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            ctimedialog.setContentView(R.layout.dialog_customtime);
-            View v1 = ctimedialog.getWindow().getDecorView().getRootView();
-
-            final TimePicker dp = ctimedialog.findViewById(R.id.timePicker);
-            TextView ok = ctimedialog.findViewById(R.id.oktv);
-            TextView cancel = ctimedialog.findViewById(R.id.canceltv);
-
-            //   dp.setOnDateChangedListener(dateChangedListener);
-            FontsOverride.overrideFonts(ctimedialog.getContext(), v1);
-
-            ctimedialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    Window view1 = ((Dialog) ctimedialog).getWindow();
-
-                }
-            });
-
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ctimedialog.dismiss();
-                }
-            });
-
-
-            ok.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    int hour = 0;
-                    int min = 0;
-                    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-                    if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        hour = dp.getHour();
-                        min = dp.getMinute();
-                    } else {
-                        hour = dp.getCurrentHour();
-                        min = dp.getCurrentMinute();
-                    }
-
-                    ctimedialog.dismiss();
-                    populateSetTimeTo(hour, min);
-                }
-            });
-            ctimedialog.show();
-            //getActivity().showDialog(Time_id);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void populateSetTimeTo(int hourOfDay, int minute) {
         strDateFormat2 = eventdateto_et.getText().toString();
@@ -769,8 +735,8 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
         Date newDate = null;
 
         String strDateFormat = String.format("%02d:%02d", hourOfDay, minute);
-        String runtimeFrom = strDateFormat2 + " " + strDateFormat;
-        Log.e("tag", "RUNTIME---------->" + runtimeFrom);
+    //    String runtimeFrom = strDateFormat2 + " " + strDateFormat;
+
         strDateFormat = strDateFormat + " a";
 
         try {
@@ -778,7 +744,9 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             spf = new SimpleDateFormat("MMM/dd/yyyy");
             strDateFormat2 = spf.format(newDate);
             System.out.println(strDateFormat2);
-            Log.e("tag", "dvhdsvjvj" + strDateFormat2);
+
+            //SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+           // eventenddate = spf1.format(newDate);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -794,8 +762,13 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
             eventdateto_et.setText("");
 
             eventdateto_et.setText(date + " " + outputFormat.format(dt));
-            // eventdateto_et.setText(strDateFormat2 + " " + outputFormat.format(dt));
             str_end = outputFormat.format(dt);
+          //  SimpleDateFormat spf1 = new SimpleDateFormat("yyyy/MM/dd");
+          //  newDate = spf.parse(date);
+          //  eventenddate = spf1.format(newDate);
+            edit.putString("eventenddate", eventenddate + " " + str_end);
+            edit.commit();
+
         } catch (ParseException exc) {
             exc.printStackTrace();
         }
@@ -843,6 +816,7 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 } catch (NullPointerException e) {
 
                 }
@@ -870,8 +844,8 @@ public class EventTypeFragment extends Fragment implements DatePickerDialog.OnDa
         eventData.eventcityzone = eventtimezone_et.getText().toString().trim();
         eventData.eventdays = eventdate_et.getText().toString();
         eventData.eventdesc = desc_et.getText().toString();
-        eventData.eventstartdate = eventdate_et.getText().toString();
-        eventData.eventenddate = eventdateto_et.getText().toString();
+        eventData.eventstartdate = eventstartdate + " " + str_start;
+        eventData.eventenddate = eventenddate + " " + str_end;
         eventData.eventcover = selectedCoverFilePath;
 
 

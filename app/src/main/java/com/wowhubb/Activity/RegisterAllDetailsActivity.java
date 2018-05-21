@@ -22,7 +22,6 @@ import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hbb20.CountryCodePicker;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
@@ -47,15 +47,19 @@ import org.json.JSONObject;
 public class RegisterAllDetailsActivity extends Activity {
     Typeface latoheading, lato;
     TextView head_tv;
-    TextInputLayout fname_til, lname_til, pwd_til, repwd_til, wowtag_til;
+    TextInputLayout fname_til, lname_til, wowtag_til;
     ImageView submit, backiv;
-    EditText fname_et, lname_et, pwd_et, repwd_et, wowtag_et;
-    String str_firstname, str_lastname, str_phone, str_email, str_password, str_gender, str_birthday;
+    EditText fname_et, lname_et, wowtag_et;
+    String str_country, str_firstname, str_lastname, str_phone, str_email, str_password, str_gender, str_birthday;
     String str_wowtag;
     Snackbar snackbar;
     TextView tv_snack;
     LinearLayout question;
     Dialog dialog;
+    EditText email_et, mobileno_et;
+    TextInputLayout email_til, mobile_til;
+    CountryCodePicker countryCodePicker;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,8 +73,6 @@ public class RegisterAllDetailsActivity extends Activity {
         head_tv = (TextView) findViewById(R.id.head_tv);
         fname_til = (TextInputLayout) findViewById(R.id.til_fname);
         lname_til = (TextInputLayout) findViewById(R.id.til_lastname);
-        pwd_til = (TextInputLayout) findViewById(R.id.til_pwd);
-        repwd_til = (TextInputLayout) findViewById(R.id.til_repwd);
         wowtag_til = (TextInputLayout) findViewById(R.id.wowtag_til);
 
         submit = (ImageView) findViewById(R.id.submit_iv);
@@ -78,20 +80,24 @@ public class RegisterAllDetailsActivity extends Activity {
 
         fname_et = (EditText) findViewById(R.id.fname_et);
         lname_et = (EditText) findViewById(R.id.lname_et);
-        pwd_et = (EditText) findViewById(R.id.pwd_et);
-        repwd_et = (EditText) findViewById(R.id.repwd_et);
+
+
         wowtag_et = findViewById(R.id.wowtag_et);
         question = (LinearLayout) findViewById(R.id.question);
         // wowtag_et.addTextChangedListener(passwordWatcher);
-
+        email_til = (TextInputLayout) findViewById(R.id.til_email);
+        mobile_til = (TextInputLayout) findViewById(R.id.til_mobile);
+        email_et = (EditText) findViewById(R.id.email_et);
+        mobileno_et = (EditText) findViewById(R.id.mobile_et);
+        countryCodePicker = findViewById(R.id.ccp);
 
         head_tv.setTypeface(latoheading);
         fname_til.setTypeface(lato);
         lname_til.setTypeface(lato);
-        pwd_til.setTypeface(lato);
-        repwd_til.setTypeface(lato);
-        wowtag_til.setTypeface(lato);
 
+        wowtag_til.setTypeface(lato);
+        email_til.setTypeface(lato);
+        mobile_til.setTypeface(lato);
         //--------------------------SNACKBAR-------------------------------------------------------//
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
         View sbView = snackbar.getView();
@@ -135,7 +141,7 @@ public class RegisterAllDetailsActivity extends Activity {
 
         });
 
-        pwd_et.setOnTouchListener(new View.OnTouchListener() {
+     /*   pwd_et.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 str_wowtag = wowtag_et.getText().toString();
@@ -144,7 +150,7 @@ public class RegisterAllDetailsActivity extends Activity {
                 }
                 return false;
             }
-        });
+        });*/
 
 
         wowtag_et.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -202,80 +208,65 @@ public class RegisterAllDetailsActivity extends Activity {
                 FontsOverride.hideSoftKeyboard(v);
                 String fname_str = fname_et.getText().toString();
                 String lname_str = lname_et.getText().toString();
-                String pwd_str = pwd_et.getText().toString();
-                String repwd_str = repwd_et.getText().toString();
+
                 str_wowtag = wowtag_et.getText().toString();
+                str_email = email_et.getText().toString();
+                str_phone = mobileno_et.getText().toString();
+                str_country = countryCodePicker.getSelectedCountryCodeWithPlus();
+                Log.e("tag", "fcvjchjfdh---------------------------" + str_country + str_phone);
+                Log.e("tag", "fcvjchjfdh---------------------------" + str_country);
 
                 if (!fname_et.getText().toString().trim().equalsIgnoreCase("")) {
                     fname_til.setError(null);
                     if (!lname_et.getText().toString().trim().equalsIgnoreCase("")) {
                         lname_til.setError(null);
-                        if (!wowtag_et.getText().toString().trim().equalsIgnoreCase("")) {
-                            wowtag_til.setError(null);
-                            if (!pwd_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                pwd_til.setError(null);
-                                if (pwd_et.getText().toString().trim().length() > 5) {
-                                    pwd_til.setError(null);
-                                    if (!repwd_et.getText().toString().trim().equalsIgnoreCase("")) {
-                                        repwd_til.setError(null);
+                        if(!(!android.util.Patterns.EMAIL_ADDRESS.matcher(email_et.getText().toString()).matches())) {
+                            email_til.setError(null);
+                            if (!mobileno_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                mobile_til.setError(null);
+                                if (!wowtag_et.getText().toString().trim().equalsIgnoreCase("")) {
+                                    wowtag_til.setError(null);
 
-                                        if (pwd_et.getText().toString().trim().equals(repwd_et.getText().toString().trim())) {
-                                            repwd_til.setError(null);
-                                            SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                            SharedPreferences.Editor edit = sharedPrefces.edit();
-                                            edit.putString("fname_str", fname_str);
-                                            edit.putString("lname_str", lname_str);
-                                            edit.putString("pwd_str", pwd_str);
-                                            edit.putString("repwd_str", repwd_str);
-                                            edit.putString("wowtagid", str_wowtag);
-                                            edit.commit();
-
-                                            startActivity(new Intent(RegisterAllDetailsActivity.this, RegisterBdayActivity.class));
-                                            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-                                            //  finish();
-
-                                        } else {
-                                            //  repwd_til.setError("Password does not Match");
-                                            repwd_til.requestFocus();
-                                            SpannableString s = new SpannableString("Password does not Match");
-                                            s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            repwd_til.setError(s);
-                                        }
-
-
-                                    } else {
-                                        repwd_til.requestFocus();
-                                        SpannableString s = new SpannableString("Enter Repassword");
-                                        s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        repwd_til.setError(s);
-                                    }
+                                    SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences.Editor edit = sharedPrefces.edit();
+                                    edit.putString("fname_str", fname_str);
+                                    edit.putString("lname_str", lname_str);
+                                    edit.putString("wowtagid", str_wowtag);
+                                    edit.putString("str_email", str_email);
+                                    edit.putString("str_phone", str_phone);
+                                    edit.putString("str_country", str_country);
+                                    edit.commit();
+                                    startActivity(new Intent(RegisterAllDetailsActivity.this, RegisterBdayActivity.class));
+                                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
 
 
                                 } else {
-                                    // pwd_til.setError("Password should be maximum 6 characters");
-                                    pwd_til.requestFocus();
-                                    SpannableString s = new SpannableString("Password should be maximum 6 characters");
-                                    s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    pwd_til.setError(s);
+                                    wowtag_til.requestFocus();
+                                    SpannableString s = new SpannableString("Enter Wowtag Id");
+                                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    wowtag_til.setError(s);
                                 }
+
                             } else {
-                                pwd_til.requestFocus();
-                                SpannableString s = new SpannableString("Enter Password");
-                                s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                pwd_til.setError(s);
+                                //mobile_til.setError("Enter Mobile No");
+                                SpannableString s = new SpannableString("Enter Mobile No");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                mobile_til.setError(s);
                             }
-                        } else {
-                            wowtag_til.requestFocus();
-                            SpannableString s = new SpannableString("Enter Wowtag Id");
-                            s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            wowtag_til.setError(s);
                         }
+                        else {
+                                // email_til.setError("Invalid Email");
+                                SpannableString s = new SpannableString("Invalid Email");
+                                s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                email_til.setError(s);
+
+                            }
                     } else {
 
                         lname_til.requestFocus();
                         lname_til.setTypeface(lato);
                         SpannableString s = new SpannableString("Enter Last Name");
-                        s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         lname_til.setError(s);
                     }
 
@@ -284,7 +275,7 @@ public class RegisterAllDetailsActivity extends Activity {
                     fname_til.requestFocus();
                     fname_til.setTypeface(lato);
                     SpannableString s = new SpannableString("Enter First Name");
-                    s.setSpan(new TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     fname_til.setError(s);
                 }
 
@@ -294,7 +285,13 @@ public class RegisterAllDetailsActivity extends Activity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(RegisterAllDetailsActivity.this, SplashActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     public class checkingwowtag extends AsyncTask<String, Void, String> {
         String phone_str, str_pwd;
@@ -376,13 +373,5 @@ public class RegisterAllDetailsActivity extends Activity {
             tp.setTypeface(mTypeface);
             tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(RegisterAllDetailsActivity.this, SplashActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

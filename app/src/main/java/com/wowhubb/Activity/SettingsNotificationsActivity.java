@@ -31,4 +31,10 @@ public class SettingsNotificationsActivity extends Activity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

@@ -71,7 +71,7 @@ public class CreateEventActivity extends AppCompatActivity {
         FontsOverride.overrideFonts(CreateEventActivity.this, v1);
         extras = getIntent().getExtras();
         lato = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/lato.ttf");
-        Log.e("tag", "navdashboard------------------->+" + navdashboard);
+
 
         pager = findViewById(R.id.pager);
         fab = findViewById(R.id.next_fb);
@@ -151,7 +151,6 @@ public class CreateEventActivity extends AppCompatActivity {
                         skiptv.setVisibility(View.GONE);
                         fab.setVisibility(View.VISIBLE);
 
-                        Log.e("tag", "11111111wwwwwww----");
                         break;
 
                 }
@@ -191,7 +190,6 @@ public class CreateEventActivity extends AppCompatActivity {
         skiptv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("tag", "Skip-----------" + currentPage);
 
                 if (currentPage == 3) {
                     EventHighlightsFragment eventHighlightsFragment = new EventHighlightsFragment();
@@ -307,7 +305,6 @@ public class CreateEventActivity extends AppCompatActivity {
         previous_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("tag", "fdshghfjhjfhj---------->>>>>>>" + currentPage);
                 if (currentPage == 0) {
                     previous_fab.setVisibility(View.INVISIBLE);
                     previous_fab.setEnabled(false);
@@ -350,14 +347,11 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Log.e("tag", "Current step------>");
-                Log.e("tag", " step------>" + currentPage);
                 final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String highlight1 = sharedPreferences.getString("highlight1", "");
                 String highlight2 = sharedPreferences.getString("highlight2", "");
                 String video1 = sharedPreferences.getString("video1", "");
                 String coverphoto = sharedPreferences.getString("coverpage", "");
-
 
                 if (currentPage == 0) {
                     fab.setVisibility(View.VISIBLE);
@@ -383,13 +377,12 @@ public class CreateEventActivity extends AppCompatActivity {
                                                 fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
                                                 fragmentTransaction.replace(R.id.frame_layout, WowtagFragment, "tag");
                                                 fragmentTransaction.addToBackStack("tag");
-                                                Log.e("tag", "jvkbjk" + currentPage);
                                                 fragmentTransaction.commit();
                                                 currentPage = currentPage + 1;
                                                 pager.setCurrentItem(currentPage, true);
                                                 previous_fab.setVisibility(View.VISIBLE);
                                                 // pager.setCurrentItem(currentPage);
-                                                Log.e("tag", "jvkbjk");
+
                                             } else {
                                                 SpannableString s = new SpannableString("Please Capture any Cover Page Image for your Event");
                                                 s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -415,13 +408,7 @@ public class CreateEventActivity extends AppCompatActivity {
                                     }
 
 
-                                   /* } else {
-                                        SpannableString s = new SpannableString("Select Event End Date");
-                                        s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        EventTypeFragment.eventdateto_til.setError(s);
 
-
-                                    }*/
                                 } else {
                                     SpannableString s = new SpannableString("Select Event Start Date");
                                     s.setSpan(new FontsOverride.TypefaceSpan(lato), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -454,9 +441,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 } else if (currentPage == 1) {
 
-                    Log.e("tag", "11111222");
                     fab.setVisibility(View.VISIBLE);
-                    Log.e("tag", "3333333333");
                     if (!WowtagFragment.eventname_et.getText().toString().trim().equalsIgnoreCase("")) {
                         WowtagFragment.eventname_et.setError(null);
 
@@ -466,7 +451,7 @@ public class CreateEventActivity extends AppCompatActivity {
                                 WowtagFragment.til_from.setError(null);
                                 if (!WowtagFragment.totime_tv.getText().toString().trim().equalsIgnoreCase("")) {
                                     WowtagFragment.til_to.setError(null);
-                                    Log.e("tag", "hgchgxc");
+
                                     setData();
                                     EventVenueFragment eventVenueFragment = new EventVenueFragment();
                                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -504,13 +489,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 } else if (currentPage == 2) {
                     fab.setVisibility(View.VISIBLE);
-
-                    // publishtv.setVisibility(View.VISIBLE);
                     if (!EventVenueFragment.venuename.getText().toString().trim().equalsIgnoreCase("")) {
-                        Log.e("tag", "hsgdfd");
                         EventVenueFragment.postDataToSQLite();
-                        // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
-                        Log.e("tag", "ifff" + EventVenueFragment.listBeneficiary.size());
                         ProgramScheduleFragmentNew programScheduleFragmentNew = new ProgramScheduleFragmentNew();
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
@@ -522,12 +502,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
                     } else {
 
-                        // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                         ProgramScheduleFragmentNew programScheduleFragmentNew = new ProgramScheduleFragmentNew();
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frame_layout, programScheduleFragmentNew, "tag");
                         fragmentTransaction.addToBackStack(null);
-
                         fragmentTransaction.commitAllowingStateLoss();
                         currentPage = currentPage + 1;
                         pager.setCurrentItem(currentPage, true);
@@ -536,7 +514,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 } else if (currentPage == 3) {
                     fab.setVisibility(View.VISIBLE);
-                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                     EventHighlightsFragment eventHighlightsFragment = new EventHighlightsFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
@@ -550,25 +527,17 @@ public class CreateEventActivity extends AppCompatActivity {
                 } else if (currentPage == 4) {
                     fab.setVisibility(View.VISIBLE);
                     fab.setVisibility(View.INVISIBLE);
-                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                     EventContactFragment eventContactFragment = new EventContactFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
-
                     fragmentTransaction.replace(R.id.frame_layout, eventContactFragment, "tag");
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commitAllowingStateLoss();
                     currentPage = currentPage + 1;
                     pager.setCurrentItem(currentPage, true);
-
-
                 } else if (currentPage == 5) {
-                    // pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                     fab.setVisibility(View.INVISIBLE);
-
-
                 } else {
-                    //  pager.setCurrentItem(indicator.getCurrentStep() + 1, true);
                     fab.setVisibility(View.VISIBLE);
                 }
 
@@ -586,10 +555,8 @@ public class CreateEventActivity extends AppCompatActivity {
         EventTypeFragment eventTypeFragment = new EventTypeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.right_to_left);
-
         fragmentTransaction.replace(R.id.frame_layout, eventTypeFragment, "tag");
         fragmentTransaction.addToBackStack(null);
-
         fragmentTransaction.commitAllowingStateLoss();
         currentPage = 0;
         previous_fab.setVisibility(View.INVISIBLE);
@@ -624,11 +591,8 @@ public class CreateEventActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         int counter = getSupportFragmentManager().getBackStackEntryCount();
-        Log.e("tag", "counter----->" + counter);
-
         if (counter == 1) {
             finish();
-            // super.onBackPressed();
         }
     }
 }

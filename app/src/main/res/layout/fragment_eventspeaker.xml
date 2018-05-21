@@ -116,7 +116,7 @@
                                 android:src="@drawable/plus_icon" />
                         </FrameLayout>
 
-                        <FrameLayout
+                       <!-- <FrameLayout
                             android:id="@+id/frame_highlight2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
@@ -136,7 +136,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:src="@drawable/plus_icon" />
-                        </FrameLayout>
+                        </FrameLayout>-->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -314,7 +314,7 @@
                                 android:src="@drawable/plus_icon" />
                         </FrameLayout>
 
-                        <FrameLayout
+                        <!--<FrameLayout
                             android:id="@+id/frame_highlight21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
@@ -334,7 +334,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:src="@drawable/plus_icon" />
-                        </FrameLayout>
+                        </FrameLayout>-->
                     </LinearLayout>
                 </LinearLayout>
 

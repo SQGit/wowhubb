@@ -1,8 +1,12 @@
 package com.wowhubb.Activity;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -18,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.Fragment.EmailInviteFragmentTest;
+import com.wowhubb.Fragment.EmailInviteFragment;
 import com.wowhubb.Fragment.SmsInviteFragment;
 import com.wowhubb.R;
 
@@ -32,24 +36,29 @@ import java.util.List;
 public class EventInviteActivity extends AppCompatActivity
 
 {
-    public static String eventId;
+    public static String eventId, str_number,status,token;
     Typeface segoeui;
     ImageView wowtag_play, backiv;
     FloatingActionButton createfab;
     Bundle extras;
+
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    SharedPreferences.Editor editor;
+    Dialog dialog;
+    SharedPreferences sharedPrefces;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getSupportActionBar().hide();
         setContentView(R.layout.eventinvite);
+
+
         extras = getIntent().getExtras();
         if (extras != null) {
             eventId = extras.getString("eventId");
-            Log.e("tag", "12sdssddsds2" + eventId);
+            str_number = extras.getString("str_number");
         }
 
 
@@ -62,7 +71,11 @@ public class EventInviteActivity extends AppCompatActivity
         backiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //finish();
+                startActivity(new Intent(EventInviteActivity.this, EventFeedDashboard.class));
+                overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                 finish();
+
             }
         });
 
@@ -76,8 +89,8 @@ public class EventInviteActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new EmailInviteFragmentTest(), "Email Invite");
         adapter.addFrag(new SmsInviteFragment(), "SMS Invite");
+        adapter.addFrag(new EmailInviteFragment(), "Email Invite");
         viewPager.setAdapter(adapter);
     }
 
@@ -86,14 +99,14 @@ public class EventInviteActivity extends AppCompatActivity
         FontsOverride.overrideFonts(EventInviteActivity.this, v2);
 
         TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.customtabgroup_title, null);
-        tabOne.setText("Email Invite");
+        tabOne.setText("SMS Invite");
         tabOne.setMinimumWidth(0);
         tabOne.setTextSize(15);
         tabOne.setTypeface(segoeui);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.customtabgroup_title, null);
-        tabTwo.setText("SMS Invite");
+        tabTwo.setText("Email Invite");
         tabTwo.setMinimumWidth(0);
         tabTwo.setTypeface(segoeui);
         tabTwo.setTextSize(15);

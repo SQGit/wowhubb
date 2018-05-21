@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wowhubb.Nearbyeventsmodule.Model.ScheduleEventModelPojo;
 import com.wowhubb.R;
 
 import java.util.ArrayList;
@@ -53,10 +53,11 @@ public class ScheduleInnerEventAdapter extends RecyclerView.Adapter<RecyclerView
         // Get current position of item in recyclerview to bind data and assign values from list
         final MyHolder myHolder= (MyHolder) holder;
         final ScheduleEventModelPojo current=scheduleEventModelPojos.get(position);
-        myHolder.event_time.setText(current.geteventInnerTime());
-        myHolder.event_name.setText(current.geteventInnerEvent());
-        myHolder.event_who.setText(current.geteventInnerWho());
 
+
+        myHolder.event_time.setText(current.eventInnerTime);
+        myHolder.event_name.setText(current.eventInnerEvent);
+        myHolder.event_who.setText(current.eventInnerWho);
 
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -75,8 +76,6 @@ public class ScheduleInnerEventAdapter extends RecyclerView.Adapter<RecyclerView
             holder.itemView.setBackgroundColor(Color.parseColor("#F1F1F1"));
             //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
         }
-
-
     }
 
 

@@ -78,7 +78,7 @@ public class PaticularWowtagActivity extends Activity {
     public static String selectedVideoFilePath1, selectedCoverFilePath;
     String get_wowid, get_wowname, wowtag_video;
     SharedPreferences.Editor editor;
-    String token, str_msg;
+    String token, str_msg,str_mon;
     TextView txt_provider_head, wowtagid, wowtag_name, wowtag_venue, wowtag_address, wowtag_eventdatetime, wowtag_time, wowtag_description, wowtag_description_cont, wowtag_runtime, wow_shares, wow_attending, wow_views, wowtag_edit;
     TextView txt_fromgallery, txt_takevideo;
     ImageView no_video, del_img;
@@ -89,6 +89,7 @@ public class PaticularWowtagActivity extends Activity {
     Boolean flag = false;
     Dialog dialog, loader_dialog;
     private Uri fileUri, videoUri;
+    private static final String SERVER_PATH = "http://104.197.80.225:3010/wow/event/editwowtagvideo/";
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -162,6 +163,8 @@ public class PaticularWowtagActivity extends Activity {
             public void onClick(View view) {
                 if (selectedVideoFilePath1 != null) {
                     new editWowtagVideoAsync().execute();
+
+                    //uploadVideoToServer(selectedVideoFilePath1);
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Select or Capture New Video", Toast.LENGTH_LONG).show();
                 }
@@ -171,28 +174,27 @@ public class PaticularWowtagActivity extends Activity {
         del_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                flag = false;
+
+                Toast.makeText(getApplicationContext(), "Under Development", Toast.LENGTH_LONG).show();
+
+               /* flag = false;
                 animShake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
                 del_img.startAnimation(animShake);
-                new callParticularWowtagVideoDelete().execute();
+                new callParticularWowtagVideoDelete().execute();*/
             }
         });
 
         wowtag_edit.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onClick(View view) {
                 flag = true;
-                wow_videoview.setVisibility(View.GONE);
+                /*wow_videoview.setVisibility(View.GONE);
                 no_video.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext()).load(R.drawable.capture_video)
-                        .into(no_video);
-            }
-        });
+                        .into(no_video);*/
 
 
-        no_video.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 if (flag == true) {
                     dialog = new Dialog(PaticularWowtagActivity.this);
                     dialog.setContentView(R.layout.dialog_takevideo);
@@ -277,8 +279,15 @@ public class PaticularWowtagActivity extends Activity {
 
                     dialog.show();
                 } else if (flag == false) {
-                    Log.e("tag", "Dont Capture");
                 }
+            }
+        });
+
+
+        no_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
@@ -290,6 +299,12 @@ public class PaticularWowtagActivity extends Activity {
             }
         });
     }
+
+
+
+
+
+
 
     private Uri getOutputMediaFileUri(int type) {
         Uri selectedMediaUri = Uri.fromFile(getOutputMediaFile(type));
@@ -303,7 +318,6 @@ public class PaticularWowtagActivity extends Activity {
 
     private Uri getOutputMediaFileUri2(int type) {
         File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
-        //videoUri = Uri.fromFile(mediaFile);
         String authorities = getApplicationContext().getPackageName() + ".fileprovider";
         videoUri = FileProvider.getUriForFile(getApplicationContext(), authorities, getOutputMediaFile(type));
         return videoUri;
@@ -377,8 +391,6 @@ public class PaticularWowtagActivity extends Activity {
 
                     selectedVideoFilePath1 = fileUri.getPath();
                     no_video.setImageBitmap(ThumbnailUtils.createVideoThumbnail(selectedVideoFilePath1, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND));
-
-
                 }
 
 
@@ -440,15 +452,12 @@ public class PaticularWowtagActivity extends Activity {
     //Describe Asynctask for Particular WOWTAG List:
     private class callParticularWowtag extends AsyncTask<String, String, String> {
 
-
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-
         @Override
         protected String doInBackground(String... strings) {
-
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -470,7 +479,6 @@ public class PaticularWowtagActivity extends Activity {
             } else {
 
                 try {
-
                     JSONObject jo = new JSONObject(jsonstr);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
@@ -480,18 +488,32 @@ public class PaticularWowtagActivity extends Activity {
                         String e_start_date = jsonObject.getString("eventstartdate");
                         String e_end_date = jsonObject.getString("eventenddate");
                         wowtag_description_cont.setText(jsonObject.getString("eventdescription"));
-                        wowtag_video = jsonObject.getString("wowtagvideo");
+                        wowtag_video = jsonObject.getString("wowtagvideourl");
                         String wowtag_runtimefrom = jsonObject.getString("runtimefrom");
+                        Log.e("tag","8888888--->"+wowtag_runtimefrom);
                         String wowtag_runtimeto = jsonObject.getString("runtimeto");
 
-                        wowtag_runtime.setText("Wowtag Runtime From " + wowtag_runtimefrom + " to " + wowtag_runtimeto);
+
+
+                        String[] wowfrm=wowtag_runtimefrom.split("/");
+                        String wow_month1=wowfrm[0];
+                        String wow_day1=wowfrm[1];
+                        String wow_year1=wowfrm[2];
+                        Log.e("tag","8888888"+wowfrm);
+
+                        String[] wowto=wowtag_runtimeto.split("/");
+                        String wow_month2=wowto[0];
+                        String wow_day2=wowto[1];
+                        String wow_year2=wowto[2];
+
+
+                        //wowtag_runtime.setText("Wowtag Runtime From " + wow_month1+"/"+wow_day1+"/"+wow_year1 + " to " + wow_month2+"/"+wow_day2+"/"+wow_year2);
 
                         if (wowtag_video == null) {
                             no_video.setVisibility(View.VISIBLE);
                             wow_videoview.setVisibility(View.GONE);
                             Glide.with(getApplicationContext()).load(R.drawable.no_video)
                                     .into(no_video);
-
                         }
                         if (wowtag_video.equals("null")) {
                             no_video.setVisibility(View.VISIBLE);
@@ -500,10 +522,9 @@ public class PaticularWowtagActivity extends Activity {
                             Glide.with(getApplicationContext()).load(R.drawable.no_video)
                                     .into(no_video);
                         } else {
-
                             no_video.setVisibility(View.GONE);
                             wow_videoview.setVisibility(View.VISIBLE);
-                            wow_videoview.setVideoPath("http://104.197.80.225:3010/wow/media/event/" + wowtag_video);
+                            wow_videoview.setVideoPath(wowtag_video);
                         }
 
                         try {
@@ -512,16 +533,33 @@ public class PaticularWowtagActivity extends Activity {
                             String time1 = splited_start[1];
                             String ampm1 = splited_start[2];
 
+                            String[] splited_date_from=date1.split("/");
+                            String year1=splited_date_from[0];
+                            String month1=splited_date_from[1];
+                            String day1=splited_date_from[2];
+                            Log.e("tag","Splited"+year1+"  "+month1+"   "+day1);
+
+
+
+
+
                             String[] splited_end = e_end_date.split("\\s+");
                             String date2 = splited_end[0];
                             String time2 = splited_end[1];
                             String ampm2 = splited_end[2];
 
-                            wowtag_eventdatetime.setText(date1 + " to " + date2);
+
+                            String[] splited_date_to=date2.split("/");
+                            String year2=splited_date_to[0];
+                            String month2=splited_date_to[1];
+                            String day2=splited_date_to[2];
+
+
+                            wowtag_eventdatetime.setText(month1+"/"+day1+"/"+year1+ " to " + month2+"/"+day2+"/"+year2);
                             wowtag_time.setText(time1 + " " + ampm1 + " - " + time2 + " " + ampm2);
 
                         } catch (ArrayIndexOutOfBoundsException e) {
-
+                            Log.e("tag","testing catche");
                         }
 
 
@@ -580,17 +618,16 @@ public class PaticularWowtagActivity extends Activity {
                     if (status.equals("true")) {
 
                         str_msg = jo.getString("message");
-
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
 
                                 no_video.setVisibility(View.VISIBLE);
                                 wow_videoview.setVisibility(View.GONE);
 
                                 Glide.with(getApplicationContext()).load(R.drawable.no_video)
                                         .into(no_video);
+
                                 Toast.makeText(getApplicationContext(), str_msg, Toast.LENGTH_LONG).show();
                                 animShake.cancel();
                             }
@@ -617,28 +654,39 @@ public class PaticularWowtagActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             loader_dialog.show();
+            Log.e("tag","firststep");
         }
 
         @Override
         protected String doInBackground(String... strings) {
             String json = "", jsonStr = "";
+            Log.e("tag","inside------->");
             try {
                 String responseString = null;
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost("http://104.197.80.225:3010/wow/event/editwowtagvideo");
                 httppost.setHeader("token", token);
+                Log.e("tag","12345-----TOKEN"+token);
                 httppost.setHeader("eventid", get_wowid);
+                Log.e("tag","12345-----ID"+get_wowid);
+
                 HttpResponse response = null;
                 HttpEntity r_entity = null;
 
 
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 if (!selectedVideoFilePath1.equals("")) {
-                    entity.addPart("wowtagvideo", new FileBody(new File(selectedVideoFilePath1), "image/jpeg"));
+                    Log.e("tag","filledpath----->"+selectedVideoFilePath1);
+                    entity.addPart("wowtagvideo", new FileBody(new File(selectedVideoFilePath1), ".MPEG-4 (.mp4)"));
+
+                }
+                else
+                {
+                    Log.e("tag","emptypath----->");
                 }
 
                 httppost.setEntity(entity);
-                try {
+                try{
 
                     try {
                         response = httpclient.execute(httppost);
@@ -651,20 +699,33 @@ public class PaticularWowtagActivity extends Activity {
                     }
 
                     int statusCode = response.getStatusLine().getStatusCode();
+
                     if (statusCode == 200) {
                         responseString = EntityUtils.toString(r_entity);
+                        Log.e("tag","Response 200"+ responseString);
 
-                    } else {
-                        responseString = "Error occurred! Http Status Code: "
+                    } else if(statusCode==500){
+
+                        Log.e("tag","Response000000000"+ response);
+
+                        /*responseString = "Error occurred! Http Status Code: "
                                 + statusCode;
+                        Log.e("tag","Response 500"+ responseString);*/
                     }
-                } catch (ClientProtocolException e) {
+                }
+                catch (ClientProtocolException e) {
+
                     responseString = e.toString();
-                } catch (IOException e) {
+                    Log.e("tag","123456"+responseString);
+                }
+                catch (IOException e) {
                     responseString = e.toString();
                 }
                 return responseString;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
+
+
             }
             return null;
 
@@ -674,9 +735,12 @@ public class PaticularWowtagActivity extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             loader_dialog.dismiss();
+            Log.e("tag","success"+s);
+
             if (s.length() > 0) {
                 try {
                     JSONObject jo = new JSONObject(s.toString());
+                    Log.e("tag","output"+jo);
                     String success = jo.getString("success");
                     if (success.equals("true")) {
                         String msg = jo.getString("message");
@@ -684,12 +748,25 @@ public class PaticularWowtagActivity extends Activity {
                         new callParticularWowtag().execute();
 
                     } else {
+                        Log.e("tag","falsestmt");
 
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
+            else
+            {
+                Log.e("tag","outofloop");
+            }
+
+
         }
     }
+
+
+
+
+
 }

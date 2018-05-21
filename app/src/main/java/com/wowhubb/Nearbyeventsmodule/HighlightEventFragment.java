@@ -8,17 +8,25 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Nearbyeventsmodule.Database_Helper.DatabaseHandler;
 import com.wowhubb.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class HighlightEventFragment extends Fragment {
@@ -28,6 +36,9 @@ public class HighlightEventFragment extends Fragment {
     private ArrayList<HighlightEventModelPojo> staticArrayListforHighlights=new ArrayList<>();
     HighlightEventAdapter nearByEventHighlightsAdapter;
     HorizontalScrollView imaqe_scroll;
+    TextView guest_name1,guest_name2,guest_info1,guest_info2,txt_speaker_type1,txt_speaker_type2,guest_website1,guest_website2;
+    LinearLayout lnr_item1,lnr_item2;
+    ImageView img_guestprofile1,img_guestprofile2;
 
 
     @SuppressLint("NewApi")
@@ -40,25 +51,61 @@ public class HighlightEventFragment extends Fragment {
         token = sharedPreferences.getString("token", "");
         FontsOverride.overrideFonts(getActivity(), view);
         recycler_eventhighlight = (RecyclerView) view.findViewById(R.id.recycler_eventhighlight);
-        av_loader = (AVLoadingIndicatorView)view. findViewById(R.id.avi);
-        imaqe_scroll=view.findViewById(R.id.imaqe_scroll);
+        guest_name1=view.findViewById(R.id.guest_name1);
+        guest_info1=view.findViewById(R.id.guest_info1);
+        lnr_item1=view.findViewById(R.id.lnr_item1);
+        img_guestprofile1=view.findViewById(R.id.img_guestprofile1);
+        txt_speaker_type1=view.findViewById(R.id.txt_speaker_type1);
+        guest_website1=view.findViewById(R.id.guest_website1);
 
 
-        imaqe_scroll.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                imaqe_scroll.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+        lnr_item1.setVisibility(View.GONE);
+
+        DatabaseHandler db = new DatabaseHandler(getActivity());
+
+        List<HighlightEventModelPojo> list = db.getHighlightEventSchedule();
+        for (int i = 0; i < list.size(); i++) {
+            HighlightEventModelPojo dbHighlightModelPojo1 = list.get(i);
+            String video1=dbHighlightModelPojo1.guestVideo2;
+
+            if(video1!=null)
+            {
+                lnr_item1.setVisibility(View.VISIBLE);
+                guest_name1.setText(dbHighlightModelPojo1.guestName1);
+                guest_info1.setText("             "+dbHighlightModelPojo1.guestInfo1);
+                String guest_profile1="http://104.197.80.225:3010/wow/media/event/"+dbHighlightModelPojo1.guestProfile1;
+                Log.e("tag","view 6 "+guest_profile1);
+                txt_speaker_type1.setText(dbHighlightModelPojo1.guestType1);
+
+                Glide.with(getActivity()).load(guest_profile1)
+                        .into(img_guestprofile1);
+
+
+                SpannableString content = new SpannableString(dbHighlightModelPojo1.guestSite1);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                guest_website1.setText(content);
             }
-        }, 100L);
 
-        //load static data to method:
-        loadStaticEventsHighlights();
+            String video2=dbHighlightModelPojo1.guestVideo1;
+           /* if(video2 !=null)
+            {
+                guest_name2.setText(dbHighlightModelPojo1.guestName2);
+                //guest_info2.setText("             "+dbHighlightModelPojo1.guestInfo2);
+
+                String guest_profile2="http://104.197.80.225:3010/wow/media/event/"+dbHighlightModelPojo1.guestProfile2;
+                Log.e("tag","view 6 "+guest_profile2);
 
 
+                Glide.with(getActivity()).load(guest_profile2)
+                        .into(img_guestprofile2);
+                txt_speaker_type2.setText(dbHighlightModelPojo1.guestType2);
 
-        //call NearbyEvents Separete Activity Asynctask:
-        new callEventHighlights().execute();
 
+                SpannableString content = new SpannableString(dbHighlightModelPojo1.guestSite2);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                guest_website2.setText(content);
+            }*/
+        }
 
         return view;
     }
@@ -68,26 +115,6 @@ public class HighlightEventFragment extends Fragment {
      */
 
 
-    private void loadStaticEventsHighlights() {
-        HighlightEventModelPojo item1, item2, item3;
-
-        String s1=getResources().getDrawable(R.drawable.speaker1).toString();
-        String s2=getResources().getDrawable(R.drawable.speaker2).toString();
-        String s3=getResources().getDrawable(R.drawable.speaker3).toString();
-
-
-
-        item1 = new HighlightEventModelPojo("12 Dr. TD Jake", "Dr. TD Jake", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.","www.wowhubb.com/drtdjake",s1);
-        staticArrayListforHighlights.add(item1);
-
-
-        item2 = new HighlightEventModelPojo("042 Dr. Segun", "Dr. Segun", "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.","www.wowhubb.com/drtdsegun",s2);
-        staticArrayListforHighlights.add(item2);
-
-        item3 = new HighlightEventModelPojo("56 Dr. TD Jake", "Dr. TD Jake", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.","www.wowhubb.com/drtdjake",s3);
-        staticArrayListforHighlights.add(item3);
-
-    }
 
 
 

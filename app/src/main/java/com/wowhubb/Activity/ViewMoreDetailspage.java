@@ -21,7 +21,6 @@ import com.wowhubb.FeedsData.Programschedule;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.Fragment.ViewEventInfoFragment;
 import com.wowhubb.Fragment.ViewHighlightFragment;
-import com.wowhubb.Nearbyeventsmodule.EventDiscussionFragment;
 import com.wowhubb.R;
 
 import java.util.ArrayList;
@@ -61,6 +60,10 @@ public class ViewMoreDetailspage extends AppCompatActivity {
         } catch (NullPointerException e) {
 
         }
+        catch (RuntimeException e)
+        {
+
+        }
         if (extras != null) {
             eventvenueaddress = extras.getString("eventvenueaddress");
             description = extras.getString("description");
@@ -90,7 +93,7 @@ public class ViewMoreDetailspage extends AppCompatActivity {
 
         if (coverimage != null && !coverimage.equals("null")) {
             Log.e("tag", "coverrrr------->");
-            Glide.with(ViewMoreDetailspage.this).load("http://104.197.80.225:3010/wow/media/event/" + coverimage)
+            Glide.with(ViewMoreDetailspage.this).load(coverimage)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .crossFade()
@@ -121,7 +124,7 @@ public class ViewMoreDetailspage extends AppCompatActivity {
         adapter.addFrag(new ViewEventInfoFragment(), "Event Info");
         adapter.addFrag(new ViewProgramSchedule(), "Event Schedule");
         adapter.addFrag(new ViewHighlightFragment(), "Event Highlights");
-        adapter.addFrag(new EventDiscussionFragment(), "Event Discussions");
+        //adapter.addFrag(new EventDiscussionFragment(), "Event Discussions");
 
         viewPager.setAdapter(adapter);
     }
@@ -163,9 +166,9 @@ public class ViewMoreDetailspage extends AppCompatActivity {
         tabfour.setTypeface(segoeui);
         tabfour.setTextSize(15);
 
-        tabThree.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
+        tabfour.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
         //tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.eventhubb_tab, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabfour);
+     //   tabLayout.getTabAt(2).setCustomView(tabfour);
 
     }
 
@@ -174,6 +177,7 @@ public class ViewMoreDetailspage extends AppCompatActivity {
         super.onBackPressed();
 
     }
+
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -203,4 +207,6 @@ public class ViewMoreDetailspage extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+
 }

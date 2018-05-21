@@ -13,11 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Nearbyeventsmodule.Activity.AllNearbyEventActivity;
+import com.wowhubb.Nearbyeventsmodule.Activity.PlayVideoActivity;
+import com.wowhubb.Nearbyeventsmodule.Fragment.InfoEventFragment;
+import com.wowhubb.Nearbyeventsmodule.Fragment.ScheduleEventFragment;
 import com.wowhubb.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +36,7 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
     private TabLayout tabLayout;
     Typeface segoeui;
     ImageView wowtag_play,img_back;
+    LinearLayout lnr_wowtag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,13 +47,16 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
         View v1 = getWindow().getDecorView().getRootView();
         FontsOverride.overrideFonts(NearbyEventIndividualPage.this, v1);
         segoeui = Typeface.createFromAsset(getAssets(), "fonts/segoeui.ttf");
-        wowtag_play=findViewById(R.id.wowtag_play);
-        img_back=findViewById(R.id.img_back);
 
-        wowtag_play.setOnClickListener(new View.OnClickListener() {
+        img_back=findViewById(R.id.img_back);
+        lnr_wowtag=findViewById(R.id.lnr_wowtag);
+
+        lnr_wowtag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Under Development",Toast.LENGTH_LONG).show();
+               Intent video=new Intent(getApplicationContext(), PlayVideoActivity.class);
+               startActivity(video);
+               finish();
             }
         });
 
@@ -79,7 +89,6 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
     }
 
 
-
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -102,7 +111,6 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
-
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
@@ -133,7 +141,8 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
          TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.customtab_title, null);
-        tabThree.setText(" Event Highlights");
+        tabThree.setText(" " +
+                " Highlights");
         tabThree.setMinimumWidth(0);
         tabThree.setTypeface(segoeui);
         tabThree.setTextSize(15);
@@ -152,7 +161,6 @@ public class NearbyEventIndividualPage extends AppCompatActivity {
         tabThree.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
         //tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.eventhubb_tab, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
-
     }
 
 

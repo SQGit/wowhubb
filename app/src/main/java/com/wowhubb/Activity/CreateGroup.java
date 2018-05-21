@@ -32,7 +32,6 @@ import java.util.List;
 
 public class CreateGroup extends AppCompatActivity {
     Typeface segoeui;
-
     ImageView wowtag_play, backiv;
     FloatingActionButton createfab;
     private ViewPager viewPager;
@@ -41,7 +40,6 @@ public class CreateGroup extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getSupportActionBar().hide();
         setContentView(R.layout.create_group);
         View v1 = getWindow().getDecorView().getRootView();
@@ -49,9 +47,7 @@ public class CreateGroup extends AppCompatActivity {
         segoeui = Typeface.createFromAsset(getAssets(), "fonts/segoeui.ttf");
         wowtag_play = findViewById(R.id.wowtag_play);
         backiv = findViewById(R.id.backtv);
-
         createfab = findViewById(R.id.createfab);
-
         createfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,10 +120,7 @@ public class CreateGroup extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(CreateGroup.this, MyEventFeedsActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-
+       finish();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

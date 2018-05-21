@@ -124,7 +124,57 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/runtimelv"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1.1"
+                android:gravity="center"
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:background="@drawable/bg_parent_rounded_corner"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/month_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/textcolr"
+                        android:gravity="center"
+                        android:text="Nov"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/date_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:gravity="center"
+                        android:text="10th-12th"
+                        android:singleLine="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/time_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="09:00AM - 12:00PM"
+                        android:textColor="@color/textcolr"
+                        android:layout_marginBottom="@dimen/_4sdp"
+                        android:textSize="@dimen/_9sdp" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -195,7 +245,7 @@
                     <FrameLayout
                         android:id="@+id/framevideo1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_140sdp"
                         android:layout_marginRight="@dimen/_3sdp"
                         android:background="@color/gray"
                         android:clickable="true"
@@ -204,7 +254,7 @@
                         <ImageView
                             android:id="@+id/video0_iv"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_120sdp"
+                            android:layout_height="match_parent"
                             android:layerType="software"
                             android:scaleType="fitCenter" />
 

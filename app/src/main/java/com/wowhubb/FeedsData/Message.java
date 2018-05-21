@@ -1,8 +1,5 @@
-package com.wowhubb.FeedsData;
 
-/**
- * Created by Salman on 08-02-2018.
- */
+package com.wowhubb.FeedsData;
 
 import java.util.List;
 
@@ -50,7 +47,7 @@ public class Message {
         return pages;
     }
 
-    public void setPages(int pages) {
+    public void setPages(Integer pages) {
         this.pages = pages;
     }
 

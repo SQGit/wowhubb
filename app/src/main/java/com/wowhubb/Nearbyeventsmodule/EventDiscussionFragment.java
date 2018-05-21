@@ -22,7 +22,7 @@ public class EventDiscussionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.vieweventdiscussion, container, false);
+        View view = inflater.inflate(R.layout.fragment_eventdiscussion, container, false);
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         token = sharedPreferences.getString("token", "");
@@ -36,6 +36,10 @@ public class EventDiscussionFragment extends Fragment {
     /**
      * Parsing json reponse and passing the data to feed view list adapter
      */
+
+
+
+
 
 
 }

@@ -1,15 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+<!--<item
         android:id="@+id/action_search"
         android:icon="@drawable/search_icon_white"
-        android:title="action_search"
-        app:showAsAction="always|collapseActionView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+    android:title="action_search"
+        app:showAsAction="always" />-->
+
+
     <item
         android:id="@+id/action_nav"
         android:icon="@drawable/nav_icon"
-        android:title="action_search"
-        app:showAsAction="always|collapseActionView" />
+        android:title="home"
+        android:orderInCategory="1"
+        app:showAsAction="always" />
 
 </menu>

@@ -134,6 +134,7 @@ public class LoginForgotActivity extends Activity {
         super.onBackPressed();
         Intent intent = new Intent(LoginForgotActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public class forgotpwd_phone extends AsyncTask<String, Void, String> {
@@ -317,5 +318,6 @@ public class LoginForgotActivity extends Activity {
         }
 
     }
+
 
 }

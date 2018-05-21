@@ -69,8 +69,8 @@ public class HttpUtils {
     }
 
     public static String makeRequest1(String url, String json,String token) {
-        Log.e(TAG, "URL-->" + url);
-        Log.e(TAG, "input-->" + json);
+        Log.e("tag", "URL-->" + url);
+        Log.e("tag", "input-->" + json);
 
 
         try {
@@ -78,8 +78,9 @@ public class HttpUtils {
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(new StringEntity(json));
-           // httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setHeader("Accept", "application/json");
+          httpPost.setHeader("Content-Type", "application/json");
+           // httpPost.setHeader("Content-Type","application/x-www-form-urlencoded");
             httpPost.setHeader("token",token);
 
             HttpResponse httpResponse = new DefaultHttpClient().execute(httpPost);

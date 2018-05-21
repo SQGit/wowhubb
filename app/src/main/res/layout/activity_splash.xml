@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/splash"
@@ -16,23 +15,21 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.85">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:layout_gravity="right"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:text="Version:7.9"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/_5sdp"
+                android:text="@string/versionname"
+                android:textColor="@color/white" />
 
 
-                <android.support.v4.view.ViewPager
+            <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -44,6 +41,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
@@ -61,9 +59,7 @@
                     <com.wowhubb.Pager.SimpleViewPagerIndicator
                         android:id="@+id/page_indicator"
                         android:layout_width="wrap_content"
-
                         android:layout_height="wrap_content"
-
                         android:gravity="center" />
                 </LinearLayout>
 
@@ -119,9 +115,9 @@
                 android:background="#202020"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
-                android:text="Register"
-                android:textSize="@dimen/_16sdp"
-                android:textColor="#ffffff" />
+                android:text="@string/register"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_16sdp" />
 
             <TextView
                 android:id="@+id/logintv"
@@ -131,10 +127,10 @@
                 android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
-                android:text="Login"
-                android:textSize="@dimen/_16sdp"
+                android:text="@string/login"
+                android:textColor="#ffffff"
 
-                android:textColor="#ffffff" />
+                android:textSize="@dimen/_16sdp" />
 
         </LinearLayout>
 

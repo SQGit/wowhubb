@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,16 +20,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+import com.wowhubb.Activity.CreateGroup;
+import com.wowhubb.Activity.CreateGroupActivity;
+import com.wowhubb.Activity.UpdateGroupActivity;
+import com.wowhubb.Activity.ViewGroupMembers;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Groups.Adminid;
 import com.wowhubb.Groups.Group;
+import com.wowhubb.Groups.GroupData;
+import com.wowhubb.Groups.User;
+import com.wowhubb.Groups.Userid;
 import com.wowhubb.R;
+import com.wowhubb.Utils.ApiClient;
+import com.wowhubb.Utils.ApiInterface;
 import com.wowhubb.Utils.HttpUtils;
 
 import org.json.JSONArray;
@@ -37,6 +48,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CreateGroupFragment extends Fragment {
@@ -52,21 +69,25 @@ public class CreateGroupFragment extends Fragment {
     ListView listView;
     groupAdapter adapter;
     View view;
-    private List<Group> groups;
-
+   // List<User> userslist;
+    List<Adminid> adminidList;
+    GroupData groupData;
+    List<Group> groupList;
+    ApiInterface apiInterface;
+    private static Retrofit retrofit = null;
     @SuppressLint("NewApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.creategroupfragmentlist, container, false);
-
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPreferences.edit();
         token = sharedPreferences.getString("token", "");
         userId = sharedPreferences.getString("userid", "");
+        groupData = new GroupData();
         contactList = new ArrayList<>();
-        groups = new ArrayList<>();
+        groupList = new ArrayList<>();
+       // userslist = new ArrayList<>();
+        adminidList = new ArrayList<>();
         Log.e("tag", "iddddddddd----------->" + userId);
         listView = (ListView) view.findViewById(R.id.listView);
 
@@ -75,7 +96,9 @@ public class CreateGroupFragment extends Fragment {
         loader_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loader_dialog.setCancelable(false);
         loader_dialog.setContentView(R.layout.test_loader);
-        new fetchGroup().execute();
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        connectAndGetApiData();
 
        /* Log.e("tag", "Groups---->>>>"+groups.size());
         if(groups.size()>0)
@@ -98,7 +121,36 @@ public class CreateGroupFragment extends Fragment {
             });
         }
 */
+
         return view;
+    }
+    public void connectAndGetApiData() {
+
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://104.197.80.225:3010/wow/group/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+
+        ApiInterface movieApiService = retrofit.create(ApiInterface.class);
+
+        Call<GroupData> call = movieApiService.getGroups("application/x-www-form-urlencoded", token);
+        call.enqueue(new Callback<GroupData>() {
+            @Override
+            public void onResponse(Call<GroupData> call, Response<GroupData> response) {
+                List<Group> groups = response.body().getGroups();
+                Log.d("tag", "Number of movies received: " + groups.size());
+                adapter = new groupAdapter(getActivity(), groups);
+                listView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<GroupData> call, Throwable throwable) {
+                Log.e("tag", throwable.toString());
+            }
+        });
     }
 
     public class fetchGroup extends AsyncTask<String, Void, String> {
@@ -133,43 +185,60 @@ public class CreateGroupFragment extends Fragment {
                     String status = jo.getString("success");
                     if (status.equals("true")) {
                         try {
+
+
                             // av_loader.setVisibility(View.GONE);
                             JSONArray feedArray = jo.getJSONArray("groups");
 
                             for (int i = 0; i < feedArray.length(); i++) {
                                 JSONObject feedObj = (JSONObject) feedArray.get(i);
+
                                 Group item = new Group();
+                                User user = new User();
+                                Adminid adminid = new Adminid();
                                 item.setId(feedObj.getString("_id"));
-                                ///  item.setAdminid(feedObj.getString("adminid"));
                                 item.setGroupname(feedObj.getString("groupname"));
-                                JSONArray users = feedObj.getJSONArray("users");
-                                item.setGroupcount("" + users.length());
+
                                 JSONObject adminobj = feedObj.getJSONObject("adminid");
                                 {
-                                    item.setFirstname(adminobj.getString("firstname"));
+                                    adminid.setFirstname(adminobj.getString("firstname"));
+                                    adminid.setId(adminobj.getString("_id"));
                                 }
 
-/*
+                                JSONArray users = feedObj.getJSONArray("users");
+                                item.setGroupcount("" + users.length());
 
-                               JSONArray users = feedObj.getJSONArray("users
-                                Log.e("tag", "val11111-----" + users.toString());
-                                   Userid userid = new Userid();
-                               JSONObject userobj = (JSONObject) users.get(i);
-                                    JSONObject user = userobj.getJSONObject("userid");
-                                     Log.e("tag", "val1111122222-----" + user);
-                                    userid.setId(user.getString("_id"));
-                                    userid.setFirstname(user.getString("firstname"));
-                                    userid.setLastname(user.getString("lastname"));
-                                    userid.setWowtagid(user.getString("wowtagid"));
+                                Log.e("tag", "userslength--------------------" + users.length());
 
-*/
+                                for (int j = 0; j < users.length(); j++) {
+                                    JSONObject feedJson = (JSONObject) users.get(j);
+                                    JSONObject userobj = feedJson.getJSONObject("userid");
+                                    {
+                                        Userid userid = new Userid();
+                                        userid.setId(userobj.getString("_id"));
+                                        // Log.e("tag", "basda-----" + userobj.getString("firstname"));
+                                        userid.setFirstname(userobj.getString("firstname"));
+                                        userid.setWowtagid(userobj.getString("wowtagid"));
+                                        ///  userid.setPersonalimage(userobj.getString("personalimage"));
+                                        // Log.e("tag", "itemmmmmm11-----" + userobj.getString("wowtagid"));
+                                        user.setUserid(userid);
+                                     //   userslist.add(user);
+                                      ///  item.setUsers(userslist);
+                                    }
+
+//                    Log.e("tag", "itemmmmmmlisttttt-----" + userslist.size());
+                                }
 
 
-                                groups.add(item);
-
-                                Log.e("tag", "basda-----" + groups.toString());
+                                item.setAdminid(adminid);
+                                groupList.add(item);
+                                groupData.setGroups(groupList);
+                                Log.e("tag", "aaaaaaaaaa-----" + groupData);
                             }
-                            adapter = new groupAdapter(getActivity(), groups);
+
+                            // Log.e("tag", "uttttttttttttttt-----" + groupList);
+
+                            adapter = new groupAdapter(getActivity(), groupList);
                             listView.setAdapter(adapter);
 
                         } catch (JSONException e) {
@@ -192,20 +261,17 @@ public class CreateGroupFragment extends Fragment {
     }
 
     class groupAdapter extends BaseAdapter {
-
-
         SharedPreferences.Editor editor;
         String token;
         Dialog dialog;
         private Activity activity;
         private LayoutInflater inflater;
-        private List<Group> feedItems;
+        public List<Group> feedItems;
 
         public groupAdapter(Activity activity, List<Group> feedItems) {
             this.activity = activity;
             this.feedItems = feedItems;
         }
-
 
         @Override
         public int getCount() {
@@ -236,47 +302,74 @@ public class CreateGroupFragment extends Fragment {
                 viewHolder = new ViewHolder();
                 viewHolder.position = position;
                 FontsOverride.overrideFonts(activity, convertView);
-                viewHolder.name = (CheckBox) convertView.findViewById(R.id.text1);
+                viewHolder.name = (TextView) convertView.findViewById(R.id.text1);
                 viewHolder.memberscount = (TextView) convertView.findViewById(R.id.members_tv);
                 viewHolder.createdname = (TextView) convertView.findViewById(R.id.createdname_tv);
                 viewHolder.deleteiv = convertView.findViewById(R.id.delete_iv);
                 viewHolder.editiv = convertView.findViewById(R.id.editiv);
-
                 convertView.setTag(viewHolder);
-
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Group item = groups.get(position);
+            Group item = feedItems.get(position);
+          //  List<Group> mains = groupData.getGroups();
 
+           Adminid adminid=item.getAdminid();
 
             viewHolder.name.setText(item.getGroupname());
-
-            viewHolder.memberscount.setText(item.getGroupcount() + " Members");
-            viewHolder.createdname.setText("Created by " + item.getFirstname());
-            //   final Doc doc = docs.get(position);
+            viewHolder.createdname.setText("Created by "+adminid.getFirstname());
+          viewHolder.memberscount.setText(item.getUsers().size() + " Members");
 
 
-            Log.e("tag", "UID------>" + userId);
-            Log.e("tag", "userid1222222332------>" + item.getId());
-
-          /* // String s = String.valueOf(item.getAdminid().getId());
-            if (userId==item.getAdminid().getId()) {
-                Log.e("tag", "truee------>" + item.getAdminid());
+            if (userId.equals(item.getAdminid().getId())) {
                 viewHolder.deleteiv.setVisibility(View.VISIBLE);
+                viewHolder.editiv.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.deleteiv.setVisibility(View.GONE);
-                Log.e("tag", "truee------>" + item.getAdminid());
-            }*/
+                viewHolder.editiv.setVisibility(View.GONE);
+            }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Group item = feedItems.get(position);
+
+                    Log.e("tag", "Gropupname" +item.getUsers());
+                    Intent intent = new Intent(activity, ViewGroupMembers.class);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = prefs.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(item.getUsers());
+                    editor.putString("membersstatus", "group");
+                    editor.putString("usergroups", json);
+                    editor.apply();
+                    getContext().startActivity(intent);
+
+                }
+            });
+
+            viewHolder.editiv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Group item = feedItems.get(position);
+
+                    Intent intent=new Intent(activity, UpdateGroupActivity.class);
+                    intent.putExtra("groupid",item.getId());
+                    intent.putExtra("groupname",item.getGroupname());
+                    intent.putExtra("groupprivacy",item.getPrivacy());
+                    startActivity(intent);
+
+                   activity.overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+                }
+            });
 
 
             viewHolder.deleteiv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     try {
-                        Group item = groups.get(position);
+                        Group item = feedItems.get(position);
                         Log.e("tag", "Gropupname" + position);
                         String groupId = item.getId();
                         Log.e("tag", "Gropupname" + item.getId());
@@ -289,7 +382,6 @@ public class CreateGroupFragment extends Fragment {
                 }
             });
 
-
             return convertView;
         }
 
@@ -298,11 +390,11 @@ public class CreateGroupFragment extends Fragment {
             TextView createdname, memberscount;
             int position;
             ImageView deleteiv, editiv;
-            CheckBox name;
+            TextView name;
         }
 
-    }
 
+    }
 
     public class DeleteGroups extends AsyncTask<String, Void, String> {
         String groupId;
@@ -347,8 +439,8 @@ public class CreateGroupFragment extends Fragment {
                     JSONObject jo = new JSONObject(s);
                     String status = jo.getString("success");
                     if (status.equals("true")) {
-                        removegroups(pos);
-
+                        startActivity(new Intent(getActivity(), CreateGroup.class));
+                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                     } else {
                         String msg = jo.getString("message");
                         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
@@ -369,10 +461,10 @@ public class CreateGroupFragment extends Fragment {
 
             if (pos > -1) {
                 Log.e("tag", "1111111133333333---pos id--------->>>" + pos);
-                groups.remove(pos);
+                groupList.remove(pos);
                 Log.e("tag", "111111112222---pos id--------->>>" + pos);
-                adapter.notifyDataSetChanged();
 
+                adapter.notifyDataSetChanged();
             }
         }
 

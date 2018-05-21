@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.wowhubb.R;
-
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by Guna on 29-11-2017.
  */
@@ -33,10 +28,6 @@ public class HighlightEventAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<HighlightEventModelPojo> eventHighlightsModelPojos;
     SharedPreferences.Editor editor;
     String token;
-    Typeface lato;
-    Dialog dialog;
-
-
 
 
     public HighlightEventAdapter(Context context, ArrayList<HighlightEventModelPojo> eventHighlightsModelPojos) {
@@ -58,16 +49,12 @@ public class HighlightEventAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final MyHolder myHolder= (MyHolder) holder;
         final HighlightEventModelPojo current=eventHighlightsModelPojos.get(position);
         myHolder.guest_wowtagid.setText(current.getguestWowTagId());
-        myHolder.guest_name.setText(current.getguestName());
-        myHolder.guest_info.setText(current.getguestInfo());
+        String video1=current.getguestVideo1();
+        Log.e("tag","Print Video"+video1);
 
-        SpannableString content = new SpannableString(current.getguestSite());
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        myHolder.guest_website.setText(content);
 
-        Glide.with(context).load(current.getguestProfile())
+        Glide.with(context).load(R.drawable.speaker1)
                 .into(myHolder.img_guestprofile);
-
 
         myHolder.lnr_video_link.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +67,7 @@ public class HighlightEventAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         editor = sharedPreferences.edit();
         token = sharedPreferences.getString("token", "");
-
-
     }
-
-
-
-
 
 
     @Override
@@ -95,16 +76,9 @@ public class HighlightEventAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-
-
-
     @Override
     public int getItemViewType(int position) {
         return position;
-
-    }
-
-    public interface NearByEventListener {
     }
 
 
@@ -126,17 +100,11 @@ public class HighlightEventAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             txt_speaker=itemView.findViewById(R.id.txt_speaker);
             lnr_video_link=itemView.findViewById(R.id.lnr_video_link);
 
-
-
-
-
             guest_wowtagid.setTypeface(tf);
             guest_name.setTypeface(tf);
             guest_info.setTypeface(tf);
             guest_website.setTypeface(tf);
             txt_speaker.setTypeface(tf);
-
-
         }
     }
 }

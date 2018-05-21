@@ -1,6 +1,7 @@
 package com.wowhubb.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -111,6 +112,9 @@ public class MyEventFeedsActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent intent = new Intent(MyEventFeedsActivity.this, EventFeedDashboard.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         finish();
     }
 }

@@ -1,16 +1,12 @@
+
 package com.wowhubb.FeedsData;
 
-
-/**
- * Created by Salman on 08-02-2018.
- */
 
 public class Feeds {
 
     private Boolean success;
     private Integer code;
     private Message message;
-
 
     public Boolean getSuccess() {
         return success;

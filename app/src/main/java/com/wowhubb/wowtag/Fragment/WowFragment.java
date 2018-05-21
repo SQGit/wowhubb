@@ -180,9 +180,10 @@ public class WowFragment extends Fragment {
                             adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.select_dialog_item,list);
                             autoCompleteTextView.setThreshold(1);//will start working from first character
                             autoCompleteTextView.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-                            autoCompleteTextView.setTextColor(getResources().getColor(R.color.brown));
-                            autoCompleteTextView.setHintTextColor(Color.parseColor("#382F2F"));
-                            autoCompleteTextView.setDropDownBackgroundResource(R.color.black_87);
+                            autoCompleteTextView.setTextColor(getResources().getColor(R.color.textcolr));
+                            autoCompleteTextView.setHintTextColor(getResources().getColor(R.color.white));
+                            autoCompleteTextView.setDropDownBackgroundResource(R.color.white);
+
                         } else {
                             Log.e("tag","No Wowtag Id Found..");
                         }

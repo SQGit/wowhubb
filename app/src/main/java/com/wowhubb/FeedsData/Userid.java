@@ -1,10 +1,9 @@
+
 package com.wowhubb.FeedsData;
 
-/**
- * Created by Salman on 16-02-2018.
- */
 
 public class Userid {
+
     private String _id;
     private String firstname;
     private String lastname;

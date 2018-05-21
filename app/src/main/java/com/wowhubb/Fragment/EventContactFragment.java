@@ -1,6 +1,9 @@
 package com.wowhubb.Fragment;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -18,21 +22,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.suke.widget.SwitchButton;
 import com.wowhubb.Activity.CreateEventActivity;
 import com.wowhubb.Activity.EventFeedDashboard;
+import com.wowhubb.Activity.QuickCreateEventVenues;
 import com.wowhubb.Adapter.ExpandableListAdapter;
 import com.wowhubb.Adapter.ExpandableListDataPump;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Groups.Group;
 import com.wowhubb.R;
 import com.wowhubb.Utils.HttpUtils;
 import com.wowhubb.Utils.Utils;
@@ -64,15 +72,15 @@ public class EventContactFragment extends Fragment {
     TextInputLayout til_name, til_phone, til_email, til_msg, til_gift, til_donation, til_others;
     Typeface lato;
     EditText event_info, name, phone, email, message;
-    CheckBox sharenw_cb, specific_group, eventlink_cb;
+    CheckBox registerrsvp_cb,sharenw_cb, specific_group, eventlink_cb;
     Dialog dialog, loader_dialog;
-    String str_phone, str_email;
-    TextView helpfultips_tv;
+    String str_phone, str_email,str_registerrsvp;
+    TextView helpfultips_tv, grouppublishtv;
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List expandableListTitle;
     HashMap<String, List<String>> expandableListDetail;
-    String runtimeFrom, runtimeTo, str_category, eventhighlights2, eventhighlightsvideo2, eventhighlightsvideo1, eventhighlights1, speakername2, speakerlink2, speakeractivities2;
+    String runtimeFrom, runtimeTo, str_category,runtimeto,runtimefrom, eventenddate, eventstartdate, eventhighlightsvideo1, eventhighlights1, speakername2, speakerlink2, speakeractivities2;
     EditText eventregistryurl_et, donationurl_et, othersurl_et;
     LinearLayout ll;
     String profilepath, video1, video2, coverpage, token, eventId, highlights1, highlights2, highlight1_status, highlight2_status, highlightsvideo1, highlightsvideo2;
@@ -80,6 +88,8 @@ public class EventContactFragment extends Fragment {
     SharedPreferences.Editor edit;
     String eventguesttype2;
     int eventcount;
+    ListView listview;
+    private List<Group> groups;
 
     public static EventContactFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
@@ -93,8 +103,10 @@ public class EventContactFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        eventData = ((CreateEventActivity) getActivity()).eventData;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (((CreateEventActivity) getActivity()) != null) {
+            eventData = ((CreateEventActivity) getActivity()).eventData;
+        }
         final View view = inflater.inflate(R.layout.fragment_eventcontact, container, false);
 
         FontsOverride.overrideFonts(getActivity(), view);
@@ -104,24 +116,23 @@ public class EventContactFragment extends Fragment {
         edit = sharedPreferences.edit();
         video1 = sharedPreferences.getString("video1", "");
         token = sharedPreferences.getString("token", "");
-        runtimeFrom = sharedPreferences.getString("runtimeFrom", "");
-        runtimeTo = sharedPreferences.getString("runtimeTo", "");
+       // runtimeFrom = sharedPreferences.getString("runtimeFrom", "");
+      //  runtimeTo = sharedPreferences.getString("runtimeTo", "");
         str_category = sharedPreferences.getString("str_category", "");
         coverpage = sharedPreferences.getString("coverpage", "");
-        // eventhighlights2 = sharedPreferences.getString("eventhighlights2", "");
+        eventenddate= sharedPreferences.getString("eventenddate", "");
         eventhighlights1 = sharedPreferences.getString("eventhighlights1", "");
-        // eventhighlightsvideo2 = sharedPreferences.getString("eventhighlightsvideo2", "");
+        eventstartdate= sharedPreferences.getString("eventstartdate", "");
         eventhighlightsvideo1 = sharedPreferences.getString("eventhighlightsvideo1", "");
-        // speakername2 = sharedPreferences.getString("speakername2", "");
-        // speakerlink2 = sharedPreferences.getString("speakerlink2", "");
-        //  speakeractivities2 = sharedPreferences.getString("speakeractivities2", "");
+        runtimefrom = sharedPreferences.getString("runtimefrom", "");
+        runtimeto = sharedPreferences.getString("runtimeto", "");
 
         helpfultips_tv = view.findViewById(R.id.helpfultips_tv);
-
+        groups = new ArrayList<>();
         lato = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf");
-        final com.suke.widget.SwitchButton switchButton = (com.suke.widget.SwitchButton)
+        final com.suke.widget.SwitchButton phone_sb = (com.suke.widget.SwitchButton)
                 view.findViewById(R.id.switch_button);
-        com.suke.widget.SwitchButton switchButton1 = (com.suke.widget.SwitchButton)
+        com.suke.widget.SwitchButton email_sb = (com.suke.widget.SwitchButton)
                 view.findViewById(R.id.switch_button1);
 
 
@@ -130,16 +141,18 @@ public class EventContactFragment extends Fragment {
         loader_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loader_dialog.setCancelable(false);
         loader_dialog.setContentView(R.layout.test_loader);
-        til_name = (TextInputLayout) view.findViewById(R.id.til_name);
-        til_phone = (TextInputLayout) view.findViewById(R.id.til_phone);
-        til_email = (TextInputLayout) view.findViewById(R.id.til_email);
-        til_msg = (TextInputLayout) view.findViewById(R.id.til_msg);
+        til_name = view.findViewById(R.id.til_name);
+        til_phone =view.findViewById(R.id.til_phone);
+        til_email =  view.findViewById(R.id.til_email);
+        til_msg = view.findViewById(R.id.til_msg);
         til_donation = view.findViewById(R.id.til_donation);
         til_gift = view.findViewById(R.id.til_gift);
         til_others = view.findViewById(R.id.til_otherurl);
         sharenw_cb = view.findViewById(R.id.share_cb);
         specific_group = view.findViewById(R.id.specific_group_cb);
         eventlink_cb = view.findViewById(R.id.eventlink_cb);
+        registerrsvp_cb=view.findViewById(R.id.registerrsvp_cb);
+
         name = view.findViewById(R.id.name_et);
         phone = view.findViewById(R.id.phone_et);
         email = view.findViewById(R.id.email_et);
@@ -171,16 +184,20 @@ public class EventContactFragment extends Fragment {
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_wowhubb_network);
-        View view1 = dialog.getWindow().getDecorView().getRootView();
-        FontsOverride.overrideFonts(dialog.getContext(), view1);
-        ImageView share_iv = dialog.findViewById(R.id.closeiv);
-        share_iv.setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.dialog_wowhubb_networklist);
+        listview = dialog.findViewById(R.id.listView);
+        ImageView closeiv = dialog.findViewById(R.id.closeiv);
+        grouppublishtv =  dialog.findViewById(R.id.publish_tv);
+        closeiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
+        new fetchGroup().execute();
+
+        View view1 = dialog.getWindow().getDecorView().getRootView();
+        FontsOverride.overrideFonts(dialog.getContext(), view1);
 
         // new eventvenue().execute();
 
@@ -285,19 +302,43 @@ public class EventContactFragment extends Fragment {
             }
         });
 
-        switchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+        phone_sb.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 //TODO do your job
                 if (isChecked) {
                     phone.setEnabled(true);
-                    email.setEnabled(true);
                 } else {
                     phone.setEnabled(false);
+
+                }
+            }
+        });
+
+        email_sb.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                //TODO do your job
+                if (isChecked) {
+                    email.setEnabled(true);
+                } else {
                     email.setEnabled(false);
                 }
+            }
+        });
 
 
+        registerrsvp_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked)
+                {
+                    str_registerrsvp="on";
+                } else
+                {
+                    str_registerrsvp="off";
+                }
             }
         });
 
@@ -328,20 +369,7 @@ public class EventContactFragment extends Fragment {
                 }
             }
         });
-        switchButton1.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                //TODO do your job
-                if (isChecked) {
-                    phone.setEnabled(true);
-                    email.setEnabled(true);
-                } else {
-                    phone.setEnabled(false);
-                    email.setEnabled(false);
-                }
 
-            }
-        });
 
 
         return view;
@@ -385,9 +413,9 @@ public class EventContactFragment extends Fragment {
                 httppost.setHeader("eventtype", "personal_event");
                 httppost.setHeader("eventname", EventTypeFragment.eventtopic_et.getText().toString());
                 httppost.setHeader("eventtimezone", EventTypeFragment.eventtimezone_et.getText().toString());
-                httppost.setHeader("eventstartdate", EventTypeFragment.eventdate_et.getText().toString());
-                httppost.setHeader("eventenddate", EventTypeFragment.eventdateto_et.getText().toString());
-                httppost.setHeader("eventdescription", EventTypeFragment.eventdescr_et.getText().toString());
+                httppost.setHeader("eventstartdate", eventstartdate);
+                httppost.setHeader("eventenddate",eventenddate);
+                httppost.setHeader("eventdescription", EventTypeFragment.desc_et.getText().toString());
                 HttpResponse response = null;
                 HttpEntity r_entity = null;
 
@@ -497,8 +525,8 @@ public class EventContactFragment extends Fragment {
 
                 httppost.setHeader("eventid", eventId);
                 httppost.setHeader("eventtitle", WowtagFragment.eventname_et.getText().toString());
-                httppost.setHeader("runtimefrom", WowtagFragment.fromtime_tv.getText().toString());
-                httppost.setHeader("runtimeto", WowtagFragment.totime_tv.getText().toString());
+                httppost.setHeader("runtimefrom", runtimefrom);
+                httppost.setHeader("runtimeto",runtimeto);
 
                 HttpResponse response = null;
                 HttpEntity r_entity = null;
@@ -632,7 +660,7 @@ public class EventContactFragment extends Fragment {
                 }*/
                 if (EventHighlightsFragment.eventhighlightsvideo1 != null) {
                     Log.e("tag", "h11" + eventhighlightsvideo1);
-                    entity.addPart("eventhighlightsvideo1", new FileBody(new File(EventHighlightsFragment.eventhighlightsvideo1), "video/mp4"));
+                    entity.addPart("eventhighlights2", new FileBody(new File(EventHighlightsFragment.eventhighlightsvideo1), "video/mp4"));
                 }
                 /*if (eventhighlightsvideo2 != null) {
                     Log.e("tag", "h12" + eventhighlightsvideo1);
@@ -818,8 +846,9 @@ public class EventContactFragment extends Fragment {
                 jsonObject.accumulate("eventcontactmessage", message.getText().toString());
 
                 jsonObject.accumulate("privateevent", "pv");
-                jsonObject.accumulate("registerrsvp", "regrsvp");
+                jsonObject.accumulate("registerrsvp", str_registerrsvp);
                 jsonObject.accumulate("eventnolinks", "no lilnks");
+
 
 
                 String gift_url = eventregistryurl_et.getText().toString();
@@ -880,4 +909,154 @@ public class EventContactFragment extends Fragment {
         }
 
     }
+
+    public class fetchGroup extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+          //  loader_dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String json = "", jsonStr = "";
+
+            try {
+                JSONObject jsonObject = new JSONObject();
+                json = jsonObject.toString();
+                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/group/fetchgroups", json, token);
+            } catch (Exception e) {
+                Log.e("InputStream", e.getLocalizedMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "tag" + s);
+            //loader_dialog.dismiss();
+            if (s != null) {
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    String status = jo.getString("success");
+                    if (status.equals("true")) {
+                        try {
+                            // av_loader.setVisibility(View.GONE);
+                            JSONArray feedArray = jo.getJSONArray("groups");
+
+                            for (int i = 0; i < feedArray.length(); i++) {
+                                JSONObject feedObj = (JSONObject) feedArray.get(i);
+                                Group item = new Group();
+                                item.setId(feedObj.getString("_id"));
+                                item.setGroupname(feedObj.getString("groupname"));
+                                JSONArray users = feedObj.getJSONArray("users");
+                                item.setGroupcount("" + users.length());
+
+                                JSONObject adminobj = feedObj.getJSONObject("adminid");
+                                {
+                                    item.setFirstname(adminobj.getString("firstname"));
+                                }
+
+
+                                groups.add(item);
+
+                                Log.e("tag", "basda-----" + groups.toString());
+                            }
+
+                            groupAdapter adapter = new groupAdapter(getActivity(), groups);
+                            listview.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("tag", "nt" + e.toString());
+                }
+            } else {
+
+            }
+
+        }
+
+    }
+
+    class groupAdapter extends BaseAdapter {
+        SharedPreferences.Editor editor;
+        String token, userId;
+        Dialog dialog;
+        private Activity activity;
+        private LayoutInflater inflater;
+        private List<Group> feedItems;
+
+        public groupAdapter(Activity activity, List<Group> feedItems) {
+            this.activity = activity;
+            this.feedItems = feedItems;
+        }
+
+        @Override
+        public int getCount() {
+            return feedItems.size();
+        }
+
+        @Override
+        public Object getItem(int location) {
+            return feedItems.get(location);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @SuppressLint("ResourceAsColor")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final groupAdapter.ViewHolder viewHolder;
+
+            if (inflater == null)
+                inflater = (LayoutInflater) activity
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.dialog_viewgroup, null);
+                viewHolder = new groupAdapter.ViewHolder();
+                viewHolder.position = position;
+                FontsOverride.overrideFonts(activity, convertView);
+                viewHolder.name = (CheckBox) convertView.findViewById(R.id.text1);
+                viewHolder.memberscount = (TextView) convertView.findViewById(R.id.members_tv);
+                viewHolder.createdname_tv = convertView.findViewById(R.id.createdname_tv);
+                convertView.setTag(viewHolder);
+
+
+            } else {
+                viewHolder = (groupAdapter.ViewHolder) convertView.getTag();
+            }
+
+            Group item = groups.get(position);
+            viewHolder.name.setText(item.getGroupname());
+            Log.e("tag", "Gropupname" + item.getGroupname());
+            viewHolder.memberscount.setText(item.getGroupcount() + " Members");
+
+            viewHolder.createdname_tv.setText("Created by " + item.getFirstname());
+            viewHolder.name.setChecked(false);
+
+            return convertView;
+        }
+
+        class ViewHolder {
+            TextView memberscount, createdname_tv;
+            int position;
+            CheckBox name;
+
+
+        }
+
+
+    }
+
 }

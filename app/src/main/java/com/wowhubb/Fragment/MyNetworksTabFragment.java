@@ -31,8 +31,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -59,7 +64,8 @@ import static com.wowhubb.R.drawable;
 import static com.wowhubb.R.id;
 import static com.wowhubb.R.layout;
 
-public class MyNetworksTabFragment extends Fragment {
+public class MyNetworksTabFragment extends Fragment implements SearchView.OnQueryTextListener {
+    static SearchView searchView;
     SharedPreferences.Editor editor;
     String token, personalimage;
     FriendListAdapter adapter;
@@ -67,7 +73,6 @@ public class MyNetworksTabFragment extends Fragment {
     List<String> arrayList = new ArrayList<>();
     Dialog dialog;
     private List<FeedItem> feedItems;
-
 
     public static MyNetworksTabFragment newInstance() {
         MyNetworksTabFragment fragment = new MyNetworksTabFragment();
@@ -84,6 +89,9 @@ public class MyNetworksTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(layout.fragment_networklist, container, false);
         FontsOverride.overrideFonts(getActivity(), view);
+
+        setHasOptionsMenu(true);
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPreferences.edit();
         token = sharedPreferences.getString("token", "");
@@ -100,15 +108,72 @@ public class MyNetworksTabFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(layout.test_loader);
         new getNetworks().execute();
+
+
+
+
         return view;
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        // Do something when collapsed
+                        adapter.setFilter(feedItems);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        // Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<FeedItem> filteredModelList = filter(feedItems, newText);
+        adapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    private List<FeedItem> filter(List<FeedItem> models, String query) {
+        query = query.toLowerCase();
+
+        final List<FeedItem> filteredModelList = new ArrayList<>();
+        for (FeedItem model : models) {
+            final String text = model.getFriendname().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 
     public class getNetworks extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           // dialog.show();
+            // dialog.show();
         }
 
         @Override
@@ -178,8 +243,6 @@ public class MyNetworksTabFragment extends Fragment {
     }
 
     class FriendListAdapter extends BaseAdapter {
-
-
         SharedPreferences.Editor editor;
         String token, userId;
         Dialog dialog;
@@ -280,7 +343,7 @@ public class MyNetworksTabFragment extends Fragment {
 
             } else {
                 viewHolder.mutualtv.setVisibility(View.VISIBLE);
-                viewHolder.mutualtv.setText(item.getMutualfriends()+" Mutual Connections");
+                viewHolder.mutualtv.setText(item.getMutualfriends() + " Mutual Connections");
 
             }
 
@@ -318,6 +381,12 @@ public class MyNetworksTabFragment extends Fragment {
             });
 
             return convertView;
+        }
+
+        public void setFilter(List<FeedItem> countryModels) {
+            feedItems = new ArrayList<>();
+            feedItems.addAll(countryModels);
+            notifyDataSetChanged();
         }
 
         class ViewHolder {
@@ -499,5 +568,37 @@ public class MyNetworksTabFragment extends Fragment {
             }
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("tag",">>>pause-----------");
+       // setHasOptionsMenu(true);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("tag",">>>stop-----------");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("tag",">>>dvvvvvv-----------");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("tag",">>>destroy-----------");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.e("tag",">>>detach-----------");
     }
 }

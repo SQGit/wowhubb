@@ -12,10 +12,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,9 +25,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hbb20.CountryCodePicker;
 import com.wang.avi.AVLoadingIndicatorView;
-import com.wowhubb.Adapter.CustomAdapter;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 import com.wowhubb.Utils.Config;
@@ -48,8 +47,8 @@ public class RegisterCountryActivity extends Activity {
     ImageView submit;
     Config config;
     EditText phone_et;
-    String str_phone, val_status, str_country;
-    CountryCodePicker countryCodePicker;
+    String str_phone, str_email, val_status, str_country,str_password;
+    // CountryCodePicker countryCodePicker;
     Snackbar snackbar;
     TextView tv_snack;
     AVLoadingIndicatorView av_loader;
@@ -62,7 +61,10 @@ public class RegisterCountryActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_country);
-
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        str_phone = sharedPreferences.getString("str_phone", "");
+        str_email = sharedPreferences.getString("str_email", "");
+        str_password = sharedPreferences.getString("str_password", "");
         config = new Config();
 
         //------------------------------FONT STYLE------------------------------------------------//
@@ -77,23 +79,25 @@ public class RegisterCountryActivity extends Activity {
         sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         edit = sharedPrefces.edit();
         edit.putString("val_status", "phone");
-        edit.remove("str_email");
-        edit.remove("str_phone");
+        //    edit.remove("str_email");
+        // edit.remove("str_phone");
         edit.apply();
         edit.commit();
 
-        head_tv =  findViewById(R.id.head_tv);
+        head_tv = findViewById(R.id.head_tv);
         submit = findViewById(R.id.submit_iv);
         phone_et = findViewById(R.id.phone_et);
-        av_loader =  findViewById(R.id.avi);
-        phone_til =  findViewById(R.id.til_phone);
+        av_loader = findViewById(R.id.avi);
+        phone_til = findViewById(R.id.til_phone);
         head_tv.setTypeface(latoheading);
         phone_til.setTypeface(lato);
-        ByEmail =  findViewById(R.id.rademail);
-        ByPhone =  findViewById(R.id.radiophone);
-        radioGroup =  findViewById(R.id.radioGroup);
-        countryCodePicker = findViewById(R.id.ccp);
-
+        ByEmail = findViewById(R.id.rademail);
+        ByPhone = findViewById(R.id.radiophone);
+        radioGroup = findViewById(R.id.radioGroup);
+        //  countryCodePicker = findViewById(R.id.ccp);
+        phone_et.setText("");
+        phone_et.setText(str_phone);
+        phone_et.setSelection(phone_et.getText().length());
         //-----------------------------------------SNACKBAR----------------------------------------//
 
         snackbar = Snackbar.make(findViewById(R.id.top), R.string.networkError, Snackbar.LENGTH_LONG);
@@ -115,7 +119,10 @@ public class RegisterCountryActivity extends Activity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 if (ByPhone.isChecked()) {
-                    countryCodePicker.setVisibility(View.VISIBLE);
+                    //  countryCodePicker.setVisibility(View.VISIBLE);
+                    phone_et.setText("");
+                    phone_et.setText(str_phone);
+                    phone_et.setSelection(phone_et.getText().length());
                     phone_et.setError(null);
                     phone_til.setHint("Mobile Number");
                     phone_til.setPadding(0, 0, 0, 0);
@@ -125,17 +132,17 @@ public class RegisterCountryActivity extends Activity {
                     val_status = sharedPreferences.getString("val_status", "");
 
                 } else {
-                    countryCodePicker.setVisibility(View.GONE);
-                    phone_et.setError(null);
                     phone_et.setText("");
-                    phone_til.setPadding(40, 0, 0, 0);
+                    phone_et.setText(str_email);
+                    phone_et.setError(null);
+                    phone_et.setSelection(phone_et.getText().length());
+                    phone_til.setPadding(0, 0, 0, 0);
                     phone_til.setHint("Email");
                     edit.putString("val_status", "email");
                     edit.commit();
                     final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
                     val_status = sharedPreferences.getString("val_status", "");
-                    edit.remove("str_phone");
-                    edit.apply();
+
                 }
 
 
@@ -143,19 +150,15 @@ public class RegisterCountryActivity extends Activity {
         });
 
 
-
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                str_country = countryCodePicker.getSelectedCountryCodeWithPlus();
+                //  str_country = countryCodePicker.getSelectedCountryCodeWithPlus();
                 phone_et.setEnabled(true);
                 str_phone = phone_et.getText().toString();
-                edit.putString("str_country", str_country);
-                edit.commit();
 
-                if (!str_country.equals("")) {
-                    phone_et.setEnabled(true);
+
                     if (!phone_et.getText().toString().trim().equalsIgnoreCase("")) {
                         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
                         val_status = sharedPreferences.getString("val_status", "");
@@ -164,9 +167,8 @@ public class RegisterCountryActivity extends Activity {
                                 phone_til.setError(null);
                                 if (!Utils.Operations.isOnline(RegisterCountryActivity.this)) {
                                     snackbar.show();
-                                    tv_snack.setText(R.string.networkError);}
-                                else
-                                {
+                                    tv_snack.setText(R.string.networkError);
+                                } else {
                                     new login_customer().execute();
                                 }
 
@@ -177,15 +179,13 @@ public class RegisterCountryActivity extends Activity {
                         } else {
 
                             if (!(!android.util.Patterns.EMAIL_ADDRESS.matcher(phone_et.getText().toString()).matches())) {
-                                phone_et.setError(null);
+                                phone_til.setError(null);
                                 {
                                     phone_et.requestFocus();
                                     if (!Utils.Operations.isOnline(RegisterCountryActivity.this)) {
                                         snackbar.show();
                                         tv_snack.setText(R.string.networkError);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         new login_customer_email().execute();
                                     }
 
@@ -203,20 +203,17 @@ public class RegisterCountryActivity extends Activity {
                         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegisterCountryActivity.this);
                         val_status = sharedPreferences.getString("val_status", "");
                         if (val_status.equals("phone")) {
-                            phone_et.setError(null);
+                            phone_til.setError(null);
                             phone_til.setError("Enter Mobile Number");
                             phone_et.requestFocus();
                         } else {
-                            phone_et.setError(null);
+                            phone_til.setError(null);
                             phone_til.setError("Enter Email");
                             phone_et.requestFocus();
                         }
 
                     }
 
-                } else {
-                    phone_et.setEnabled(false);
-                }
 
 
             }
@@ -256,7 +253,7 @@ public class RegisterCountryActivity extends Activity {
             String json = "", jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("tonumber", str_country + str_phone);
+                jsonObject.accumulate("tonumber",  str_phone);
                 json = jsonObject.toString();
                 return jsonStr = HttpUtils.makeRequest(Config.WEB_URL_OTP, json);
             } catch (Exception e) {
@@ -281,9 +278,9 @@ public class RegisterCountryActivity extends Activity {
                             String msg = jo.getString("message");
                             SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit = sharedPrefces.edit();
-                           // edit.putString("otp", otp);
                             edit.putString("str_phone", str_phone);
                             edit.putString("loginstatus", "phone");
+                            edit.putString("str_password",str_password);
                             edit.commit();
                             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                             startActivity(new Intent(RegisterCountryActivity.this, RegisterOtpActivity.class));
@@ -345,11 +342,11 @@ public class RegisterCountryActivity extends Activity {
                     if (jo.has("success")) {
                         String status = jo.getString("success");
                         if (status.equals("true")) {
-                           // String otp = jo.getString("otp");
+                            // String otp = jo.getString("otp");
                             String msg = jo.getString("message");
                             SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor edit = sharedPrefces.edit();
-                            //edit.putString("otp", otp);
+                           edit.putString("str_password", str_password);
                             edit.putString("str_email", str_phone);
                             edit.putString("loginstatus", "email");
                             edit.commit();
@@ -376,4 +373,14 @@ public class RegisterCountryActivity extends Activity {
         }
 
     }
+
+
+
+
+
+
+
+
+
+
 }

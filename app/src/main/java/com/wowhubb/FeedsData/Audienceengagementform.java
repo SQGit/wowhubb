@@ -1,20 +1,17 @@
-package com.wowhubb.FeedsData;
 
-/**
- * Created by Salman on 08-02-2018.
- */
+package com.wowhubb.FeedsData;
 
 public class Audienceengagementform {
 
     private Object gender;
     private Object country;
     private Object zipcode;
-    private String city;
-    private String address2;
-    private String address1;
+    private Object city;
+    private Object address2;
+    private Object address1;
     private Object phone;
     private String email;
-    private Object wowtagid;
+    private String wowtagid;
     private String fullname;
 
     public Object getGender() {
@@ -41,27 +38,27 @@ public class Audienceengagementform {
         this.zipcode = zipcode;
     }
 
-    public String getCity() {
+    public Object getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Object city) {
         this.city = city;
     }
 
-    public String getAddress2() {
+    public Object getAddress2() {
         return address2;
     }
 
-    public void setAddress2(String address2) {
+    public void setAddress2(Object address2) {
         this.address2 = address2;
     }
 
-    public String getAddress1() {
+    public Object getAddress1() {
         return address1;
     }
 
-    public void setAddress1(String address1) {
+    public void setAddress1(Object address1) {
         this.address1 = address1;
     }
 
@@ -81,11 +78,11 @@ public class Audienceengagementform {
         this.email = email;
     }
 
-    public Object getWowtagid() {
+    public String getWowtagid() {
         return wowtagid;
     }
 
-    public void setWowtagid(Object wowtagid) {
+    public void setWowtagid(String wowtagid) {
         this.wowtagid = wowtagid;
     }
 

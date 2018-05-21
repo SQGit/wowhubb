@@ -34,7 +34,9 @@ import android.widget.Toast;
 
 import com.wowhubb.EventServiceProvider.Activity.EventServiceProviderActivity;
 import com.wowhubb.Fonts.FontsOverride;
+import com.wowhubb.Nearbyeventsmodule.Activity.NearbyCategoryActivity;
 import com.wowhubb.R;
+import com.wowhubb.ShareBookEvents.Activity.SearchBookMainActivity;
 import com.wowhubb.Utils.Config;
 import com.wowhubb.Utils.HttpUtils;
 import com.wowhubb.wowtag.Activity.WowtagRsvp;
@@ -122,6 +124,13 @@ public class LandingPageActivity extends Activity {
                 create_dialog.show();
             }
         }
+        searchevents_lv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(LandingPageActivity.this, SearchBookMainActivity.class));
+            }
+        });
 
 
         //-----------------------------------------SNACKBAR----------------------------------------//
@@ -349,20 +358,10 @@ public class LandingPageActivity extends Activity {
         });
 
 
-        searchevents_lv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                snackbar.show();
-            }
-        });
-
-
         nearby_lv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // startActivity(new Intent(LandingPageActivity.this, NearbyCategoryActivity.class));
-                snackbar.show();
+                startActivity(new Intent(LandingPageActivity.this, NearbyCategoryActivity.class));
             }
         });
 
@@ -381,8 +380,8 @@ public class LandingPageActivity extends Activity {
                         Intent setIntent = new Intent(Intent.ACTION_MAIN);
                         setIntent.addCategory(Intent.CATEGORY_HOME);
                         setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        setIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(setIntent);
+
 
                         SharedPreferences sharedPrefces = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor edit = sharedPrefces.edit();
@@ -503,13 +502,12 @@ public class LandingPageActivity extends Activity {
                             Log.e("tag", "print_List" + list);
 
 
-                            adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.select_dialog_item, list);
-                            Log.e("tag", "Adapter" + adapter);
+                            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.select_dialog_item,list);
                             autoCompleteTextView1.setThreshold(1);//will start working from first character
                             autoCompleteTextView1.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-                            autoCompleteTextView1.setTextColor(getResources().getColor(R.color.brown));
-                            autoCompleteTextView1.setHintTextColor(Color.parseColor("#382F2F"));
-                            autoCompleteTextView1.setDropDownBackgroundResource(R.color.black_87);
+                            autoCompleteTextView1.setTextColor(getResources().getColor(R.color.textcolr));
+                            autoCompleteTextView1.setHintTextColor(getResources().getColor(R.color.black_87));
+                            autoCompleteTextView1.setDropDownBackgroundResource(R.color.colorPrimary);
 
                         } else {
 

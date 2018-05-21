@@ -1,5 +1,6 @@
 package com.wowhubb.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ import com.wowhubb.Activity.LandingPageActivity;
 import com.wowhubb.Fonts.FontsOverride;
 import com.wowhubb.R;
 import com.wowhubb.Utils.HttpUtils;
+import com.wowhubb.data.EventData;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -59,7 +62,7 @@ public class GiftRegistryFragment extends Fragment {
     EditText eventregistryurl_et, donationurl_et, othersurl_et;
     private TextView callToAction, subaction;
     LinearLayout ll;
-
+    public EventData eventData;
     public static GiftRegistryFragment newInstance(int page, boolean isLast) {
         Bundle args = new Bundle();
         args.putInt("page", page);
@@ -72,7 +75,10 @@ public class GiftRegistryFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (((CreateEventActivity) getActivity()) != null) {
+            eventData = ((CreateEventActivity) getActivity()).eventData;
+        }
         View view = inflater.inflate(R.layout.fragment_giftregistry, container, false);
         FontsOverride.overrideFonts(getActivity(), view);
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -84,12 +90,12 @@ public class GiftRegistryFragment extends Fragment {
 
         CreateEventActivity.skiptv.setVisibility(View.INVISIBLE);
 
-        av_loader = (AVLoadingIndicatorView) view.findViewById(R.id.avi);
+        av_loader =view.findViewById(R.id.avi);
         lato = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lato.ttf");
-        til_ticketurl = (TextInputLayout) view.findViewById(R.id.til_ticketurl);
-        til_donation = (TextInputLayout) view.findViewById(R.id.til_donation);
-        til_otherurl = (TextInputLayout) view.findViewById(R.id.til_otherurl);
-        callToAction = (TextView) view.findViewById(R.id.tv_calltoaction);
+        til_ticketurl =  view.findViewById(R.id.til_ticketurl);
+        til_donation = view.findViewById(R.id.til_donation);
+        til_otherurl =  view.findViewById(R.id.til_otherurl);
+        callToAction = view.findViewById(R.id.tv_calltoaction);
 
         eventregistryurl_et = view.findViewById(R.id.eventreg_et);
         donationurl_et = view.findViewById(R.id.donationurl_et);
@@ -172,6 +178,7 @@ public class GiftRegistryFragment extends Fragment {
                 }
             }
         });
+
         eventlink_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -195,6 +202,7 @@ public class GiftRegistryFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class videoupload_task extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -207,7 +215,7 @@ public class GiftRegistryFragment extends Fragment {
         protected String doInBackground(String... strings) {
             String json = "", jsonStr = "";
             try {
-                String responseString = null;
+                String responseString;
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost("http://104.197.80.225:3010/wow/event/create");
                 httppost.setHeader("token", token);
@@ -257,13 +265,19 @@ public class GiftRegistryFragment extends Fragment {
                     }
 
                     try {
-                        r_entity = response.getEntity();
+                        if (response != null) {
+                            r_entity = response.getEntity();
+                        }
                     } catch (Exception e) {
                         Log.e("tag", "dsa:" + e.toString());
                     }
 
-                    int statusCode = response.getStatusLine().getStatusCode();
-                    Log.e("tag", response.getStatusLine().toString());
+                    int statusCode = 0;
+                    if (response != null) {
+                        statusCode = response.getStatusLine().getStatusCode();
+                        Log.e("tag", response.getStatusLine().toString());
+                    }
+
                     if (statusCode == 200) {
                         responseString = EntityUtils.toString(r_entity);
                         Log.e("tag", "rssss" + responseString);
@@ -294,14 +308,14 @@ public class GiftRegistryFragment extends Fragment {
             super.onPostExecute(s);
             loader_dialog.dismiss();
             try {
-                JSONObject jo = new JSONObject(s.toString());
+                JSONObject jo = new JSONObject(s);
                 String success = jo.getString("success");
                 if (success.equals("true")) {
                     JSONObject msg = jo.getJSONObject("message");
                     eventId = msg.getString("_id");
                     new updateeventinfo().execute();
                 } else {
-
+                    Log.e("tag", "else");
 
                 }
             } catch (JSONException e) {
@@ -313,9 +327,10 @@ public class GiftRegistryFragment extends Fragment {
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     public class updateeventinfo extends AsyncTask<String, Void, String> {
 
-        public updateeventinfo() {
+        updateeventinfo() {
 
         }
 
@@ -327,7 +342,7 @@ public class GiftRegistryFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            String json = "", jsonStr = "";
+            String json, jsonStr = "";
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("eventid", eventId);
@@ -335,6 +350,10 @@ public class GiftRegistryFragment extends Fragment {
                 jsonObject.accumulate("eventdescription", EventTypeFragment.desc_et.getText().toString());
                 jsonObject.accumulate("eventdate", EventTypeFragment.eventdate_et.getText().toString());
                 jsonObject.accumulate("eventname", "!" + WowtagFragment.eventname_et.getText().toString());
+                jsonObject.accumulate("eventstartdate",eventData.eventstartdate);
+                jsonObject.accumulate("eventenddate",eventData.eventenddate);
+                Log.e("tag","startttttttttt------------->"+eventData.eventstartdate);
+                Log.e("tag","enddddddddddd------------->"+eventData.eventenddate);
 
                 jsonObject.accumulate("eventvenuename", EventVenueFragment.venuename.getText().toString());
                 jsonObject.accumulate("eventvenueaddress", EventVenueFragment.address.getText().toString());
@@ -350,7 +369,7 @@ public class GiftRegistryFragment extends Fragment {
 
                 if(!gift_url.matches(""))
                 {
-                    Log.e("tag","gift urllllll");
+
                     jsonObject.accumulate("giftregistryurl", eventregistryurl_et.getText().toString());
                 }
                 if(!donation_url.matches(""))
@@ -371,7 +390,7 @@ public class GiftRegistryFragment extends Fragment {
                 }
 
                 json = jsonObject.toString();
-                return jsonStr = HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/info", json, token);
+                return HttpUtils.makeRequest1("http://104.197.80.225:3010/wow/event/info", json, token);
             } catch (Exception e) {
                 Log.e("InputStream", e.getLocalizedMessage());
             }
@@ -383,26 +402,27 @@ public class GiftRegistryFragment extends Fragment {
             super.onPostExecute(s);
             Log.e("tag", "tag" + s);
             loader_dialog.dismiss();
-            if (s != null) {
-                try {
-                    JSONObject jo = new JSONObject(s);
-                    String status = jo.getString("success");
-                    if (status.equals("true")) {
-                        Toast.makeText(getActivity(), "Event Created Successfully", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getActivity(), LandingPageActivity.class));
-                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("tag", "nt" + e.toString());
+            if (s != null) try {
+                JSONObject jo = new JSONObject(s);
+                String status = jo.getString("success");
+                if (status.equals("true")) {
+                    Toast.makeText(getActivity(), "Event Created Successfully", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getActivity(), LandingPageActivity.class));
+                    getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                 }
-            } else {
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e("tag", "nt" + e.toString());
+            }
+            else {
+                Log.e("tag","else");
             }
 
         }
 
     }
+
+
 
 }
