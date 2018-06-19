@@ -97,7 +97,10 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
-
+    <style name="DialogAnimation_2">
+        <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_up</item>
+    </style>
 
 
     <style name="Theme.MyFancyTheme" parent="android:Theme.Holo">

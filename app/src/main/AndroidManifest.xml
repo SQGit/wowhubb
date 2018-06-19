@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.wowhubb">
+    package="vineture.wowhubb">
 
     <uses-feature android:name="android.hardware.usb.host" />
 
@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
@@ -42,11 +43,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <permission
-        android:name="com.wowhubb.permission.MAPS_RECEIVE"
+        android:name="vineture.wowhubb.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <application
-        android:name="com.wowhubb.app.AppController"
+        android:name="vineture.wowhubb.app.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -60,7 +61,7 @@
             android:value="AIzaSyAYHEiseekr8Ka4gLCxC4CE85tB6euYwYk" />
 
         <activity
-            android:name=".Activity.EventFeedDashboard"
+            android:name="vineture.wowhubb.Activity.EventFeedDashboard"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustResize">
@@ -72,7 +73,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.SplashActivity"
+            android:name="vineture.wowhubb.Activity.SplashActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
@@ -82,179 +83,200 @@
 
         </activity>
         <activity
-            android:name=".Activity.ViewRsvp"
+            android:name="vineture.wowhubb.Activity.ViewRsvp"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
         <activity
-            android:name=".Activity.ViewGroupMembers"
+            android:name="vineture.wowhubb.Activity.ViewGroupMembers"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+        </activity>
+
+
+        <activity
+            android:name="vineture.wowhubb.Activity.LandingWowSearch"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.UpdateGroupActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
         <activity
-            android:name=".Activity.UpdateGroupActivity"
+            android:name="vineture.wowhubb.Activity.MyEventFeedsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
         <activity
-            android:name=".Activity.MyEventFeedsActivity"
+            android:name="vineture.wowhubb.Activity.QuickCreateEvent"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
         <activity
-            android:name=".Activity.QuickCreateEvent"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-        </activity>
-        <activity android:name=".Activity.TodayEventActivity"
+            android:name="vineture.wowhubb.Activity.TodayEventActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
 
         </activity>
         <activity
-            android:name=".Activity.AddContactsInvite"
-            android:screenOrientation="portrait"
+            android:name="vineture.wowhubb.Activity.AddContactsInvite"
             android:label="Contacts"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-
-        </activity>
-        <activity
-            android:name=".Activity.EventInviteActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
+
         </activity>
         <activity
-            android:name=".Activity.QuickCreateEventVenues"
+            android:name="vineture.wowhubb.Activity.EventInviteActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
 
         </activity>
         <activity
-            android:name=".Activity.CreateGroup"
+            android:name="vineture.wowhubb.Activity.QuickCreateEventVenues"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-        </activity>
-
-        <activity
-            android:name=".Activity.ViewEventDiscussions"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-        </activity>
-        <activity
-            android:name=".Activity.CreateGroupActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-        </activity>
-        <activity
-            android:name=".Activity.RegisterAllDetailsActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-
-        </activity>
-        <activity
-            android:name=".Activity.ShareThoughtsActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
-        <activity
-            android:name=".Activity.RegisterBdayActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".Activity.ViewFeedActivityDetails"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme1"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
-        <activity
-            android:name=".Activity.RegisterOtpActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.LoginForgotActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.LoginActivity"
-            android:screenOrientation="portrait">
-
-
-        </activity>
-        <activity
-            android:name=".Activity.ViewMoreDetailspage"
-            android:screenOrientation="portrait">
-
-
-        </activity>
-        <activity
-            android:name=".Activity.LoginResetActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".Activity.LandingPageActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity
-            android:name=".Activity.InterestActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.SettingsActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.AccountsActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.ShareThoughtsUrlActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.SettingsNotificationsActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.AccountsPrivacyActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".Activity.CreateEventActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-
-        </activity>
-        <activity
-            android:name=".Activity.ProfileActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
 
         </activity>
         <activity
             android:name=".Activity.ProfilePersonalActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+
+        <activity
+            android:name=".Activity.ProfileProfessionalActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+
+
+
+
+        <activity
+            android:name="vineture.wowhubb.Activity.CreateGroup"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+        </activity>
+
+        <activity
+            android:name="vineture.wowhubb.Activity.ViewEventDiscussions"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.CreateGroupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.RegisterAllDetailsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ShareThoughtsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.RegisterBdayActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ViewFeedActivityDetails"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.RegisterOtpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="vineture.wowhubb.Activity.LoginForgotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="vineture.wowhubb.Activity.LoginActivity"
+            android:screenOrientation="portrait">
+
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ViewMoreDetailspage"
+            android:screenOrientation="portrait">
+
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.LoginResetActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.LandingPageActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name="vineture.wowhubb.Activity.InterestActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.SettingsActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.AccountsActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ShareThoughtsUrlActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.SettingsNotificationsActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.AccountsPrivacyActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.CreateEventActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity
+            android:name="vineture.wowhubb.Activity.ProfilePersonal"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
 
 
         </activity>
         <activity
-            android:name=".Activity.RegisterCountryActivity"
+            android:name="vineture.wowhubb.Activity.RegisterCountryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
 
@@ -263,20 +285,20 @@
             android:name="com.gun0912.tedpicker.ImagePickerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ted_pick_theme" />
-        <activity android:name=".Activity.LoginOtpActivity">
+        <activity android:name="vineture.wowhubb.Activity.LoginOtpActivity">
 
         </activity>
-        <activity android:name=".Activity.FeedActivityVideo">
+        <activity android:name="vineture.wowhubb.Activity.FeedActivityVideo">
 
         </activity>
-        <activity android:name=".Activity.FeedActivityImage">
+        <activity android:name="vineture.wowhubb.Activity.FeedActivityImage">
 
         </activity>
 
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.wowhubb.fileprovider"
+            android:authorities="vineture.wowhubb.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -286,15 +308,16 @@
 
 
         <activity
-            android:name=".Nearbyeventsmodule.PlayMultipleActivity"
+            android:name="vineture.wowhubb.Nearbyeventsmodule.PlayMultipleActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
-        <activity android:name=".Nearbyeventsmodule.Activity.NearbyCategoryActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".Activity.LandingPageActivity"
-            android:screenOrientation="portrait">
+        <activity
+            android:name="vineture.wowhubb.Nearbyeventsmodule.Activity.NearbyCategoryActivity"
+            android:parentActivityName="vineture.wowhubb.Activity.LandingPageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -306,72 +329,60 @@
         </activity>
 
 
-
-        <activity android:name=".Nearbyeventsmodule.EmptyActivity"
+        <activity
+            android:name="vineture.wowhubb.Nearbyeventsmodule.EmptyActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
-
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
         <activity
-            android:name=".Nearbyeventsmodule.Activity.AllNearbyEventActivity"
+            android:name="vineture.wowhubb.Nearbyeventsmodule.Activity.AllNearbyEventActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
         <activity
-            android:name=".Nearbyeventsmodule.NearbyEventIndividualPage"
+            android:name="vineture.wowhubb.Nearbyeventsmodule.NearbyEventIndividualPage"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
         <activity
-            android:name=".Nearbyeventsmodule.Activity.PlayVideoActivity"
+            android:name="vineture.wowhubb.Nearbyeventsmodule.Activity.PlayVideoActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
-
-
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
         <activity
-            android:name=".wowtag.Activity.PaticularWowtagActivity"
+            android:name="vineture.wowhubb.wowtag.Activity.PaticularWowtagActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
         <activity
-            android:name=".wowtag.Activity.WowtagRsvp"
+            android:name="vineture.wowhubb.wowtag.Activity.WowtagRsvp"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
         <activity
-            android:name=".EventServiceProvider.Activity.EventListDetailsNewActivity"
+            android:name="vineture.wowhubb.EventServiceProvider.Activity.EventListDetailsNewActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
         <activity
-            android:name=".EventServiceProvider.Activity.ViewBusinessPage"
+            android:name="vineture.wowhubb.EventServiceProvider.Activity.ViewBusinessPage"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
         <activity
-            android:name=".EventServiceProvider.Activity.EnquiryWithUs"
+            android:name="vineture.wowhubb.EventServiceProvider.Activity.EnquiryWithUs"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
         <activity
-            android:name=".EventServiceProvider.Activity.FilterEventProvider"
+            android:name="vineture.wowhubb.EventServiceProvider.Activity.FilterEventProvider"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
         <activity
-            android:name=".EventServiceProvider.Activity.EventServiceProviderActivity"
-            android:parentActivityName=".Activity.LandingPageActivity"
+            android:name="vineture.wowhubb.EventServiceProvider.Activity.EventServiceProviderActivity"
+            android:parentActivityName="vineture.wowhubb.Activity.LandingPageActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <meta-data
@@ -385,29 +396,23 @@
         //Search and Book Events
 
         <activity
-            android:name=".ShareBookEvents.Activity.SearchBookMainActivity"
+            android:name="vineture.wowhubb.ShareBookEvents.Activity.SearchBookMainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
         <activity
-            android:name=".ShareBookEvents.Activity.SearchEventIndividualPage"
+            android:name="vineture.wowhubb.ShareBookEvents.Activity.SearchEventIndividualPage"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
         <activity
-            android:name=".ShareBookEvents.Activity.EnquiryVenue"
+            android:name="vineture.wowhubb.ShareBookEvents.Activity.EnquiryVenue"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
         <activity
-            android:name=".ShareBookEvents.Activity.EnquiryNext"
+            android:name="vineture.wowhubb.ShareBookEvents.Activity.EnquiryNext"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified">
-        </activity>
-
-
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustUnspecified"></activity>
 
 
     </application>

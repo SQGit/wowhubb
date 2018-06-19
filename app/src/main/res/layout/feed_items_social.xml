@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/greyview"
     android:orientation="vertical">
 
@@ -12,6 +12,7 @@
         android:layout_marginBottom="4dp"
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,15 +27,16 @@
                 android:layout_weight="1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/feed_item_profile_name" />
+
             <TextView
                 android:id="@+id/menu_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="..."
-                android:paddingTop="@dimen/_5sdp"
                 android:paddingBottom="@dimen/_5sdp"
                 android:paddingLeft="@dimen/_10sdp"
                 android:paddingRight="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:text="..."
                 android:textColor="@color/textcolr"
                 android:textSize="@dimen/_18sdp" />
         </LinearLayout>
@@ -42,8 +44,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -51,17 +53,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_10sdp"
-                android:text="@string/name"
                 android:layout_weight="1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/feed_item_profile_name" />
+
             <TextView
                 android:id="@+id/eventcategory_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:text="Birthday"
                 android:textColor="@color/textcolr"
-                android:layout_marginRight="@dimen/_10sdp"
                 android:textSize="@dimen/_11sdp" />
         </LinearLayout>
 
@@ -85,9 +87,9 @@
                     android:id="@+id/imageview_profile"
                     android:layout_width="@dimen/_47sdp"
                     android:layout_height="@dimen/_47sdp"
+                    android:src="@drawable/profile_img"
                     app:civ_border_color="@color/graybg"
-                    app:civ_border_width="1dp"
-                    android:src="@drawable/profile_img" />
+                    app:civ_border_width="1dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,6 +143,7 @@
                     android:layout_marginRight="@dimen/_5sdp"
                     android:background="@drawable/bg_parent_rounded_corner"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/city_tv"
                         android:layout_width="match_parent"
@@ -151,6 +154,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/month_tv"
                         android:layout_width="match_parent"
@@ -166,8 +170,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="10th-12th"
                         android:singleLine="true"
+                        android:text="10th-12th"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/_10sdp" />
 
@@ -196,7 +200,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -231,22 +234,64 @@
                 <ImageView
                     android:id="@+id/feedImage1"
                     android:layout_width="match_parent"
-                    android:layerType="software"
-                    android:scaleType="fitCenter"
                     android:layout_height="@dimen/_150sdp"
-                    android:background="@color/gray" />
+                    android:background="@color/gray"
+                    android:layerType="software"
+                    android:scaleType="fitCenter" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:orientation="horizontal"
+                    android:textColor="@color/white">
+
+                    <TextView
+                        android:id="@+id/ticketprice_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        android:text="3000"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        android:gravity="right">
+
+                        <TextView
+                            android:id="@+id/option_professional"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btnbg_curve"
+                            android:gravity="bottom"
+                            android:paddingBottom="@dimen/_5sdp"
+                            android:paddingLeft="@dimen/_16sdp"
+                            android:paddingRight="@dimen/_16sdp"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                </LinearLayout>
 
             </FrameLayout>
-
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
-                android:weightSum="2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
 
                 <LinearLayout
@@ -255,8 +300,7 @@
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                   >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/eventtopic_tv"
@@ -265,6 +309,7 @@
                         android:text="Ramya's Birthday lets celebrate!!"
                         android:textColor="@color/textcolr"
                         android:textSize="@dimen/_9sdp" />
+
                     <TextView
                         android:id="@+id/otherurl_tv"
                         android:layout_width="wrap_content"
@@ -282,22 +327,20 @@
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/address_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Address "
-                        android:maxLines="2"
+                        android:layout_gravity="center"
                         android:drawableLeft="@drawable/map_icon"
                         android:drawablePadding="@dimen/_3sdp"
-                        android:layout_gravity="center"
                         android:gravity="center"
+                        android:maxLines="2"
+                        android:text="Address "
                         android:textColor="@color/textcolr"
                         android:textSize="@dimen/_9sdp" />
-
 
 
                 </LinearLayout>
@@ -331,10 +374,12 @@
                 android:weightSum="3">
 
                 <LinearLayout
+                    android:id="@+id/ll1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <FrameLayout
                         android:id="@+id/framevideo1"
@@ -352,9 +397,9 @@
                         <ImageView
                             android:id="@+id/video1plus_iv"
                             android:layout_width="wrap_content"
-                            android:src="@drawable/video_icon"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:src="@drawable/video_icon" />
 
 
                     </FrameLayout>
@@ -369,12 +414,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_3sdp"
                     android:layout_weight="1"
                     android:background="@color/gray"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <FrameLayout
                         android:id="@+id/framevideo2"
@@ -386,28 +433,30 @@
                             android:id="@+id/highlight1"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_70sdp"
+                            android:layout_gravity="center"
                             android:layerType="software"
-                            android:scaleType="fitCenter"
-                            android:layout_gravity="center" />
+                            android:scaleType="fitCenter" />
 
                         <ImageView
                             android:id="@+id/video2plus_iv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
 
 
                     </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_3sdp"
                     android:layout_weight="1"
                     android:background="@color/gray"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <FrameLayout
                         android:id="@+id/framevideo3"
@@ -426,14 +475,15 @@
                         <ImageView
                             android:id="@+id/video3plus_iv"
                             android:layout_width="wrap_content"
-                            android:src="@drawable/video_icon"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:src="@drawable/video_icon" />
 
 
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -454,8 +504,9 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:gravity="left"
                         android:text="Wowsome"
-                        android:visibility="invisible"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="invisible" />
+
                     <TextView
                         android:id="@+id/rsvp_tv"
                         android:layout_width="wrap_content"
@@ -463,8 +514,9 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:gravity="left"
                         android:text="RSVP"
-                        android:visibility="gone"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="gone" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -479,19 +531,19 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:gravity="right"
-                            android:visibility="gone"
                             android:text="Comments"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/viewshare_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/_10sdp"
-                            android:visibility="gone"
                             android:gravity="right"
                             android:text="Share"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -524,12 +576,12 @@
                             android:id="@+id/wowsome_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:drawableLeft="@drawable/wowsomes_icon"
                             android:drawablePadding="@dimen/_3sdp"
-                            android:text="Wowsomes"
-                            android:padding="@dimen/_3sdp"
                             android:gravity="center"
-                            android:layout_gravity="center_horizontal"
+                            android:padding="@dimen/_3sdp"
+                            android:text="Wowsomes"
                             android:textColor="@drawable/selector_text"
                             android:textSize="@dimen/_11sdp"
                             android:textStyle="bold" />
@@ -546,11 +598,11 @@
                             android:id="@+id/comments_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:drawableLeft="@drawable/comments_icon"
                             android:drawablePadding="@dimen/_3sdp"
-                            android:padding="@dimen/_3sdp"
                             android:gravity="center"
-                            android:layout_gravity="center_horizontal"
+                            android:padding="@dimen/_3sdp"
                             android:text="Comments"
                             android:textColor="@drawable/selector_comments"
                             android:textSize="@dimen/_11sdp"
@@ -568,13 +620,13 @@
                             android:id="@+id/share_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:drawableLeft="@drawable/shares_icon"
                             android:drawablePadding="@dimen/_3sdp"
-                            android:textColor="@drawable/selector_shares"
-                            android:padding="@dimen/_3sdp"
                             android:gravity="center"
-                            android:layout_gravity="center_horizontal"
+                            android:padding="@dimen/_3sdp"
                             android:text="Shares"
+                            android:textColor="@drawable/selector_shares"
                             android:textSize="@dimen/_11sdp"
                             android:textStyle="bold" />
 
@@ -588,38 +640,38 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_15sdp"
-                android:gravity="center"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:background="#f5f5f5"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:layout_weight="1"
                     android:id="@+id/sendinvite_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/_12sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_7sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
-                    android:textColor="@drawable/selector_text"
-                    android:drawablePadding="@dimen/_5sdp"
+                    android:layout_weight="1"
                     android:drawableLeft="@drawable/send_invite"
-                    android:text="Send Invite"/>
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:padding="@dimen/_7sdp"
+                    android:text="Send Invite"
+                    android:textColor="@drawable/selector_text"
+                    android:textSize="@dimen/_12sdp" />
 
                 <TextView
                     android:id="@+id/viewmore_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/_12sdp"
-                    android:padding="@dimen/_7sdp"
-                    android:gravity="right"
                     android:layout_marginRight="@dimen/_10sdp"
-                    android:drawablePadding="@dimen/_5sdp"
                     android:drawableLeft="@drawable/view_details"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:gravity="right"
+                    android:padding="@dimen/_7sdp"
+                    android:text="View More Details"
                     android:textColor="@drawable/selector_text"
-                    android:text="View More Details"/>
-
+                    android:textSize="@dimen/_12sdp" />
 
 
             </LinearLayout>

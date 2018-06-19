@@ -11,100 +11,51 @@
     <LinearLayout
         android:id="@+id/lnr_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_120sdp"
+        android:background="@drawable/blur_back"
+        android:paddingLeft="@dimen/_5sdp"
+        android:layout_marginTop="-10dp"
+        android:paddingRight="@dimen/_5sdp"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
         android:orientation="vertical">
-
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_120sdp">
-
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/blur_back"/>
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/bg_white"
-            android:padding="@dimen/_3sdp"
-            android:layout_margin="@dimen/_10sdp">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_wowtag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_gravity="center"
+            android:gravity="center">
 
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextView1"
+
+            <TextView
+                android:id="@+id/txt_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textView1"
-                android:hint="!Search Wowtag"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="17dp"
-                android:ems="10"
-                android:text="">
-                <requestFocus />
-            </AutoCompleteTextView>
+                android:text="  ! Wowtag Search"
+                android:textColor="@color/grey"
+                android:layout_gravity="center"
+                android:cursorVisible="false"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:textSize="@dimen/_15sdp"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:background="@null"/>
 
-            </android.support.design.widget.TextInputLayout>
-
-          <!--  <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_wowtag"
+            <View
                 android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:padding="@dimen/_10sdp"
-                android:layout_height="wrap_content">
-
-               &lt;!&ndash; <EditText
-                    android:id="@+id/aboutme_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="Enter Your Wowtag"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_action_name"
-                    android:drawablePadding="-10dp"
-                    android:textColorHint="@color/white"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:textColor="@color/headercolor"
-                    android:textSize="@dimen/_13sdp" />
-
-&ndash;&gt;
-
-
-
-
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey">
-
-                </View>
-            </android.support.design.widget.TextInputLayout>-->
+                android:layout_height="0.5dp"
+                android:background="@color/white"/>
         </LinearLayout>
-    </FrameLayout>
 
-            </LinearLayout>
+    </LinearLayout>
 
 
-  <LinearLayout
+
+
+
+    <LinearLayout
         android:id="@+id/wow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,14 +92,14 @@
                 android:layout_height="wrap_content">
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#333333"
-                android:textSize="@dimen/_11sdp"
-                android:text="@string/wow"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/_11sdp"
+                    android:text="@string/wow"/>
             </LinearLayout>
-            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -235,14 +186,12 @@
 
         <LinearLayout
             android:id="@+id/searchproviders_lv"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="8"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:orientation="horizontal">
-
 
 
             <LinearLayout
@@ -258,8 +207,6 @@
                     android:layout_gravity="center"
                     android:src="@drawable/event_sp_landing"/>
             </LinearLayout>
-
-
 
 
             <LinearLayout
@@ -278,8 +225,6 @@
                     android:textColor="#333333"
                     android:textSize="@dimen/_13sdp" />
             </LinearLayout>
-
-
 
 
             <LinearLayout

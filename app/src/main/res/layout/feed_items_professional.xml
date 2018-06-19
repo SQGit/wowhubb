@@ -240,6 +240,22 @@
                     android:layout_height="@dimen/_150sdp"
                     android:background="@color/gray" />
 
+                <TextView
+                    android:id="@+id/option_professional"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:background="@drawable/btnbg_curve"
+                    android:gravity="bottom"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingRight="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:text=""
+                    android:textSize="@dimen/_10sdp"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
 
             </FrameLayout>
 

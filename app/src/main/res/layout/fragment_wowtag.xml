@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_16sdp"
                 android:textColor="@color/headercolor"
-                android:text="Enter your " />
+                android:text="Search your " />
 
 
             <TextView
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_16sdp"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="Wowtag Code"/>
+                android:text="!Wowtag"/>
 
         </LinearLayout>
 
@@ -40,11 +40,14 @@
 
         <TextView
           android:id="@+id/txt3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:textSize="@dimen/_12sdp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/_10sdp"
+            android:gravity="center"
             android:textColor="@color/headercolor"
             android:layout_height="wrap_content"
-            android:text="To earn redeemable points" />
+            android:text="!Wowtag is a catch word or phrase that uniquely identifies your events on the wowhubb network." />
     </LinearLayout>
 
 
@@ -71,14 +74,15 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/contact_icn" />
             </LinearLayout>
@@ -89,6 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:orientation="vertical">
+
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/til_wowtag"
@@ -104,7 +110,7 @@
                         android:layout_below="@+id/textView1"
                         android:hint="Enter your Wowtag"
                         android:singleLine="true"
-
+                        android:background="@android:color/transparent"
                         android:imeOptions="actionDone"
                         android:layout_marginTop="17dp"
                         android:ems="10"
@@ -130,7 +136,19 @@
                     android:src="@drawable/search_icon" />
             </LinearLayout>
         </LinearLayout>
+
+
+
+
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/_60sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/colorAccent"/>
 
     <TextView
         android:id="@+id/search"
@@ -142,6 +160,7 @@
         android:paddingBottom="@dimen/_5sdp"
         android:paddingLeft="@dimen/_25sdp"
         android:paddingRight="@dimen/_25sdp"
+        android:gravity="center"
         android:paddingTop="@dimen/_5sdp"
         android:text="Search"
         android:textSize="@dimen/_14sdp"

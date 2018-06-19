@@ -227,12 +227,35 @@
     <string name="group_members">Group Members</string>
     <string name="todayevents">Today Events</string>
     <string name="rsvpinvites">Rsvp Invites</string>
-    <string name="versionname">Version:8.4</string>
+    <string name="versionname">Version:1.3</string>
     <string name="login">Login</string>
     <string name="search">Search</string>
     <string name="guestspeaker">Guest Speaker</string>
 
+    <string name="htmlFormattedText">Hi There!\n Please download the wowhubb app from<a href="https://play.google.com/store/apps/details?id=vineture.wowhubb"></a>\n\n\n Thankk You\n Wowhubb Team</string>
 
+    <string name="tabbed_main_detail_item" formatted="false">
+        <![CDATA[&nbsp;<i>%s</i>&nbsp;&minus;&nbsp;%s<br>]]>
+    </string>
+
+    <string name="tabbed_main_detail_how_to" formatted="false">
+        <![CDATA[
+        Input some date time value as milliseconds:
+        <br><br>
+        <i>long time = System.currentTimeMillis();</i>
+        <br><br>
+        Use the <b>TimeAgo</b> class:
+        <br><br>
+        <i>
+            String timeAgo = TimeAgo.using(time<br> [, new TimeAgoMessages.Builder()<br> .defaultLocale().build()]);
+        </i>
+        <br><br>
+        For specific language usage, use <b>TimeAgoMessages</b>.
+        <br><br><i>Languages supported</i>: Spanish (es), English (en), German (de), French (fr), Italian (it), Portuguese (pt).
+        ]]>
+    </string>
+    <string name="tabbed_main_detail_from" formatted="false"><![CDATA[%s<br>]]></string>
+    <string name="tabbed_main_detail_until" formatted="false"><![CDATA[%s<br>]]></string>
     <string-array name="CountryCodes" >
         <item>93,AF</item>
         <item>355,AL</item>

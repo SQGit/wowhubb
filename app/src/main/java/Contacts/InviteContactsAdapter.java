@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.wowhubb.Activity.EventInviteActivity;
-import com.wowhubb.Fonts.FontsOverride;
-import com.wowhubb.R;
+import vineture.wowhubb.Activity.EventInviteActivity;
+import vineture.wowhubb.Fonts.FontsOverride;
+import vineture.wowhubb.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ta_library/ta_library.iml" filepath="$PROJECT_DIR$/ta_library/ta_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/wowhubb.iml" filepath="$PROJECT_DIR$/wowhubb.iml" />
     </modules>
   </component>

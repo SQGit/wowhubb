@@ -2,27 +2,35 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-
+        config {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('D:/14022018_wowhubb/wowhubb/wowhubb.jks')
+            storePassword '123456'
+        }
     }
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.wowhubb"
+        applicationId "vineture.wowhubb"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 3
-        versionName "1.3"
+        versionCode 4
+        versionName '1.3'
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             zipAlignEnabled true
+            signingConfig signingConfigs.config
         }
         debug {
             zipAlignEnabled true
-            debuggable true
         }
     }
     productFlavors {
@@ -38,6 +46,8 @@ repositories {
     maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 
 }
+
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
@@ -81,7 +91,10 @@ dependencies {
     compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
     compile 'com.github.mabbas007:TagsEditText:1.0.5'
     compile 'com.doodle.android:android-material-chips:1.2.0'
-    compile 'org.jsoup:jsoup:1.8.3' // required
+    compile 'org.jsoup:jsoup:1.8.3'
+    // required
     compile 'com.leocardz:link-preview:2.0.0@aar'
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
+    //for latestversion
+    compile project(':ta_library')
 }

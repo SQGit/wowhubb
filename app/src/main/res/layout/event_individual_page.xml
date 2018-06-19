@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"
             android:padding="@dimen/_10sdp"
-            android:src="@drawable/close_icon" />
+            android:src="@drawable/close_icon_pink" />
     </FrameLayout>
 
 

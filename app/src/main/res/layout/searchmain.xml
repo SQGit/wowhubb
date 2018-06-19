@@ -4,7 +4,7 @@
     android:id="@+id/activity_search_view_check"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.wowhubb.Activity.EventFeedDashboard">
+    tools:context="com.wowhubb.wow.wowhubb.Activity.EventFeedDashboard">
 
     <include layout="@layout/toolbar"/>
     <include layout="@layout/search_toolbar"

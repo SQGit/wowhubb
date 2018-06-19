@@ -1,27 +1,31 @@
 {
   "project_info": {
-    "project_number": "687469958749",
-    "firebase_url": "https://wowhubb-186605.firebaseio.com",
-    "project_id": "wowhubb-186605",
-    "storage_bucket": "wowhubb-186605.appspot.com"
+    "project_number": "612780115750",
+    "firebase_url": "https://wowhubb-69dc1.firebaseio.com",
+    "project_id": "wowhubb-69dc1",
+    "storage_bucket": "wowhubb-69dc1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:687469958749:android:5bae4f289836aece",
+        "mobilesdk_app_id": "1:612780115750:android:5bae4f289836aece",
         "android_client_info": {
           "package_name": "com.wowhubb"
         }
       },
       "oauth_client": [
         {
-          "client_id": "687469958749-g2rvo5vhb0jrvpvbuc3chg2lhi154qnf.apps.googleusercontent.com",
+          "client_id": "612780115750-8p20v39quhf2dfcj81drl2evo3o34pre.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "612780115750-8p20v39quhf2dfcj81drl2evo3o34pre.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD0Rl3XBSo7boZjXEZeq4jiiYQjf36u9no"
+          "current_key": "AIzaSyBOxU_dUFkY9Kt90Iefi_uqDi5A3OVlyVo"
         }
       ],
       "services": {
